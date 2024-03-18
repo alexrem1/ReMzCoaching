@@ -3,6 +3,7 @@ import {
   PaymentElement,
   useStripe,
   useElements,
+  AddressElement,
 } from "@stripe/react-stripe-js";
 import { useParams } from "react-router-dom";
 // import CAPTCHA from "./CAPTCHA";
@@ -73,8 +74,10 @@ export default function CheckoutForm() {
     // redirected to the `return_url`.
     if (error.type === "card_error" || error.type === "validation_error") {
       setMessage(error.message);
+      console.log(error);
     } else {
       setMessage("An unexpected error occurred.");
+      console.log(error, message);
     }
 
     setIsLoading(false);
@@ -88,6 +91,25 @@ export default function CheckoutForm() {
     <>
       {stripe && elements && (
         <form id="payment-form" onSubmit={handleSubmit}>
+          <h3>Address</h3>
+          <AddressElement
+            options={{
+              mode: "shipping",
+              // allowedCountries: ["UK"],
+              fields: {
+                phone: "always",
+              },
+              // defaultValues: {
+              //   name: "Jane Doe",
+              //   // disabled: true,
+              // },
+              validation: {
+                phone: {
+                  required: "always",
+                },
+              },
+            }}
+          />
           <PaymentElement
             id="payment-element"
             options={paymentElementOptions}

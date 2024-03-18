@@ -102,7 +102,7 @@ function Navbar() {
           {auth ? (
             <>
               <Link to="/profile">
-                <p onClick={() => closeHamburger()}>Profile</p>
+                <p onClick={() => closeHamburger()}>My Account</p>
               </Link>
               <Link>
                 <p onClick={handleLogout}>Logout</p>

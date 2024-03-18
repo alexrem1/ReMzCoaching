@@ -1,22 +1,16 @@
-import "./Profile.css";
 import { Link } from "react-router-dom";
-import useGetProfile from "../CustomHooks/useGetProfile";
-import ShowUserBookings from "../Bookings/ShowUserBookings";
+import useGetProfile from "../../CustomHooks/useGetProfile";
 
-function Profile() {
+function UserDetails() {
   const { userDetails, maskPassword } = useGetProfile();
 
   return (
-    <div>
+    <>
       {userDetails.map((details) => (
         <div key={details.id}>
-          <h1>
-            Welcome to your profile page {details.CarerFirstName}{" "}
-            {details.CarerLastName}
-          </h1>
           <h3>Your details</h3>
           <p>
-            You're authorized {details.CarerFirstName} {details.CarerLastName}
+            Name: {details.CarerFirstName} {details.CarerLastName}
           </p>
           <p>Email: {details.Email}</p>
           <p>Contact number: {details.ContactNumber}</p>
@@ -68,14 +62,13 @@ function Profile() {
             <p>Pupil Premium: No</p>
           )}
 
-          <button>
+          <button className="primary-cta">
             <Link to={`/profile/update/${details.id}`}> Update Details</Link>
           </button>
         </div>
       ))}
-      <ShowUserBookings />
-    </div>
+    </>
   );
 }
 
-export default Profile;
+export default UserDetails;

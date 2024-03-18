@@ -40,6 +40,8 @@ const verifyUser = (req, res, next) => {
         req.name = decoded.name;
         req.role = decoded.role;
         req.id = decoded.id;
+        req.email = decoded.email;
+        req.phone = decoded.phone;
         next();
       }
     });
@@ -72,6 +74,9 @@ app.get("/", verifyUser, (req, res) => {
     name: req.name,
     role: req.role,
     id: req.id,
+    email: req.email,
+    phone: req.phone,
+    token: "dog",
   });
 });
 
@@ -94,7 +99,7 @@ app.get("/users/:id", verifyUser, (req, res) => {
   });
 });
 
-//users can update their Email and password
+//users can update their details
 app.put("/users/:id", verifyUser, (req, res) => {
   const id = req.params.id;
   const q =
@@ -136,17 +141,6 @@ app.put("/users/:id", verifyUser, (req, res) => {
   });
 });
 
-//admin can delete users
-app.delete("/users/:id", verifyRole("admin"), (req, res) => {
-  const id = req.params.id;
-  const q = "DELETE FROM users WHERE id =?";
-
-  db.query(q, [id], (err, data) => {
-    if (err) return res.json({ Error: "Error" });
-    return res.json(data);
-  });
-});
-
 //users can log in
 app.post("/login", (req, res) => {
   const sql = "SELECT * FROM users WHERE Email =? ";
@@ -163,18 +157,29 @@ app.post("/login", (req, res) => {
         (err, response) => {
           if (err) return res.json({ Error: "Dog" });
           if (response) {
-            const name = data[0].CarerFirstName;
+            const name = data[0].CarerFirstName + " " + data[0].CarerLastName;
             const role = data[0].role;
             const id = data[0].id;
-            const token = jwt.sign({ name, role, id }, process.env.SECRET_KEY, {
-              expiresIn: "1d",
-            });
+            const email = data[0].Email;
+            const phone = data[0].ContactNumber;
+            const token = jwt.sign(
+              { name, role, id, email, phone },
+              process.env.SECRET_KEY,
+              {
+                expiresIn: "1d",
+              }
+            );
             res.cookie("token", token, {
               expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
             });
-            return res
-              .status(200)
-              .json({ Status: "User logged in successfully", role, name, id });
+            return res.status(200).json({
+              Status: "User logged in successfully",
+              role,
+              name,
+              id,
+              email,
+              phone,
+            });
             // deprecated: res.json({ Status: "User logged in successfully" }, role);
           } else {
             return res.json({
@@ -247,75 +252,12 @@ app.get("/admin", verifyRole("admin"), (req, res) => {
     name: req.name,
     role: req.role,
     id: req.id,
+    email: req.email,
+    phone: req.phone,
   });
 });
 
-//user can make a booking
-app.post("/bookings", verifyUser, (req, res) => {
-  const userId = req.id; // Assuming you have access to the user ID through middleware or authentication
-
-  const sql =
-    "INSERT INTO bookings (`user_id`, `booking_date`, `booking_time`, `booking_child_name`, `booking_product_id`) VALUES (?, ?, ?, ?, ?)";
-  const values = [
-    userId,
-    req.body.selectedDate,
-    req.body.selectedTime,
-    req.body.selectedName,
-    req.body.product_id,
-  ]; // Include user_id in the values array
-
-  db.query(sql, values, (err, result) => {
-    if (err) {
-      console.error("Error registering booking:", err);
-      return res.status(500).json({ error: "Error registering booking" });
-    }
-    return res.json({ status: "Booking registered successfully" });
-  });
-});
-
-//admin can see all bookings with name
-app.get("/bookings", verifyRole("admin"), (req, res) => {
-  const sql = `
-    SELECT bookings.*, users.CarerFirstName AS userName 
-    FROM bookings 
-    INNER JOIN users ON bookings.user_id = users.id
-  `;
-  db.query(sql, (err, data) => {
-    if (err) {
-      console.error("Error fetching bookings:", err);
-      return res.status(500).json({ error: "Error fetching bookings" });
-    }
-    return res.json(data);
-  });
-});
-
-//user gets shown their own bookings
-app.get("/bookings/:id", verifyUser, (req, res) => {
-  const userId = req.params.id;
-  const query =
-    "SELECT bookings.*, users.FirstChildFirstName AS Child1 FROM bookings JOIN users ON bookings.user_id = users.id WHERE users.id = ?";
-  db.query(query, [userId], (err, data) => {
-    if (err) {
-      console.error("Error fetching bookings:", err);
-      return res.status(500).json({ error: "Error fetching bookings" });
-    }
-    return res.json(data);
-  });
-});
-
-//admin can delete any booking
-app.delete("/bookings/:id", verifyRole("admin"), (req, res) => {
-  const id = req.params.id;
-  // console.log(id, req.params);
-
-  const q = "DELETE FROM bookings WHERE booking_id =?";
-
-  db.query(q, [id], (err, data) => {
-    if (err) return res.json({ Error: "Error" });
-    return res.json(data);
-  });
-});
-
+// get all products
 app.get("/products", verifyUser, (req, res) => {
   const sql = `
     SELECT * FROM products 
@@ -329,23 +271,209 @@ app.get("/products", verifyUser, (req, res) => {
   });
 });
 
-// app.get("/products/:id", verifyUser, (req, res) => {
-//   const productId = req.params.id;
-//   const sql = `
-//     SELECT * FROM products WHERE product_id = ?;
-//   `;
-//   db.query(sql, [productId], (err, data) => {
-//     if (err) {
-//       console.error("Error fetching product:", err);
-//       return res.status(500).json({ error: "Error fetching product" });
-//     }
-//     if (data.length === 0) {
-//       return res.status(404).json({ error: "Product not found" });
-//     }
-//     return res.json(data[0]); // Assuming there's only one product with the given id
-//   });
-// });
+// get specified product for update as admin
+app.get("/products/:id", verifyRole("admin"), (req, res) => {
+  const id = req.params.id;
+  console.log(id);
 
+  const sql = `SELECT * FROM products WHERE product_id =?`;
+
+  db.query(sql, [id], (err, data) => {
+    if (err) {
+      console.error("Error fetching products:", err);
+      return res.status(500).json({ error: "Error fetching products" });
+    }
+    console.log(data);
+    return res.json(data);
+  });
+});
+// update product as admin
+app.put("/admin-update-product/:id", verifyRole("admin"), (req, res) => {
+  const id = req.params.id;
+
+  const sql =
+    "UPDATE products SET product_school=?, product_activity=?, product_price=?, product_activity_duration=?, product_time=?, product_description=?, product_criteria=?, product_day=? WHERE product_id=?";
+
+  const values = [
+    req.body.product_school,
+    req.body.product_activity,
+    req.body.product_price,
+    req.body.product_activity_duration,
+    req.body.product_time,
+    req.body.product_description,
+    req.body.product_criteria,
+    req.body.product_day,
+    id, // Add the product_id for the WHERE clause
+  ];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("Error updating product:", err);
+      return res.status(500).json({ error: "Error updating product" });
+    }
+    res.json({ status: "Product updated successfully" });
+  });
+});
+
+// add new product admin
+app.post("/admin-add-product", verifyRole("admin"), (req, res) => {
+  const sql =
+    "INSERT INTO products (product_school, product_activity, product_price, product_activity_duration, product_time, product_description, product_criteria, product_day) VALUES (?, ?, ?, ?, ?,?,?,?)";
+
+  const values = [
+    req.body.product_school,
+    req.body.product_activity,
+    req.body.product_price,
+    req.body.product_activity_duration,
+    req.body.product_time,
+    req.body.product_description,
+    req.body.product_criteria,
+    req.body.product_day,
+  ];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("Error registering product:", err);
+      return res.status(500).json({ error: "Error registering product" });
+    }
+    res.json({ status: "Product registered successfully" });
+  });
+});
+
+// delete product as admin
+app.delete("/admin-delete-product/:id", verifyRole("admin"), (req, res) => {
+  const id = req.params.id;
+  // console.log(id, req.params);
+
+  const q = "DELETE FROM products WHERE product_id =?";
+
+  db.query(q, [id], (err, data) => {
+    if (err) return res.json({ Error: "Error" });
+    return res.json(data);
+  });
+});
+
+// get all user info w/order and product purchased admin
+app.get("/admin-users-info", verifyRole("admin"), (req, res) => {
+  // SQL query to select data from users, orders, and products tables
+  const sql = `
+    SELECT 
+      u.*,
+      o.*, 
+      p.*
+    FROM 
+      users u
+    LEFT JOIN 
+      orders o ON u.id = o.buyer_id
+    LEFT JOIN 
+      products p ON o.product_id = p.product_id
+    WHERE
+      u.role != "admin";
+  `;
+
+  // Execute the SQL query
+  db.query(sql, (error, results) => {
+    if (error) {
+      // Handle error if the query execution fails
+      console.error("Error executing query:", error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      // Process the retrieved data and format it as needed
+
+      // Using the reduce() method to format the data
+      const formattedData = results.reduce((formatted, row) => {
+        // Destructure the row and extract the user ID
+        const { id, ...userData } = row;
+
+        // Check if the user ID is already in the formatted data
+        if (!formatted[id]) {
+          // If not, initialize a new user object with user ID and user data
+          formatted[id] = {
+            id,
+            ...userData,
+            orders: [], // Initialize an empty array to hold user orders
+          };
+        }
+
+        // Push order details into the user's orders array
+        formatted[id].orders.push({
+          order_id: row.order_id,
+          buyer_id: row.buyer_id,
+          product_id: row.product_id,
+          isCompleted: row.isCompleted,
+          payment_intent: row.payment_intent,
+          product: {
+            // Format product details
+            product_activity: row.product_activity,
+            product_id: row.product_id,
+            product_school: row.product_school,
+            product_price: row.product_price,
+            product_activity_duration: row.product_activity_duration,
+            product_time: row.product_time,
+            product_description: row.product_description,
+            product_criteria: row.product_criteria,
+            product_day: row.product_day,
+            // Add other relevant order details here
+          },
+        });
+
+        // Return the formatted data object
+        return formatted;
+      }, {}); // Initialize the formatted data as an empty object
+
+      // Convert the formatted data object into an array of user objects
+      const formattedResults = Object.values(formattedData);
+
+      // Send the formatted results as JSON response
+      return res.json(formattedResults);
+    }
+  });
+});
+
+//delete users orders admin
+app.delete("/admin-users-order/:id", verifyRole("admin"), (req, res) => {
+  const id = req.params.id;
+  // console.log(id, req.params);
+
+  const q = "DELETE FROM orders WHERE order_id =?";
+
+  db.query(q, [id], (err, data) => {
+    if (err) return res.json({ Error: "Error" });
+    return res.json(data);
+  });
+});
+//admin can delete users then their orders
+app.delete(
+  "/admin-delete-users-and-orders/:id",
+  verifyRole("admin"),
+  (req, res) => {
+    const userId = req.params.id;
+
+    const deleteUserQuery = "DELETE FROM users WHERE id = ?";
+    const deleteBookingsQuery = "DELETE FROM orders WHERE buyer_id = ?";
+
+    db.query(deleteBookingsQuery, [userId], (err, bookingData) => {
+      if (err) {
+        console.error("Error deleting user's bookings:", err);
+        return res.json({ error: "Error deleting user's bookings" });
+      }
+
+      // After deleting the bookings, proceed to delete the user
+      db.query(deleteUserQuery, [userId], (err, userData) => {
+        if (err) {
+          console.error("Error deleting user:", err);
+          return res.json({ error: "Error deleting user" });
+        }
+
+        return res.json({
+          message: "User and associated bookings deleted successfully",
+        });
+      });
+    });
+  }
+);
+
+// show order to user
 app.get("/orders/:id", verifyUser, (req, res) => {
   const userId = req.id;
 
@@ -433,6 +561,7 @@ app.post("/forgot-password", (req, res) => {
   });
 });
 
+// reset password
 app.post("/reset-password/:id/:token", (req, res) => {
   const id = req.params.id;
   const token = req.params.token;
@@ -499,7 +628,6 @@ const calculateOrderAmount = async (product_id) => {
       throw new Error("Product not found");
     }
 
-    console.log(productRows);
     // Extract price and activity duration from the database response
     const { product_price, product_activity_duration } = productRows[0];
 
@@ -519,10 +647,9 @@ const calculateOrderAmount = async (product_id) => {
   }
 };
 
+// create payment intent when user tries to pay the order
 app.post("/create-payment-intent/:id", verifyUser, async (req, res) => {
   const { id } = req.params;
-  const { items } = req.body;
-  const userId = req.id;
 
   try {
     // Calculate the order amount
@@ -536,13 +663,37 @@ app.post("/create-payment-intent/:id", verifyUser, async (req, res) => {
       return res.status(404).send("Product not found");
     }
 
+    // Check if a customer with the provided email already exists
+    let customer;
+    try {
+      // Retrieve the customer using the email
+      const customerList = await stripe.customers.list({ email: req.email });
+      if (customerList.data.length > 0) {
+        // If a customer with the provided email exists, retrieve the first one
+        customer = customerList.data[0];
+        console.log("existing customer:");
+      }
+    } catch (error) {
+      throw error; // Propagate other errors
+    }
+
+    // If the customer does not exist, create a new one
+    if (!customer) {
+      customer = await stripe.customers.create({
+        email: req.email,
+        name: req.name,
+        phone: req.phone,
+        // You can add other customer information here if needed
+      });
+      console.log("new customer:");
+    }
+
     // Create a PaymentIntent with the order amount and currency
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency: "gbp",
-      automatic_payment_methods: {
-        enabled: true,
-      },
+      description: productRows[0].product_description,
+      customer: customer.id,
     });
 
     // Prepare the response object with additional product details
@@ -558,31 +709,75 @@ app.post("/create-payment-intent/:id", verifyUser, async (req, res) => {
   }
 });
 
-app.post("/orders/:id", verifyUser, (req, res) => {
+//complete order and send email
+app.post("/orders/:id", verifyUser, async (req, res) => {
   const { id } = req.params;
   const { payment_intent } = req.body;
   const userId = req.id; // Assuming you have access to the authenticated user's ID
 
-  const isCompleted = 1;
-  const values = [id, userId, isCompleted, payment_intent];
+  const paymentIntent = await stripe.paymentIntents.retrieve(payment_intent);
 
-  // Insert data into the orders table
-  const insertOrderQuery =
-    "INSERT INTO orders (product_id, buyer_id, isCompleted, payment_intent) VALUES (?, ?, ?, ?)";
+  if (paymentIntent.status === "succeeded") {
+    const isCompleted = 1;
+    const values = [id, userId, isCompleted, payment_intent];
 
-  db.query(insertOrderQuery, values, (err, result) => {
-    if (err) {
-      console.error("Error updating order:", err);
-      return res.status(500).json({ error: "Error updating order" });
-    }
-    if (result.affectedRows === 0) {
-      // No matching order found
-      return res.status(404).json({ error: "Order not found" });
-    }
-    // Order updated successfully
-    return res.status(200).json({ message: "Order updated successfully" });
-  });
-  console.log("done");
+    // Insert data into the orders table
+    const insertOrderQuery =
+      "INSERT INTO orders (product_id, buyer_id, isCompleted, payment_intent) VALUES (?, ?, ?, ?)";
+
+    db.query(insertOrderQuery, values, (err, result) => {
+      if (err) {
+        console.error("Error inserting order:", err);
+        return res.status(500).json({ error: "Error inserting order" });
+      }
+      if (result.affectedRows === 0) {
+        // No matching order found
+        return res.status(404).json({ error: "Order not found" });
+      }
+      // Order updated successfully
+      return res
+        .status(200)
+        .json({ message: "Order placed successfully", paymentIntent });
+    });
+
+    //send email
+
+    var transporter = nodemailer.createTransport({
+      service: "hotmail",
+      auth: {
+        user: process.env.MY_EMAIL,
+        pass: process.env.MY_PASSWORD,
+      },
+    });
+
+    const emailURL =
+      req.hostname === process.env.DB_HOST
+        ? process.env.LOCAL
+        : process.env.VURL;
+
+    var mailOptions = {
+      from: process.env.MY_EMAIL,
+      to: req.email,
+      subject: "Order placed successfully",
+      html: `<h3>You have successfully placed your order</h3>
+      <p>You have purchased: ${paymentIntent.description}</p>
+      <p>I'll be in touch with you soon to confirm your order on the number provided: ${paymentIntent.shipping.phone}</p>
+      <p>Check your order <a href="${emailURL}/profile">here</a>.</p>
+      <p>If you have any questions, reply back to this email.</p>
+      `,
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error, "err sending email");
+      } else {
+        return res
+          .status(200)
+          .json({ Status: "Successfully requested password reset" });
+      }
+    });
+    console.log("done");
+  }
 });
 
 app.listen(process.env.PORT, () => {

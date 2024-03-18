@@ -6,10 +6,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { ConfigProvider } from "antd";
 import dayjs from "dayjs";
-import CustomDatePicker from "../Components/DatePickerWeekends";
-import useBookings from "../CustomHooks/useBookings";
+import CustomDatePicker from "../../Components/DatePickerWeekends";
+import useBookings from "../../CustomHooks/useBookings";
 
-function ProfileUpdate() {
+function UserUpdateDetails() {
   const navigate = useNavigate();
   const location = useLocation();
   const userID = location.pathname.split("/")[3];
@@ -303,4 +303,4 @@ function ProfileUpdate() {
   );
 }
 
-export default ProfileUpdate;
+export default UserUpdateDetails;

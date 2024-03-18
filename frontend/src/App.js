@@ -9,18 +9,19 @@ import SchoolServices from "./Services/SchoolServices";
 import Home from "./Home/Home";
 import Registration from "./Registration/Registration";
 import Login from "./Login/Login";
-import Profile from "./Profile/Profile";
+import Profile from "./MyAccount/Profile/Profile";
 import Admin from "./Admin/Admin";
 import { useIsAuthenticated } from "./Context/AuthContext";
 import { Loader } from "lucide-react";
-import ProfileUpdate from "./Profile/ProfileUpdate";
-import Bookings from "./Bookings/Bookings";
+import ProfileUpdate from "./MyAccount/UserDetails/UserUpdateDetails";
 import ForgottenPassword from "./ForgottenPassword/ForgottenPassword";
 import ResetPassword from "./ForgottenPassword/ResetPassword";
 import StripeTest from "./Bookings/StripeTest";
 import FormHolder from "./AA/FormHolder";
 import TEST from "./AA/TEST";
 import SuccessPayment from "./AA/SuccessPayment";
+import AdminUpdateProduct from "./Admin/AdminProducts/AdminUpdateProduct";
+import AdminAddProduct from "./Admin/AdminProducts/AdminAddProduct";
 
 function App() {
   const { auth, loading, role, userID } = useIsAuthenticated();
@@ -43,6 +44,12 @@ function App() {
         <Route path="/payment/:id" element={<TEST />} />
         <Route path="/success/:id" element={<SuccessPayment />} />
         <Route
+          path="/admin/product-update/:id"
+          element={<AdminUpdateProduct />}
+        />
+        <Route path="/admin/product-add" element={<AdminAddProduct />} />
+
+        {/* <Route
           path="/bookings"
           element={
             loading === null ? (
@@ -55,7 +62,7 @@ function App() {
               loading && !auth && <Navigate to="/login" />
             )
           }
-        />
+        /> */}
         <Route
           path="/register"
           element={

@@ -14,7 +14,8 @@ export default function useRegistration() {
     Email: yup
       .string()
       .email("Enter a valid email")
-      .required("Your email is required"),
+      .required("Your email is required")
+      .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
     ContactNumber: yup
       .number()
       .integer()
@@ -66,19 +67,20 @@ export default function useRegistration() {
     setError,
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm({
-    // defaultValues: {
-    //   CarerFirstName: "remmy",
-    //   CarerLastName: "remmy",
-    //   Email: "remidy@live.co.uk",
-    //   ContactNumber: 20,
-    //   EmergencyContactNumber: 20,
-    //   FirstChildFirstName: "remmy",
-    //   FirstChildLastName: "test",
-    //   FirstChildYearGroup: "7",
-    //   FirstChildMedical: "N/A",
-    //   password: "93MDLuffy!!!",
-    //   confirmPassword: "93MDLuffy!!!",
-    // },
+    defaultValues: {
+      CarerFirstName: "remmy",
+      CarerLastName: "remmy",
+      Email: "remidy@live.co.ukk",
+      ContactNumber: 20,
+      EmergencyContactNumber: 20,
+      FirstChildFirstName: "remmy",
+      FirstChildLastName: "test",
+      FirstChildDOB: dayjs().format("YYYY-MM-DD"),
+      FirstChildYearGroup: "7",
+      FirstChildMedical: "N/A",
+      password: "93MDLuffy!!!",
+      confirmPassword: "93MDLuffy!!!",
+    },
     resolver: yupResolver(schema),
   });
   const navigate = useNavigate();
@@ -150,13 +152,13 @@ export default function useRegistration() {
 
   const onSubmit = async (data) => {
     console.log(data);
-    if (childCount === 1) {
-      data.SecondChildFirstName = "";
-      data.SecondChildLastName = "";
-      data.SecondChildDOB = "";
-      data.SecondChildMedical = "";
-      data.SecondChildYearGroup = "";
-    }
+    // if (childCount === 1) {
+    //   data.SecondChildFirstName = "";
+    //   data.SecondChildLastName = "";
+    //   data.SecondChildDOB = "";
+    //   data.SecondChildMedical = "";
+    //   data.SecondChildYearGroup = "";
+    // }
     const formattedFirstChildDOB = dayjs(data.FirstChildDOB).format(
       "DD/MM/YYYY"
     );
@@ -167,21 +169,21 @@ export default function useRegistration() {
     data.SecondChildDOB = formattedSecondChildDOB;
     data.Permission = permission;
     data.PupilPremium = pupilPremium;
-    await axios.post(`${whichAPI}/register`, data).then((res) => {
-      if (step === totalSteps) {
-        console.log("Final Form Data: ", data);
-        if (res.data.Status === "User registered successfully") {
-          console.log(res, "success");
-          navigate("/login");
-          reset();
-        } else {
-          console.log(res, "err");
-          setError("root", {
-            message: res.data.Error,
-          });
-        }
-      }
-    });
+    // await axios.post(`${whichAPI}/register`, data).then((res) => {
+    //   if (step === totalSteps) {
+    //     console.log("Final Form Data: ", data);
+    //     if (res.data.Status === "User registered successfully") {
+    //       console.log(res, "success");
+    //       navigate("/login");
+    //       reset();
+    //     } else {
+    //       console.log(res, "err");
+    //       setError("root", {
+    //         message: res.data.Error,
+    //       });
+    //     }
+    //   }
+    // });
   };
   return {
     register,

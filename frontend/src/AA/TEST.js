@@ -27,10 +27,11 @@ function TEST() {
 
       // Handle the response properly
       if (response.status === 200) {
+        console.log(response);
         const { clientSecret } = response.data;
         setClientSecret(clientSecret);
         setProductChosen(response.data.product);
-        console.log(response.data.product);
+        // console.log(response.data.product);
       } else {
         console.error("Failed to create payment intent");
       }

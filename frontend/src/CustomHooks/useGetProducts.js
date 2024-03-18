@@ -10,7 +10,7 @@ export const useGetProducts = () => {
       : process.env.REACT_APP_VURL;
 
   useEffect(() => {
-    const fetchUserBookings = async () => {
+    const fetchUserProducts = async () => {
       try {
         const response = await axios.get(`${whichAPI}/products`);
         setProducts(response.data);
@@ -19,8 +19,8 @@ export const useGetProducts = () => {
         console.error("Error fetching products:", error);
       }
     };
-    fetchUserBookings();
+    fetchUserProducts();
   }, []);
 
-  return { products };
+  return { products, setProducts };
 };

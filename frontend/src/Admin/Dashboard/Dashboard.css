@@ -1,0 +1,43 @@
+/* Dashboard.css */
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.user-container {
+  margin-bottom: 50px;
+}
+
+.user-table,
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.user-table th,
+.user-table td,
+.order-table th,
+.order-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+@media screen and (max-width: 1020px) {
+  .user-table,
+  .order-table {
+    width: 100%;
+  }
+
+  .user-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .user-table th,
+  .user-table td,
+  .order-table th,
+  .order-table td {
+    font-size: 14px;
+  }
+}

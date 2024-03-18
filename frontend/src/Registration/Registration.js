@@ -296,15 +296,19 @@ function Registration() {
             <button type="button" onClick={prevStep}>
               Back
             </button>
-            <button type="submit" disabled={isSubmitting}>
+            <button
+              className="primary-cta"
+              type="submit"
+              disabled={isSubmitting}
+            >
               {isSubmitting ? (
-                <p>Submitting...</p>
+                <p>Registering</p>
               ) : isSubmitSuccessful ? (
-                <p>Submitted successfully</p>
+                <p>Registration successful</p>
               ) : (
-                <p>Submit</p>
+                <p>Register</p>
               )}
-            </button>{" "}
+            </button>
             {errors.root && <p>{errors.root.message}</p>}
           </>
         )}

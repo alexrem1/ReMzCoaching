@@ -15,63 +15,71 @@ function StripeTest() {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <h1>Let's test</h1>
-        {products.length > 0 &&
-          productsReadyToConsume.map((product, index) => {
-            return (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  marginBottom: "10px",
-                }}
-                key={product.product_id}
-                id={product.product_id}
-                onClick={() => handleDivClick(product)}
-              >
-                <p>School: {product.product_school}</p>
-                <input
-                  type="hidden"
-                  {...register("product_school")}
-                  value={product.product_school}
-                />
-                <p>Activity: {product.product_activity}</p>
-                <input
-                  type="hidden"
-                  {...register("product_activity")}
-                  value={product.product_activity}
-                />
-                <p>Price: £{product.product_price}</p>
-                <input
-                  type="hidden"
-                  {...register("product_price")}
-                  value={product.product_price}
-                />
-                <p>
-                  Occurence:{" "}
-                  {product.product_activity_duration > 1 ? (
-                    product.product_activity_duration
-                  ) : (
-                    <span>Daily</span>
-                  )}
-                </p>
-                <input
-                  type="hidden"
-                  {...register("product_activity_duration")}
-                  value={product.product_activity_duration}
-                />
-                <p>Duration: {product.product_time}</p>
-                <input
-                  type="hidden"
-                  {...register("product_time")}
-                  value={product.product_time}
-                />
-                <button type="submit">Submit</button>
-              </div>
-            );
-          })}
-      </form>
+      {products.length > 0 && (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <h1>Let's test</h1>
+          {productsReadyToConsume.map((product, index) => (
+            <div
+              key={product.product_id}
+              id={product.product_id}
+              onClick={() => handleDivClick(product)}
+            >
+              <p>School: {product.product_school}</p>
+              <input
+                type="hidden"
+                {...register("product_school")}
+                value={product.product_school}
+              />
+              <p>Activity: {product.product_activity}</p>
+              <input
+                type="hidden"
+                {...register("product_activity")}
+                value={product.product_activity}
+              />
+              <p>Year groups: {product.product_criteria}</p>
+              <input
+                type="hidden"
+                {...register("product_criteria")}
+                value={product.product_criteria}
+              />
+
+              <p>Runs on: {product.product_day}</p>
+              <input
+                type="hidden"
+                {...register("product_day")}
+                value={product.product_day}
+              />
+
+              <p>Price: £{product.product_price}</p>
+              <input
+                type="hidden"
+                {...register("product_price")}
+                value={product.product_price}
+              />
+              <p>
+                Occurence:{" "}
+                {product.product_activity_duration > 1 ? (
+                  <span>{product.product_activity_duration} weeks</span>
+                ) : (
+                  <span>Daily</span>
+                )}
+              </p>
+              <input
+                type="hidden"
+                {...register("product_activity_duration")}
+                value={product.product_activity_duration}
+              />
+              <p>Duration: {product.product_time}</p>
+              <input
+                type="hidden"
+                {...register("product_time")}
+                value={product.product_time}
+              />
+              <button type="submit">Book now</button>
+            </div>
+          ))}
+        </form>
+      )}
       {/* <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
           name="selectedName"

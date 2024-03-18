@@ -82,9 +82,6 @@ function AdminNavbar() {
           <Link to="/admin">
             <p onClick={() => closeHamburger()}>Admin</p>
           </Link>
-          <Link to="/profile">
-            <p onClick={() => closeHamburger()}>profile</p>
-          </Link>
           <Link>
             <p onClick={handleLogout}>Logout</p>
           </Link>

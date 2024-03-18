@@ -1,20 +1,15 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 function SuccessPayment() {
+  const [status, setStatus] = useState(null);
   const payment_intent = new URLSearchParams(window.location.search).get(
     "payment_intent"
   );
-  console.log(payment_intent);
-
-  const status = new URLSearchParams(window.location.search).get(
-    "redirect_status"
-  );
+  // console.log(payment_intent);
 
   const { id } = useParams();
-
-  console.log(id);
 
   const navigate = useNavigate();
 
@@ -25,8 +20,14 @@ function SuccessPayment() {
           ? process.env.REACT_APP_API_URL
           : process.env.REACT_APP_VURL;
       try {
-        await axios.post(`${whichAPI}/orders/${id}`, { payment_intent });
-        navigate("/profile");
+        const response = await axios.post(`${whichAPI}/orders/${id}`, {
+          payment_intent,
+        });
+        setStatus(response.data.paymentIntent.status);
+        setTimeout(() => {
+          navigate("/profile");
+        }, 5000);
+        console.log(response);
       } catch (error) {
         console.log(error);
       }
@@ -34,12 +35,17 @@ function SuccessPayment() {
     isSuccessful();
   }, []);
   return (
-    <div>
+    <>
       {status === "succeeded" && (
-        <>SuccessPayment, you will be redirected shortly...</>
+        <>
+          <p>
+            Your order has been placed, please check your junk for an email from
+            us for more details.
+          </p>
+          <p>You will be redirected to your profile shortly...</p>
+        </>
       )}
-    </div>
+    </>
   );
 }
-
 export default SuccessPayment;
