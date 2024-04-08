@@ -10,21 +10,20 @@ import "dayjs/locale/en-gb";
 export default function useRegistration() {
   const schema = yup.object().shape({
     CarerFirstName: yup.string().required("Your first name is required"),
-    CarerLastName: yup.string().required("Your Last name is required"),
+    CarerLastName: yup.string().required("Your last name is required"),
     Email: yup
       .string()
       .email("Enter a valid email")
-      .required("Your email is required")
+      .required("Required")
       .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
     ContactNumber: yup
-      .number()
-      .integer()
-      .typeError("A valid contact number is required")
+      .string()
+      .length(11, "Enter a valid contact number")
       .required("Your contact number is required"),
     EmergencyContactNumber: yup
-      .number()
-      .integer()
-      .typeError("A valid emergency contact number is required"),
+      .string()
+      .length(11, "Enter a valid emergency contact number")
+      .required("Your emergency contact number is required"),
     password: yup
       .string()
       .required("Password is required")
@@ -34,16 +33,22 @@ export default function useRegistration() {
       ),
     confirmPassword: yup
       .string()
-      .oneOf([yup.ref("password")], "Your passwords do not match."),
+      .oneOf(
+        [yup.ref("password")],
+        "Your passwords do not match, please ensure they match."
+      )
+      .required("Confirm Password is required"),
+    AddressLine1: yup.string().required("Enter your address line 1."),
+    AddressLine2: yup.string(),
+    AddressCityTown: yup.string().required("Enter your city or town."),
+    AddressPostcode: yup.string().required("Enter your postcode."),
     FirstChildFirstName: yup
       .string()
       .required("Your child's first name is required"),
     FirstChildLastName: yup
       .string()
       .required("Your child's second name is required"),
-    FirstChildDOB: yup
-      .string()
-      .required("Your first child's date of birth is required"),
+    FirstChildDOB: yup.string().required("Select their DOB"),
     FirstChildYearGroup: yup
       .string()
       .required("Please enter your child's year group"),
@@ -55,15 +60,13 @@ export default function useRegistration() {
     SecondChildDOB: yup.string(),
     SecondChildYearGroup: yup.string(),
     SecondChildMedical: yup.string(),
-    Permission: yup.bool(),
-    PupilPremium: yup.bool(),
   });
 
   const {
     register,
     handleSubmit,
-    control,
     reset,
+    control,
     setError,
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm({
@@ -71,8 +74,8 @@ export default function useRegistration() {
       CarerFirstName: "remmy",
       CarerLastName: "remmy",
       Email: "remidy@live.co.ukk",
-      ContactNumber: 20,
-      EmergencyContactNumber: 20,
+      ContactNumber: "07534633664",
+      EmergencyContactNumber: "07534633664",
       FirstChildFirstName: "remmy",
       FirstChildLastName: "test",
       FirstChildDOB: dayjs().format("YYYY-MM-DD"),
@@ -80,13 +83,16 @@ export default function useRegistration() {
       FirstChildMedical: "N/A",
       password: "93MDLuffy!!!",
       confirmPassword: "93MDLuffy!!!",
+      AddressCityTown: "london",
+      AddressLine1: "test",
+      AddressLine2: "test",
+      AddressPostcode: "Test",
     },
     resolver: yupResolver(schema),
   });
   const navigate = useNavigate();
 
   const [step, setStep] = useState(1);
-  const totalSteps = 3;
 
   const nextStep = () => {
     setStep((prevStep) => prevStep + 1);
@@ -102,22 +108,9 @@ export default function useRegistration() {
     setChildCount((prevCount) => prevCount + 1);
   };
 
-  const inputRef = useRef();
   const removeChild = () => {
     setChildCount((prevCount) => prevCount - 1);
-
-    // reset({
-    //   SecondChildFirstName: "",
-    //   SecondChildLastName: "",
-    //   SecondChildDOB: "",
-    //   SecondChildMedical: "",
-    //   SecondChildYearGroup: "",
-    // });
-    console.log("reset");
   };
-
-  const [permission, setPermission] = useState(false);
-  const [pupilPremium, setPupilPremium] = useState(false);
 
   useEffect(() => {
     const hasErrors = Object.keys(errors).length > 0;
@@ -133,17 +126,14 @@ export default function useRegistration() {
       ) {
         setStep(1);
       } else if (
-        errors.FirstChildFirstName ||
-        errors.FirstChildLastName ||
-        errors.FirstChildYearGroup ||
-        errors.FirstChildMedical ||
-        errors.FirstChildDOB
+        errors.AddressLine1 ||
+        errors.AddressCityTown ||
+        errors.AddressPostcode
       ) {
-        // If not, set the step to 2
         setStep(2);
       }
     }
-  }, [step, errors, childCount, permission, pupilPremium]);
+  }, [errors, step]);
 
   const whichAPI =
     window.location.hostname === "localhost"
@@ -151,39 +141,33 @@ export default function useRegistration() {
       : process.env.REACT_APP_VURL;
 
   const onSubmit = async (data) => {
+    if (childCount === 1) {
+      data.SecondChildFirstName = "";
+      data.SecondChildLastName = "";
+      data.SecondChildDOB = "";
+      data.SecondChildMedical = "";
+      data.SecondChildYearGroup = "";
+    }
+    data.FirstChildDOB = dayjs(data.FirstChildDOB).format("DD/MM/YYYY");
+    data.SecondChildDOB =
+      data.SecondChildDOB && dayjs(data.SecondChildDOB).format("DD/MM/YYYY");
+
     console.log(data);
-    // if (childCount === 1) {
-    //   data.SecondChildFirstName = "";
-    //   data.SecondChildLastName = "";
-    //   data.SecondChildDOB = "";
-    //   data.SecondChildMedical = "";
-    //   data.SecondChildYearGroup = "";
-    // }
-    const formattedFirstChildDOB = dayjs(data.FirstChildDOB).format(
-      "DD/MM/YYYY"
-    );
-    const formattedSecondChildDOB = data.SecondChildDOB
-      ? dayjs(data.SecondChildDOB).format("DD/MM/YYYY")
-      : null;
-    data.FirstChildDOB = formattedFirstChildDOB;
-    data.SecondChildDOB = formattedSecondChildDOB;
-    data.Permission = permission;
-    data.PupilPremium = pupilPremium;
-    // await axios.post(`${whichAPI}/register`, data).then((res) => {
-    //   if (step === totalSteps) {
-    //     console.log("Final Form Data: ", data);
-    //     if (res.data.Status === "User registered successfully") {
-    //       console.log(res, "success");
-    //       navigate("/login");
-    //       reset();
-    //     } else {
-    //       console.log(res, "err");
-    //       setError("root", {
-    //         message: res.data.Error,
-    //       });
-    //     }
-    //   }
-    // });
+    await axios.post(`${whichAPI}/register`, data).then((res) => {
+      if (step === 3) {
+        console.log("Final Form Data: ", data);
+        if (res.data.Status === "User registered successfully") {
+          console.log(res, "success");
+          navigate("/login");
+          reset();
+        } else {
+          console.log(res, "err");
+          setError("root", {
+            message: res.data.Error,
+          });
+        }
+      }
+    });
   };
   return {
     register,
@@ -199,10 +183,8 @@ export default function useRegistration() {
     childCount,
     addChild,
     removeChild,
-    setPupilPremium,
-    setPermission,
-    permission,
-    pupilPremium,
-    inputRef,
+    schema,
+
+    setStep,
   };
 }

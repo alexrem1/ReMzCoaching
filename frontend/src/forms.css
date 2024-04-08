@@ -1,0 +1,251 @@
+/* Base styles */
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  flex-direction: column;
+  padding: 50px 0;
+}
+
+.form-container label {
+  color: #767676;
+  font-size: var(--text-reg);
+  padding-left: 10px;
+}
+
+.form-container .content {
+  margin: 10px 0;
+}
+
+.form-container .permission,
+.form-container .pupil-premium {
+  display: flex;
+}
+
+.form-container .permission input,
+.form-container .pupil-premium input {
+  width: unset;
+  margin-bottom: 0;
+  padding: 0;
+  border-bottom: unset;
+  background: unset;
+}
+
+.form-container-form {
+  width: 300px;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  box-shadow: 0 0 4px 1px #d8d8d8;
+}
+
+.form-container h1 {
+  margin-bottom: 20px;
+}
+
+.form-container h1,
+.form-container h3 {
+  text-align: center;
+}
+
+.form-container-form input {
+  width: 100%;
+  border: none;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-bottom: 1px solid #000;
+  background: #f9f9f9;
+  font-size: 95%;
+}
+
+.form-container .ant-picker.ant-picker-outlined {
+  border: none;
+  border-bottom: 1px solid #000;
+  border-radius: 0;
+  background: #f9f9f9;
+  padding: 10px;
+  cursor: pointer;
+  display: block;
+  width: max-content;
+}
+
+.form-container .ant-picker.ant-picker-outlined:focus-within {
+  box-shadow: none;
+  outline: 2px solid #000;
+  border-radius: 3px;
+  border: none;
+}
+
+.form-container .ant-picker.ant-picker-outlined .ant-picker-input input {
+  font-size: 95%;
+  margin: 0;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+}
+
+.form-container .error {
+  color: red;
+  margin: 5px 0;
+}
+.form-container-form.error {
+  text-decoration: underline;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.form-container-form.error > p {
+  color: red;
+}
+
+.form-container .links {
+  text-align: center;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-container .links p {
+  color: #000;
+}
+
+.form-container .links a {
+  /* margin-right: 10px; */
+  color: #007bff;
+  text-decoration: none;
+}
+
+.form-container .links a:hover {
+  text-decoration: underline;
+}
+
+.form-container .form-container-form .add-child {
+  margin: 20px 0;
+}
+
+/* Media queries for tablet */
+@media screen and (min-width: 768px) {
+  .form-container {
+    padding: 75px 0;
+  }
+
+  .form-container-form {
+    width: 100%;
+    max-width: 550px;
+  }
+}
+
+/* Media queries for desktop */
+@media screen and (min-width: 1024px) {
+  .form-container {
+    padding: 100px 0;
+  }
+
+  .form-container-form {
+    width: 100%;
+    max-width: 700px;
+  }
+}
+
+.tooltip-trigger {
+  position: relative;
+  cursor: pointer;
+  display: inline-block; /* Ensure the trigger area takes up space */
+  padding: 5px; /* Increase padding to expand trigger area */
+}
+
+.tooltip {
+  display: none;
+  position: absolute;
+  top: calc(100% + 5px); /* Position the tooltip below the trigger */
+  left: 50%; /* Center the tooltip horizontally */
+  transform: translateX(-50%); /* Adjust to center horizontally */
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  z-index: 1;
+}
+.tooltip.active {
+  display: block;
+}
+.tooltip-container {
+  display: flex;
+  align-items: center;
+}
+
+.tooltip-container.date {
+  margin: 15px 0;
+  display: block;
+}
+
+.tooltip-container.date > div {
+  display: flex;
+  align-items: center;
+}
+
+/* products */
+
+.form-container.products .form-container-form {
+  flex-direction: column;
+  display: flex;
+  min-height: 550px;
+  justify-content: space-between;
+}
+
+.form-container.products .content.active,
+.form-container.products .content.active .product-selects {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.form-container.products .content {
+  display: none;
+}
+
+.form-container.products .ant-select.ant-select-outlined {
+  width: max-content;
+}
+
+.form-container.products button {
+  width: max-content;
+}
+
+.form-container.products .product-btns {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* products end  */
+
+/* profile start */
+
+.form-container.profile .content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+/* profile end  */
+
+/* orders start  */
+
+.form-container.orders .content.active {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.form-container.orders .content {
+  display: none;
+}
+
+.form-container.orders .product-btns {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* orders end  */

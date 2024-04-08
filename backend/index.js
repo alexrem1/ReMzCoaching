@@ -20,6 +20,7 @@ app.use(
   })
 );
 app.use(cookieParser());
+
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -27,6 +28,7 @@ const db = mysql.createConnection({
   database: process.env.DB_DB,
 });
 
+// middleware function to check if user is authenticated
 const verifyUser = (req, res, next) => {
   const token = req.cookies.token;
   if (!token) {
@@ -76,7 +78,6 @@ app.get("/", verifyUser, (req, res) => {
     id: req.id,
     email: req.email,
     phone: req.phone,
-    token: "dog",
   });
 });
 
@@ -86,6 +87,19 @@ app.get("/users", verifyRole("admin"), (req, res) => {
   db.query(q, (err, data) => {
     if (err) return res.json({ Error: "Error" });
     return res.json(data);
+  });
+});
+
+//admin can see if they're logged in correctly
+app.get("/admin", verifyRole("admin"), (req, res) => {
+  // Only users with the "admin" role can access this route
+  res.json({
+    message: "Welcome, adminn!",
+    name: req.name,
+    role: req.role,
+    id: req.id,
+    email: req.email,
+    phone: req.phone,
   });
 });
 
@@ -103,8 +117,7 @@ app.get("/users/:id", verifyUser, (req, res) => {
 app.put("/users/:id", verifyUser, (req, res) => {
   const id = req.params.id;
   const q =
-    "UPDATE users SET Email=?, ContactNumber=?, EmergencyContactNumber=?, password=?, FirstChildFirstName=?, FirstChildLastName=?, FirstChildDOB=?, FirstChildYearGroup=?, FirstChildMedical=?, SecondChildFirstName=?, SecondChildLastName=?, SecondChildDOB=?, SecondChildYearGroup=?, SecondChildMedical=?, Permission=?, PupilPremium=? WHERE id=?";
-
+    "UPDATE users SET Email=?, ContactNumber=?, EmergencyContactNumber=?, password=?, AddressLine1=?, AddressLine2=?, AddressCityTown=?, AddressPostcode=?, FirstChildFirstName=?, FirstChildLastName=?, FirstChildDOB=?, FirstChildYearGroup=?, FirstChildMedical=?, SecondChildFirstName=?, SecondChildLastName=?, SecondChildDOB=?, SecondChildYearGroup=?, SecondChildMedical=? WHERE id=?";
   bcrypt.hash(req.body.password.toString(), salt, (err, hash) => {
     if (err) return res.json({ Error: "Error for hashing password" });
 
@@ -113,6 +126,10 @@ app.put("/users/:id", verifyUser, (req, res) => {
       req.body.ContactNumber,
       req.body.EmergencyContactNumber,
       hash,
+      req.body.AddressLine1,
+      req.body.AddressLine2,
+      req.body.AddressCityTown,
+      req.body.AddressPostcode,
       req.body.FirstChildFirstName,
       req.body.FirstChildLastName,
       req.body.FirstChildDOB,
@@ -123,8 +140,6 @@ app.put("/users/:id", verifyUser, (req, res) => {
       req.body.SecondChildDOB,
       req.body.SecondChildYearGroup,
       req.body.SecondChildMedical,
-      req.body.Permission,
-      req.body.PupilPremium,
     ];
 
     db.query(q, [...values, id], (err, data) => {
@@ -200,9 +215,8 @@ app.get("/logout", (req, res) => {
 
 //users can register
 app.post("/register", (req, res) => {
-  console.log(req.body);
   const sql =
-    "INSERT INTO users (`CarerFirstName`, `CarerLastName`, `Email`, `ContactNumber`, `EmergencyContactNumber`, `password`, `FirstChildFirstName`, `FirstChildLastName`, `FirstChildDOB`, `FirstChildYearGroup`, `FirstChildMedical`, `SecondChildFirstName`, `SecondChildLastName`, `SecondChildDOB`, `SecondChildYearGroup`, `SecondChildMedical`, `Permission`,`PupilPremium`, `Role`) VALUES (?)";
+    "INSERT INTO users (`CarerFirstName`, `CarerLastName`, `Email`, `ContactNumber`, `EmergencyContactNumber`, `password`, `AddressLine1`, `AddressLine2`, `AddressCityTown`, `AddressPostcode`, `FirstChildFirstName`, `FirstChildLastName`, `FirstChildDOB`, `FirstChildYearGroup`, `FirstChildMedical`, `SecondChildFirstName`, `SecondChildLastName`, `SecondChildDOB`, `SecondChildYearGroup`, `SecondChildMedical`, `Role`) VALUES (?)";
   bcrypt.hash(req.body.password.toString(), salt, (err, hash) => {
     if (err) return res.json({ Error: "Error for hashing password" });
     const defaultRole = "visitor";
@@ -213,6 +227,10 @@ app.post("/register", (req, res) => {
       req.body.ContactNumber,
       req.body.EmergencyContactNumber,
       hash,
+      req.body.AddressLine1,
+      req.body.AddressLine2,
+      req.body.AddressCityTown,
+      req.body.AddressPostcode,
       req.body.FirstChildFirstName,
       req.body.FirstChildLastName,
       req.body.FirstChildDOB,
@@ -223,8 +241,6 @@ app.post("/register", (req, res) => {
       req.body.SecondChildDOB,
       req.body.SecondChildYearGroup,
       req.body.SecondChildMedical,
-      req.body.Permission,
-      req.body.PupilPremium,
       defaultRole,
     ];
 
@@ -239,21 +255,42 @@ app.post("/register", (req, res) => {
         }
       }
 
+      // Send email notification
+      const emailURL =
+        req.hostname === process.env.DB_HOST
+          ? process.env.LOCAL
+          : process.env.VURL;
+
+      var transporter = nodemailer.createTransport({
+        service: "hotmail",
+        auth: {
+          user: process.env.MY_EMAIL,
+          pass: process.env.MY_PASSWORD,
+        },
+      });
+
+      var mailOptions = {
+        from: process.env.MY_EMAIL,
+        to: req.body.Email,
+        subject: "You've registered with QCSports Coaching!",
+        html: `
+        <p>Welcome to the team!</p>
+        <p>Your account has been created and I look forward to interacting with you.</p>
+        <p>Please login <a href="${emailURL}/login">here</a>.</p>
+        <p>If you have any questions, reply back to this email.</p>
+      `,
+      };
+
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error, "error sending email");
+        } else {
+          console.log("Email sent: " + info.response);
+        }
+      });
+
       res.json({ Status: "User registered successfully" });
     });
-  });
-});
-
-//admin can see if they're logged in correctly
-app.get("/admin", verifyRole("admin"), (req, res) => {
-  // Only users with the "admin" role can access this route
-  res.json({
-    message: "Welcome, adminn!",
-    name: req.name,
-    role: req.role,
-    id: req.id,
-    email: req.email,
-    phone: req.phone,
   });
 });
 
@@ -402,6 +439,10 @@ app.get("/admin-users-info", verifyRole("admin"), (req, res) => {
           product_id: row.product_id,
           isCompleted: row.isCompleted,
           payment_intent: row.payment_intent,
+          created: row.created,
+          order_day: row.order_day,
+          order_finalised: row.order_finalised,
+          order_child: row.order_child,
           product: {
             // Format product details
             product_activity: row.product_activity,
@@ -431,17 +472,21 @@ app.get("/admin-users-info", verifyRole("admin"), (req, res) => {
 });
 
 //delete users orders admin
-app.delete("/admin-users-order/:id", verifyRole("admin"), (req, res) => {
-  const id = req.params.id;
-  // console.log(id, req.params);
+app.delete(
+  "/admin-delete-users-orders/:id",
+  verifyRole("admin"),
+  (req, res) => {
+    const id = req.params.id;
+    // console.log(id, req.params);
 
-  const q = "DELETE FROM orders WHERE order_id =?";
+    const q = "DELETE FROM orders WHERE order_id =?";
 
-  db.query(q, [id], (err, data) => {
-    if (err) return res.json({ Error: "Error" });
-    return res.json(data);
-  });
-});
+    db.query(q, [id], (err, data) => {
+      if (err) return res.json({ Error: "Error" });
+      return res.json(data);
+    });
+  }
+);
 //admin can delete users then their orders
 app.delete(
   "/admin-delete-users-and-orders/:id",
@@ -473,25 +518,67 @@ app.delete(
   }
 );
 
-// show order to user
-app.get("/orders/:id", verifyUser, (req, res) => {
-  const userId = req.id;
+//users can delete users then their orders
+app.delete("/delete-account/:id", verifyUser, (req, res) => {
+  const userId = req.params.id;
 
-  const sql = `
-    SELECT products.*, orders.*
-    FROM products
-    INNER JOIN orders ON products.product_id = orders.product_id
-    WHERE orders.buyer_id = ? AND orders.isCompleted = 1;
-  `;
+  const deleteUserQuery = "DELETE FROM users WHERE id = ?";
+  const deleteBookingsQuery = "DELETE FROM orders WHERE buyer_id = ?";
 
-  db.query(sql, [userId], (err, data) => {
+  db.query(deleteBookingsQuery, [userId], (err, bookingData) => {
     if (err) {
-      console.error("Error fetching products:", err);
-      return res.status(500).json({ error: "Error fetching products" });
+      console.error("Error deleting user's bookings:", err);
+      return res.json({ error: "Error deleting user's bookings" });
     }
-    return res.json(data);
+
+    // After deleting the bookings, proceed to delete the user
+    db.query(deleteUserQuery, [userId], (err, userData) => {
+      if (err) {
+        console.error("Error deleting user:", err);
+        return res.json({ error: "Error deleting user" });
+      }
+
+      // Send email notification
+      const emailURL =
+        req.hostname === process.env.DB_HOST
+          ? process.env.LOCAL
+          : process.env.VURL;
+
+      var transporter = nodemailer.createTransport({
+        service: "hotmail",
+        auth: {
+          user: process.env.MY_EMAIL,
+          pass: process.env.MY_PASSWORD,
+        },
+      });
+
+      var mailOptions = {
+        from: process.env.MY_EMAIL,
+        to: req.email,
+        subject: "Account deleted",
+        html: `
+        <p>It's sad to see you leave!</p>
+        <p>Your data with us has been deleted rom the database.</a>.</p>
+        <p>If you have any feedback, reply back to this email.</p>
+      `,
+      };
+
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error, "error sending email");
+        } else {
+          console.log("Email sent: " + info.response);
+        }
+      });
+
+      return res.json({
+        message: "User and associated bookings deleted successfully",
+      });
+    });
   });
 });
+
+//non users
 
 //forgot password
 app.post("/forgot-password", (req, res) => {
@@ -536,17 +623,9 @@ app.post("/forgot-password", (req, res) => {
       from: process.env.MY_EMAIL,
       to: userEMail,
       subject: "Reset your password",
-      html:
-        `<h1>Reset your password</h1>
-      <br/>
+      html: `<p>Here's the link to reset your password: <a href="${emailURL}/reset-password/${userID}/${token}">Reset password</a></p>
       <p>Please note this password reset expires in 30 minutes</p>
-      <br/>
-      ` +
-        emailURL +
-        `/reset-password/` +
-        userID +
-        `/` +
-        token,
+      `,
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
@@ -565,20 +644,72 @@ app.post("/forgot-password", (req, res) => {
 app.post("/reset-password/:id/:token", (req, res) => {
   const id = req.params.id;
   const token = req.params.token;
+
   jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
     if (err) {
       return res.status(401).json({ Error: "Invalid token" });
     } else {
       bcrypt.hash(req.body.password.toString(), salt, (err, hash) => {
-        if (err) return res.json({ Error: "Error for hashing password" });
-        const q = "UPDATE users SET password =? WHERE id =?";
-        const values = [hash, id];
-        db.query(q, values, (err, data) => {
+        if (err) return res.json({ Error: "Error hashing password" });
+
+        const qSelectUser = "SELECT * FROM users WHERE id = ?";
+        const qUpdatePassword = "UPDATE users SET password = ? WHERE id = ?";
+
+        db.query(qSelectUser, [id], (err, userData) => {
           if (err) {
-            console.error("Error resetting password:", err);
-            return res.status(500).json({ error: "Error resetting password" });
+            console.error("Error fetching user data:", err);
+            return res.status(500).json({ error: "Error fetching user data" });
           }
-          return res.json({ Status: "Successfully reset password" });
+
+          if (userData.length === 0) {
+            return res.status(404).json({ Error: "User not found" });
+          }
+
+          const userEmail = userData[0].Email;
+
+          db.query(qUpdatePassword, [hash, id], (err, data) => {
+            if (err) {
+              console.error("Error resetting password:", err);
+              return res
+                .status(500)
+                .json({ error: "Error resetting password" });
+            }
+
+            // Send email notification
+            const emailURL =
+              req.hostname === process.env.DB_HOST
+                ? process.env.LOCAL
+                : process.env.VURL;
+
+            var transporter = nodemailer.createTransport({
+              service: "hotmail",
+              auth: {
+                user: process.env.MY_EMAIL,
+                pass: process.env.MY_PASSWORD,
+              },
+            });
+
+            var mailOptions = {
+              from: process.env.MY_EMAIL,
+              to: userEmail,
+              subject: "Password reset successfully",
+              html: `
+                <p>Your password has been successfully reset.</p>
+                <p>Please login <a href="${emailURL}/login">here</a>.</p>
+                <p>If you have any questions, reply back to this email.</p>
+              `,
+            };
+
+            transporter.sendMail(mailOptions, function (error, info) {
+              if (error) {
+                console.log(error, "error sending email");
+              } else {
+                console.log("Email sent: " + info.response);
+              }
+            });
+
+            return res.json({ Status: "Successfully reset password" });
+          });
         });
       });
     }
@@ -613,8 +744,8 @@ app.post("/reset-password/:id/:token", (req, res) => {
 //   }
 // });
 import stripePackage from "stripe";
-const stripe = stripePackage(process.env.STRIPE_SECRET_KEY);
 
+const stripe = stripePackage(process.env.STRIPE_SECRET_KEY);
 const calculateOrderAmount = async (product_id) => {
   try {
     // Fetch product details from the database based on the product ID
@@ -650,6 +781,10 @@ const calculateOrderAmount = async (product_id) => {
 // create payment intent when user tries to pay the order
 app.post("/create-payment-intent/:id", verifyUser, async (req, res) => {
   const { id } = req.params;
+  const userId = req.id;
+  const { child, date, formattedDateTime } = req.body;
+
+  console.log(req.body);
 
   try {
     // Calculate the order amount
@@ -692,17 +827,39 @@ app.post("/create-payment-intent/:id", verifyUser, async (req, res) => {
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency: "gbp",
-      description: productRows[0].product_description,
+      description: productRows[0].product_description + " for " + child,
       customer: customer.id,
     });
 
-    // Prepare the response object with additional product details
-    const response = {
-      clientSecret: paymentIntent.client_secret,
-      product: productRows[0], // Assuming only one product with the provided id
-    };
+    const sql = `INSERT INTO orders (buyer_id, product_id, isCompleted, payment_intent, created, order_day, order_child) VALUES (?,?,?, ?, ?, ?, ?)`;
 
-    res.send(response);
+    const isCompleted = 0;
+
+    const values = [
+      userId,
+      id,
+      isCompleted,
+      paymentIntent.id,
+      formattedDateTime,
+      date,
+      child,
+    ];
+
+    db.query(sql, values, (err, result) => {
+      if (err) {
+        console.error("Error creating order:", err);
+        return res.status(500).json({ error: "Error creating order" });
+      }
+
+      // Prepare the response object with additional product details
+      const response = {
+        clientSecret: paymentIntent.client_secret,
+        product: productRows[0], // Assuming only one product with the provided id
+        // child: child, // Assuming only one child with the provided id
+      };
+
+      res.send(response);
+    });
   } catch (error) {
     console.error("Error creating payment intent:", error);
     res.status(500).send("Internal Server Error");
@@ -710,74 +867,133 @@ app.post("/create-payment-intent/:id", verifyUser, async (req, res) => {
 });
 
 //complete order and send email
-app.post("/orders/:id", verifyUser, async (req, res) => {
+app.put("/orders/:id", verifyUser, async (req, res) => {
   const { id } = req.params;
-  const { payment_intent } = req.body;
+  const { payment_intent, formattedDateTime } = req.body;
   const userId = req.id; // Assuming you have access to the authenticated user's ID
 
-  const paymentIntent = await stripe.paymentIntents.retrieve(payment_intent);
+  // Check if the payment intent already exists for the authenticated user
+  const checkPaymentIntentQuery =
+    "SELECT * FROM orders WHERE payment_intent =? AND buyer_id = ? AND isCompleted = 1";
 
-  if (paymentIntent.status === "succeeded") {
-    const isCompleted = 1;
-    const values = [id, userId, isCompleted, payment_intent];
-
-    // Insert data into the orders table
-    const insertOrderQuery =
-      "INSERT INTO orders (product_id, buyer_id, isCompleted, payment_intent) VALUES (?, ?, ?, ?)";
-
-    db.query(insertOrderQuery, values, (err, result) => {
+  db.query(
+    checkPaymentIntentQuery,
+    [payment_intent, userId],
+    async (err, rows) => {
       if (err) {
-        console.error("Error inserting order:", err);
-        return res.status(500).json({ error: "Error inserting order" });
+        console.error("Error checking payment intent:", err);
+        return res.status(500).json({ error: "Error checking payment intent" });
       }
-      if (result.affectedRows === 0) {
-        // No matching order found
-        return res.status(404).json({ error: "Order not found" });
+
+      if (rows.length > 0) {
+        // Payment intent already exists for the user
+        return res.status(400).json({
+          error:
+            "You have already made this transaction and will be redirected to your account shortly...",
+        });
       }
-      // Order updated successfully
-      return res
-        .status(200)
-        .json({ message: "Order placed successfully", paymentIntent });
-    });
 
-    //send email
+      // Payment intent doesn't exist or isn't completed, proceed with order placement
+      try {
+        const paymentIntent = await stripe.paymentIntents.retrieve(
+          payment_intent
+        );
 
-    var transporter = nodemailer.createTransport({
-      service: "hotmail",
-      auth: {
-        user: process.env.MY_EMAIL,
-        pass: process.env.MY_PASSWORD,
-      },
-    });
+        if (paymentIntent.status !== "succeeded") {
+          // Payment intent not succeeded, handle accordingly
+          return res
+            .status(400)
+            .json({ error: "Payment intent not succeeded" });
+        }
 
-    const emailURL =
-      req.hostname === process.env.DB_HOST
-        ? process.env.LOCAL
-        : process.env.VURL;
+        // Insert data into the orders table
+        const updateOrder =
+          "UPDATE orders SET isCompleted = ?, order_finalised = ? WHERE payment_intent = ?";
 
-    var mailOptions = {
-      from: process.env.MY_EMAIL,
-      to: req.email,
-      subject: "Order placed successfully",
-      html: `<h3>You have successfully placed your order</h3>
+        const isCompleted = 1;
+        const values = [isCompleted, formattedDateTime, payment_intent];
+
+        db.query(updateOrder, values, async (err, result) => {
+          if (err) {
+            console.error("Error inserting order:", err);
+            return res.status(500).json({ error: "Error inserting order" });
+          }
+          if (result.affectedRows === 0) {
+            // No matching order found
+            return res.status(404).json({ error: "Order not found" });
+          }
+
+          // Order placed successfully now send email
+
+          //send email
+
+          var transporter = nodemailer.createTransport({
+            service: "hotmail",
+            auth: {
+              user: process.env.MY_EMAIL,
+              pass: process.env.MY_PASSWORD,
+            },
+          });
+
+          const emailURL =
+            req.hostname === process.env.DB_HOST
+              ? process.env.LOCAL
+              : process.env.VURL;
+
+          var mailOptions = {
+            from: process.env.MY_EMAIL,
+            to: req.email,
+            subject: "Order placed successfully",
+            html: `
       <p>You have purchased: ${paymentIntent.description}</p>
       <p>I'll be in touch with you soon to confirm your order on the number provided: ${paymentIntent.shipping.phone}</p>
       <p>Check your order <a href="${emailURL}/profile">here</a>.</p>
       <p>If you have any questions, reply back to this email.</p>
       `,
-    };
+          };
 
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error, "err sending email");
-      } else {
+          transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+              console.log(error, "err sending email");
+            } else {
+              return res
+                .status(200)
+                .json({ Status: "Sent Order email to user" });
+            }
+          });
+
+          return res
+            .status(200)
+            .json({ message: "Order placed successfully", paymentIntent });
+        });
+      } catch (error) {
+        console.error("Error retrieving payment intent:", error);
         return res
-          .status(200)
-          .json({ Status: "Successfully requested password reset" });
+          .status(500)
+          .json({ error: "Error retrieving payment intent" });
       }
-    });
-    console.log("done");
-  }
+    }
+  );
+});
+
+// show order to user
+app.get("/orders/:id", verifyUser, (req, res) => {
+  const userId = req.id;
+
+  const sql = `
+    SELECT products.*, orders.*
+    FROM products
+    INNER JOIN orders ON products.product_id = orders.product_id
+    WHERE orders.buyer_id = ? AND orders.isCompleted = 1;
+  `;
+
+  db.query(sql, [userId], (err, data) => {
+    if (err) {
+      console.error("Error fetching products:", err);
+      return res.status(500).json({ error: "Error fetching products" });
+    }
+    return res.json(data);
+  });
 });
 
 app.listen(process.env.PORT, () => {

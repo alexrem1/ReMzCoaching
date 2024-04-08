@@ -80,7 +80,7 @@ function AdminNavbar() {
             <p onClick={() => closeHamburger()}>Home</p>
           </Link>
           <Link to="/admin">
-            <p onClick={() => closeHamburger()}>Admin</p>
+            <p onClick={() => closeHamburger()}>Dashboard</p>
           </Link>
           <Link>
             <p onClick={handleLogout}>Logout</p>

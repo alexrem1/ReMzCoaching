@@ -24,7 +24,7 @@ export default function useAdminDashboard() {
 
   const deleteOrder = async (orderId) => {
     await axios
-      .delete(`${whichAPI}/admin-users-and-orders/${orderId}`)
+      .delete(`${whichAPI}/admin-delete-users-orders/${orderId}`)
       .then((res) => {
         setUserData((prevUserOrders) => {
           // Update the userOrders state by filtering out the deleted order

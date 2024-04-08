@@ -9,16 +9,16 @@ function UserOrders() {
       {/* Buttons to toggle between showing details and bookings */}
       <div className="toggle-buttons">
         <button
-          className={showDetails ? "primary-cta" : ""}
+          className={showDetails ? "primary-cta active" : "primary-cta"}
           onClick={() => setShowDetails(true)}
         >
-          Dashboard
+          <p>Dashboard</p>
         </button>
         <button
-          className={!showDetails ? "primary-cta" : ""}
+          className={!showDetails ? "primary-cta active" : "primary-cta"}
           onClick={() => setShowDetails(false)}
         >
-          Products
+          <p>Services</p>
         </button>
       </div>
       {showDetails ? <Dashboard /> : <AdminProducts />}

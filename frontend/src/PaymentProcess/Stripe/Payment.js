@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
@@ -7,10 +7,15 @@ import axios from "axios";
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBKEY);
 
-function TEST() {
+function Payment() {
   const { id } = useParams();
   const [clientSecret, setClientSecret] = useState("");
   const [productChosen, setProductChosen] = useState("");
+
+  const location = useLocation();
+  const { state, date, formattedDateTime } = location;
+
+  // console.log(state, date, formattedDateTime);
 
   useEffect(() => {
     const whichAPI =
@@ -20,14 +25,17 @@ function TEST() {
 
     const makeRequest = async () => {
       const response = await axios.post(
-        `${whichAPI}/create-payment-intent/${id}`
+        `${whichAPI}/create-payment-intent/${id}`,
+        state,
+        date,
+        formattedDateTime
       );
 
-      console.log(response);
+      // console.log(response);
 
       // Handle the response properly
       if (response.status === 200) {
-        console.log(response);
+        // console.log(response);
         const { clientSecret } = response.data;
         setClientSecret(clientSecret);
         setProductChosen(response.data.product);
@@ -60,33 +68,38 @@ function TEST() {
   };
 
   return (
-    <div>
+    <div className="form-container payment">
       {productChosen && (
-        <>
+        <div className="form-container-form">
           <h1>Payment</h1>
-          <h2>Product Details:</h2>
-          <p>School: {productChosen.product_school}</p>
-          <p>Activity: {productChosen.product_activity}</p>
-          <p>
-            Price: £
-            {productChosen.product_price *
-              productChosen.product_activity_duration}
-          </p>
-          <p>Occurrence: {productChosen.product_activity_duration}</p>
-          <p>Duration: {productChosen.product_time}</p>
+          <div className="content">
+            <h2>Product Details:</h2>
+            <p>School: {productChosen.product_school}</p>
+            <p>
+              Activity: {productChosen.product_activity} for{" "}
+              {state.child && state.child}
+            </p>
+            <p>
+              Price: £
+              {productChosen.product_price *
+                productChosen.product_activity_duration}
+            </p>
+            <p>Occurrence: {productChosen.product_activity_duration}</p>
+            <p>Duration: {productChosen.product_time}</p>
 
-          {/* Payment form */}
-          {clientSecret && (
-            <>
-              <Elements options={options} stripe={stripePromise}>
-                <CheckoutForm clientSecret={clientSecret} />
-              </Elements>
-            </>
-          )}
-        </>
+            {/* Payment form */}
+            {clientSecret && (
+              <>
+                <Elements options={options} stripe={stripePromise}>
+                  <CheckoutForm clientSecret={clientSecret} />
+                </Elements>
+              </>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );
 }
 
-export default TEST;
+export default Payment;

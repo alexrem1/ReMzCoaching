@@ -1,0 +1,46 @@
+.form-container.services .content.active {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.form-container.services .content {
+  display: none;
+}
+
+.form-container.services .product-btns {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+.add-product {
+  display: flex;
+  justify-content: center;
+}
+.add-product .primary-cta {
+  width: unset;
+}
+.form-container.services {
+  padding: 25px 0;
+}
+
+.form-container.services p {
+  /* background-color: var(--clr-cta); */
+  width: 100%;
+  text-align: center;
+  border: 1px solid #d8d8d8;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.form-container.services .other-button {
+  padding: 8px 8px;
+}
+
+@media (min-width: 768px) {
+  .form-container.services .other-button {
+    padding: 8px 16px;
+  }
+}

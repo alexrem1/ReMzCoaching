@@ -13,10 +13,11 @@ function Dashboard() {
           <table className="user-table">
             <thead>
               <tr>
-                <th colSpan="8">User Information</th>
+                <th colSpan="8">Carer Information</th>
               </tr>
               <tr>
                 <th>Name</th>
+                <th>Address</th>
                 <th>Email</th>
                 <th>Contact</th>
                 <th>Emergency Contact</th>
@@ -26,6 +27,14 @@ function Dashboard() {
             <tbody>
               <tr>
                 <td>{`${user.CarerFirstName} ${user.CarerLastName}`}</td>
+                <td>
+                  <div>
+                    <p>{user.AddressLine1},</p>
+                    {user.AddressLine2 && <p>{user.AddressLine2},</p>}
+                    <p>{user.AddressCityTown},</p>
+                    <p>{user.AddressPostcode}</p>
+                  </div>
+                </td>
                 <td>{user.Email}</td>
                 <td>{user.ContactNumber}</td>
                 <td>{user.EmergencyContactNumber}</td>
@@ -39,7 +48,12 @@ function Dashboard() {
                   </p>
                 </td>
                 <td>
-                  <button onClick={() => deleteUser(user.id)}>Delete</button>
+                  <button
+                    className="other-button"
+                    onClick={() => deleteUser(user.id)}
+                  >
+                    <p>Delete account</p>
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -54,12 +68,13 @@ function Dashboard() {
                 <tr>
                   <th>School</th>
                   <th>Activity</th>
+                  <th>Which day</th>
                   <th>Year group</th>
                   <th>Runs on</th>
                   <th>Price paid</th>
                   <th>How long for</th>
                   <th>Time</th>
-                  <th>Action</th>
+                  <th>Purchased on</th>
                 </tr>
               )}
             </thead>
@@ -69,10 +84,19 @@ function Dashboard() {
                   {order.isCompleted === 1 && order.buyer_id ? (
                     <>
                       <td>{order.product.product_school}</td>
-                      <td>{order.product.product_activity}</td>
+                      <td>
+                        {order.product.product_activity} for {order.order_child}
+                      </td>
+                      {order.order_day ? (
+                        <td>{order.order_day}</td>
+                      ) : (
+                        <td>Next term</td>
+                      )}
+
                       <td>{order.product.product_criteria}</td>
                       <td>{order.product.product_day}</td>
                       <td>
+                        £
                         {order.product.product_price *
                           order.product.product_activity_duration}
                       </td>
@@ -82,9 +106,13 @@ function Dashboard() {
                           : `${order.product.product_activity_duration} day`}
                       </td>
                       <td>{order.product.product_time}</td>
+                      <td>{order.order_finalised}</td>
                       <td>
-                        <button onClick={() => deleteOrder(order.order_id)}>
-                          Delete
+                        <button
+                          className="other-button"
+                          onClick={() => deleteOrder(order.order_id)}
+                        >
+                          <p>Delete order</p>
                         </button>
                       </td>
                     </>

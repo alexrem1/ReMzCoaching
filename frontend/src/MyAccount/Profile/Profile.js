@@ -11,16 +11,16 @@ function Profile() {
       {/* Buttons to toggle between showing details and bookings */}
       <div className="toggle-buttons">
         <button
-          className={showDetails ? "primary-cta" : ""}
+          className={showDetails ? "primary-cta active" : "primary-cta"}
           onClick={() => setShowDetails(true)}
         >
-          My Details
+          <p>My Details</p>
         </button>
         <button
-          className={!showDetails ? "primary-cta" : ""}
+          className={!showDetails ? "primary-cta active" : "primary-cta"}
           onClick={() => setShowDetails(false)}
         >
-          My Orders
+          <p>My Orders</p>
         </button>
       </div>
 

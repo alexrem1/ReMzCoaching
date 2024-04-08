@@ -114,7 +114,11 @@ export default function CheckoutForm() {
             id="payment-element"
             options={paymentElementOptions}
           />
-          <button disabled={isLoading || !stripe || !elements} id="submit">
+          <button
+            disabled={isLoading || !stripe || !elements}
+            className={"primary-cta"}
+            id="submit"
+          >
             <span id="button-text">
               {isLoading ? (
                 <div className="spinner" id="spinner">

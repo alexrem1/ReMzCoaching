@@ -1,80 +1,119 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
 import { useGetProducts } from "../../CustomHooks/useGetProducts";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import "./adminProducts.css";
+import useUtilities from "../../CustomHooks/useUtilities";
+import useAdminProducts from "../../CustomHooks/useAdminProducts";
 
 function AdminProducts() {
   const { products, setProducts } = useGetProducts();
 
   const productsReadyToConsume = products.length > 0 && products;
 
-  console.log(productsReadyToConsume);
+  const {
+    setActiveProductIndex,
+    activeProductIndex,
+    handleNextProduct,
+    handlePrevProduct,
+    navigate,
+  } = useUtilities(products);
 
-  function deleteProduct(productId) {
-    const whichAPI =
-      window.location.hostname === "localhost"
-        ? process.env.REACT_APP_API_URL
-        : process.env.REACT_APP_VURL;
-    try {
-      axios.delete(`${whichAPI}/admin-delete-product/${productId}`);
+  const { deleteProduct } = useAdminProducts(
+    products,
+    setProducts,
+    setActiveProductIndex
+  );
 
-      const updatedProducts = products.filter(
-        (product) => product.product_id !== productId
-      );
-      setProducts(updatedProducts);
-    } catch (error) {
-      console.log("Error deleting product:", error);
-    }
-  }
   return (
     <>
-      <button className="primary-cta">
-        <Link to={"/admin/product-add"}>Add Product</Link>
-      </button>
-      {products.length > 0 && (
-        <>
-          <h3>Products</h3>
-          {productsReadyToConsume.map((product, index) => (
-            <div key={product.product_id} id={product.product_id}>
-              <p>School: {product.product_school}</p>
-              <input type="hidden" value={product.product_school} />
-              <p>Activity: {product.product_activity}</p>
-              <input type="hidden" value={product.product_activity} />
-              <p>Year groups: {product.product_criteria}</p>
-              <input type="hidden" value={product.product_criteria} />
-
-              <p>Runs on: {product.product_day}</p>
-              <input type="hidden" value={product.product_day} />
-
-              <p>Price: £{product.product_price}</p>
-              <input type="hidden" value={product.product_price} />
-              <p>
-                Occurence:{" "}
-                {product.product_activity_duration > 1 ? (
-                  <span>{product.product_activity_duration} weeks</span>
-                ) : (
-                  <span>Daily</span>
-                )}
-              </p>
-              <input type="hidden" value={product.product_activity_duration} />
-              <p>Duration: {product.product_time}</p>
-              <input type="hidden" value={product.product_time} />
-              <button className="primary-cta">
-                <Link to={`/admin/product-update/${product.product_id}`}>
-                  Update Product
-                </Link>
-              </button>
-              <button
-                onClick={() => {
-                  deleteProduct(product.product_id);
-                }}
+      <div className="add-product">
+        <button
+          className="primary-cta"
+          onClick={() => {
+            navigate("/admin/product-add");
+          }}
+        >
+          Add a new service
+        </button>
+      </div>
+      <div className="form-container services">
+        {products.length > 0 && (
+          <div className="form-container-form">
+            {productsReadyToConsume.map((product, index) => (
+              <div
+                key={product.product_id}
+                id={product.product_id}
+                className={`content ${
+                  index === activeProductIndex ? "active" : ""
+                }`}
               >
-                Delete Product
-              </button>
-            </div>
-          ))}
-        </>
-      )}
+                <div className="product-btns">
+                  <button
+                    className="other-button"
+                    onClick={() => {
+                      navigate(`/admin/product-update/${product.product_id}`);
+                    }}
+                  >
+                    Update service
+                  </button>
+                  <h3>{index + 1}</h3>
+                  <button
+                    className="other-button"
+                    onClick={() => {
+                      deleteProduct(product.product_id);
+                    }}
+                  >
+                    Delete service
+                  </button>
+                </div>
+                <p>School: {product.product_school}</p>
+                <input type="hidden" value={product.product_school} />
+                <p>Activity: {product.product_activity}</p>
+                <input type="hidden" value={product.product_activity} />
+                <p>Year groups: {product.product_criteria}</p>
+                <input type="hidden" value={product.product_criteria} />
+
+                <p>Runs on: {product.product_day}</p>
+                <input type="hidden" value={product.product_day} />
+
+                <p>Price: £{product.product_price}</p>
+                <input type="hidden" value={product.product_price} />
+                <p>
+                  Occurence:{" "}
+                  {product.product_activity_duration > 1 ? (
+                    <span>{product.product_activity_duration} weeks</span>
+                  ) : (
+                    <span>Daily</span>
+                  )}
+                </p>
+                <input
+                  type="hidden"
+                  value={product.product_activity_duration}
+                />
+                <p>Duration: {product.product_time}</p>
+                <input type="hidden" value={product.product_time} />
+
+                <div className="product-btns">
+                  <button
+                    className="other-button"
+                    type="button"
+                    onClick={handlePrevProduct}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    className="other-button"
+                    type="button"
+                    onClick={handleNextProduct}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </>
   );
 }

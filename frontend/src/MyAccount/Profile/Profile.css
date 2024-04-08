@@ -1,0 +1,14 @@
+.toggle-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.toggle-buttons p {
+  font-size: 100%;
+}
+
+.toggle-buttons button {
+  width: max-content;
+}

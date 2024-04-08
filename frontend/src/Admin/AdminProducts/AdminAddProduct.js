@@ -1,133 +1,285 @@
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import ButtonLoad from "../../Components/ButtonLoad";
+import { AlertCircle, ArrowLeftCircle } from "lucide-react";
+import useUtilities from "../../CustomHooks/useUtilities";
+import useAdminProducts from "../../CustomHooks/useAdminProducts";
 
 function AdminAddProduct() {
-  const navigate = useNavigate();
-
-  const schema = yup.object().shape({
-    product_school: yup.string().required("School is required"),
-    product_activity: yup.string().required("Activity is required"),
-    product_criteria: yup.string().required("Criteria is required"),
-    product_day: yup.string().required("Day is required"),
-    product_price: yup
-      .number()
-      .integer()
-      .typeError("A valid price is required")
-      .required("Price is required"),
-    product_activity_duration: yup
-      .number()
-      .integer()
-      .typeError("Occurence is required")
-      .required("Occurence is required"),
-    product_time: yup.string().required("Duration is required"),
-    product_description: yup.string().required("Description is required"),
-  });
+  const {
+    handleMouseEnter,
+    handleMouseLeave,
+    handleTooltipToggle,
+    isTooltipVisible,
+    navigate,
+  } = useUtilities();
 
   const {
+    addProductSubmit,
     register,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+    errors,
+    isSubmitting,
+    isSubmitSuccessful,
+  } = useAdminProducts();
 
-  function onSubmit(data) {
-    console.log(data);
-
-    const whichAPI =
-      window.location.hostname === "localhost"
-        ? process.env.REACT_APP_API_URL
-        : process.env.REACT_APP_VURL;
-
-    try {
-      axios.post(`${whichAPI}/admin-add-product`, data).then((res) => {
-        console.log(res);
-        navigate("/admin");
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <h3>Add a new product</h3>
-        <>
-          <p>School: </p>
-          <input
-            {...register("product_school")}
-            placeholder="Enter School Name"
-          />
-          {errors.product_school && <p>{errors.product_school.message}</p>}
-          <p>Activity: </p>
-          <input
-            {...register("product_activity")}
-            placeholder="What activity is it?"
-          />
-          {errors.product_activity && <p>{errors.product_activity.message}</p>}
-          <p>Description: </p>
-          <input
-            {...register("product_description")}
-            placeholder="Describe the activity"
-          />
-          {errors.product_description && (
-            <p>{errors.product_description.message}</p>
-          )}
-          <p>Year groups: </p>
-          <input
-            {...register("product_criteria")}
-            placeholder="E.g Reception - Year 6"
-          />
-          {errors.product_criteria && <p>{errors.product_criteria.message}</p>}
-
-          <p>Runs on:</p>
-          <input
-            {...register("product_day")}
-            placeholder="E.g Monday or Tuesday - Friday"
-          />
-          {errors.product_day && <p>{errors.product_day.message}</p>}
-
-          <p>Price: </p>
-          <input {...register("product_price")} placeholder="E.g 25" />
-          {errors.product_price && <p>{errors.product_price.message}</p>}
-          <p>Occurence: </p>
-          <input
-            {...register("product_activity_duration")}
-            placeholder="1 for 1 day, 10 for 10 weeks"
-          />
-          {errors.product_activity_duration && (
-            <p>{errors.product_activity_duration.message}</p>
-          )}
-          <p>Duration: </p>
-          <input
-            {...register("product_time")}
-            placeholder="E.g 2:30 PM - 5 PM"
-          />
-          {errors.product_time && <p>{errors.product_time.message}</p>}
-          <br />
-          <button className="primary-cta" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <p>Adding product...</p>
-            ) : isSubmitSuccessful ? (
-              <p>Product added</p>
-            ) : (
-              <p>Add a new product</p>
-            )}
-          </button>
-        </>
-      </form>
-
-      <button
-        className="primary-cta"
-        onClick={() => {
-          navigate("/admin");
-        }}
+    <div className="form-container">
+      <form
+        onSubmit={handleSubmit(addProductSubmit)}
+        className="form-container-form"
       >
-        Back
-      </button>
+        <h3>Add a new product</h3>
+        <div className="content">
+          {errors.product_school ? (
+            <>
+              <div className="tooltip-container">
+                <span className="error">*</span>
+                <label>School</label>
+                <AlertCircle
+                  className="tooltip-trigger"
+                  aria-label="More info"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={handleTooltipToggle}
+                />
+              </div>
+              <input
+                type="text"
+                {...register("product_school")}
+                placeholder={
+                  isTooltipVisible && errors.product_school
+                    ? errors.product_school.message
+                    : null
+                }
+              />
+            </>
+          ) : (
+            <>
+              <label>School</label>
+              <input type="text" {...register("product_school")} />
+            </>
+          )}
+          {errors.product_activity ? (
+            <>
+              <div className="tooltip-container">
+                <span className="error">*</span>
+                <label>Activity</label>
+                <AlertCircle
+                  className="tooltip-trigger"
+                  aria-label="More info"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={handleTooltipToggle}
+                />
+              </div>
+              <input
+                type="text"
+                {...register("product_activity")}
+                placeholder={
+                  isTooltipVisible && errors.product_activity
+                    ? errors.product_activity.message
+                    : null
+                }
+              />
+            </>
+          ) : (
+            <>
+              <label>Activity</label>
+              <input type="text" {...register("product_activity")} />
+            </>
+          )}
+          {errors.product_description ? (
+            <>
+              <div className="tooltip-container">
+                <span className="error">*</span>
+                <label>Description</label>
+                <AlertCircle
+                  className="tooltip-trigger"
+                  aria-label="More info"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={handleTooltipToggle}
+                />
+              </div>
+              <input
+                type="text"
+                {...register("product_description")}
+                placeholder={
+                  isTooltipVisible && errors.product_description
+                    ? errors.product_description.message
+                    : null
+                }
+              />
+            </>
+          ) : (
+            <>
+              <label>Description</label>
+              <input type="text" {...register("product_description")} />
+            </>
+          )}
+          {errors.product_criteria ? (
+            <>
+              <div className="tooltip-container">
+                <span className="error">*</span>
+                <label>Year group</label>
+                <AlertCircle
+                  className="tooltip-trigger"
+                  aria-label="More info"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={handleTooltipToggle}
+                />
+              </div>
+              <input
+                type="text"
+                {...register("product_criteria")}
+                placeholder={
+                  isTooltipVisible && errors.product_criteria
+                    ? errors.product_criteria.message
+                    : null
+                }
+              />
+            </>
+          ) : (
+            <>
+              <label>Year group</label>
+              <input type="text" {...register("product_criteria")} />
+            </>
+          )}
+          {errors.product_day ? (
+            <>
+              <div className="tooltip-container">
+                <span className="error">*</span>
+                <label>Runs on</label>
+                <AlertCircle
+                  className="tooltip-trigger"
+                  aria-label="More info"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={handleTooltipToggle}
+                />
+              </div>
+              <input
+                type="text"
+                {...register("product_day")}
+                placeholder={
+                  isTooltipVisible && errors.product_day
+                    ? errors.product_day.message
+                    : null
+                }
+              />
+            </>
+          ) : (
+            <>
+              <label>Activity</label>
+              <input type="text" {...register("product_day")} />
+            </>
+          )}
+          {errors.product_price ? (
+            <>
+              <div className="tooltip-container">
+                <span className="error">*</span>
+                <label>Price</label>
+                <AlertCircle
+                  className="tooltip-trigger"
+                  aria-label="More info"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={handleTooltipToggle}
+                />
+              </div>
+              <input
+                type="text"
+                {...register("product_price")}
+                placeholder={
+                  isTooltipVisible && errors.product_price
+                    ? errors.product_price.message
+                    : null
+                }
+              />
+            </>
+          ) : (
+            <>
+              <label>Price</label>
+              <input type="text" {...register("product_price")} />
+            </>
+          )}
+          {errors.product_activity_duration ? (
+            <>
+              <div className="tooltip-container">
+                <span className="error">*</span>
+                <label>Occurence</label>
+                <AlertCircle
+                  className="tooltip-trigger"
+                  aria-label="More info"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={handleTooltipToggle}
+                />
+              </div>
+              <input
+                type="text"
+                {...register("product_activity_duration")}
+                placeholder={
+                  isTooltipVisible && errors.product_activity_duration
+                    ? errors.product_activity_duration.message
+                    : null
+                }
+              />
+            </>
+          ) : (
+            <>
+              <label>Occurence</label>
+              <input type="text" {...register("product_activity_duration")} />
+            </>
+          )}
+          {errors.product_time ? (
+            <>
+              <div className="tooltip-container">
+                <span className="error">*</span>
+                <label>Duration</label>
+                <AlertCircle
+                  className="tooltip-trigger"
+                  aria-label="More info"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={handleTooltipToggle}
+                />
+              </div>
+              <input
+                type="text"
+                {...register("product_time")}
+                placeholder={
+                  isTooltipVisible && errors.product_time
+                    ? errors.product_time.message
+                    : null
+                }
+              />
+            </>
+          ) : (
+            <>
+              <label>Duration</label>
+              <input type="text" {...register("product_time")} />
+            </>
+          )}
+          <ButtonLoad
+            isSubmittingText="Adding product..."
+            isSubmitSuccessfulText="Product added successfully"
+            defaultText="Add product"
+            isSubmitting={isSubmitting}
+            isSubmitSuccessful={isSubmitSuccessful}
+            disabled={isSubmitting}
+          />
+          <button
+            className="secondary-cta"
+            onClick={() => {
+              navigate("/admin");
+            }}
+          >
+            <ArrowLeftCircle />
+            <p>Back</p>
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

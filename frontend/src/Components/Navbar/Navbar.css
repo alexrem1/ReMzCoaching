@@ -5,6 +5,7 @@ nav.navbar {
   /* background-color: red; */
   grid-template-rows: 70px;
   grid-auto-rows: minmax(50px, max-content);
+  border-bottom: 1px solid black;
 }
 
 nav.navbar > * {
@@ -16,8 +17,8 @@ nav > .hamburger-menu {
   grid-template-columns: [full-width-start] 10% [breakout-start] 20% [content-start] 1fr [content-end] 20% [breakout-end] 10% [full-width-end];
   /* grid-template-rows: 70px; */
   grid-column: full-width;
-  background-color: orange;
   transition: background-color 500ms ease-in-out;
+  border-top: 1px solid #000;
 }
 
 nav .logo-img {
@@ -48,6 +49,7 @@ nav .hamburger-menu > * {
   justify-self: center;
   cursor: pointer;
   text-decoration: none;
+  color: #000;
 }
 
 nav .hamburger-menu > * > p:hover {

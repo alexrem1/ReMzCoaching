@@ -4,49 +4,85 @@ import useGetProfile from "../CustomHooks/useGetProfile";
 const { Option } = Select;
 
 // Extract Select component
-const SelectChild = ({ field, errors }) => {
+const SelectChild = ({ field, errors, prod }) => {
   const { userDetails } = useGetProfile();
-
-  // console.log(userDetails.length, userDetails);
-
   let userChildDetails = [];
 
+  // console.log(userDetails.length, userDetails);
   if (userDetails.length > 0) {
-    if (
-      userDetails[0].FirstChildFirstName &&
-      !userDetails[0].SecondChildFirstName
-    ) {
-      userChildDetails = [
-        {
-          label: userDetails[0].FirstChildFirstName,
-          value: userDetails[0].FirstChildFirstName,
-        },
-      ];
-    } else if (
-      userDetails[0].FirstChildFirstName &&
-      userDetails[0].SecondChildFirstName
-    ) {
-      userChildDetails = [
-        {
-          label: userDetails[0].FirstChildFirstName,
-          value: userDetails[0].FirstChildFirstName,
-        },
-        {
-          label: userDetails[0].SecondChildFirstName,
-          value: userDetails[0].SecondChildFirstName,
-        },
-
-        {
-          label:
-            userDetails[0].FirstChildFirstName +
-            " and " +
-            userDetails[0].SecondChildFirstName,
-          value:
-            userDetails[0].FirstChildFirstName +
-            " and " +
-            userDetails[0].SecondChildFirstName,
-        },
-      ];
+    if (prod.product_activity_duration < 10) {
+      if (prod.product_activity.includes("Discounted")) {
+        if (
+          userDetails[0].FirstChildFirstName &&
+          userDetails[0].SecondChildFirstName
+        ) {
+          userChildDetails = [
+            {
+              label:
+                userDetails[0].FirstChildFirstName +
+                " and " +
+                userDetails[0].SecondChildFirstName,
+              value:
+                userDetails[0].FirstChildFirstName +
+                " and " +
+                userDetails[0].SecondChildFirstName,
+            },
+          ];
+        }
+      } else if (!prod.product_activity.includes("Discounted")) {
+        if (
+          userDetails[0].FirstChildFirstName &&
+          !userDetails[0].SecondChildFirstName
+        ) {
+          userChildDetails = [
+            {
+              label: userDetails[0].FirstChildFirstName,
+              value: userDetails[0].FirstChildFirstName,
+            },
+          ];
+        } else if (
+          userDetails[0].FirstChildFirstName &&
+          userDetails[0].SecondChildFirstName
+        ) {
+          userChildDetails = [
+            {
+              label: userDetails[0].FirstChildFirstName,
+              value: userDetails[0].FirstChildFirstName,
+            },
+            {
+              label: userDetails[0].SecondChildFirstName,
+              value: userDetails[0].SecondChildFirstName,
+            },
+          ];
+        }
+      }
+    }
+    if (prod.product_activity_duration >= 10) {
+      if (
+        userDetails[0].FirstChildFirstName &&
+        !userDetails[0].SecondChildFirstName
+      ) {
+        userChildDetails = [
+          {
+            label: userDetails[0].FirstChildFirstName,
+            value: userDetails[0].FirstChildFirstName,
+          },
+        ];
+      } else if (
+        userDetails[0].FirstChildFirstName &&
+        userDetails[0].SecondChildFirstName
+      ) {
+        userChildDetails = [
+          {
+            label: userDetails[0].FirstChildFirstName,
+            value: userDetails[0].FirstChildFirstName,
+          },
+          {
+            label: userDetails[0].SecondChildFirstName,
+            value: userDetails[0].SecondChildFirstName,
+          },
+        ];
+      }
     }
   }
 
@@ -70,23 +106,6 @@ const SelectChild = ({ field, errors }) => {
       {errors.selectedName && (
         <p style={{ color: "red" }}>{errors.selectedName.message}</p>
       )}
-
-      <>
-        {userDetails.length > 0 && (
-          <>
-            {field.value === userDetails[0].FirstChildFirstName && (
-              <p>{userDetails[0].FirstChildFirstName}</p>
-            )}
-            {userDetails[0].SecondChildFirstName &&
-              field.value === userDetails[0].SecondChildFirstName && (
-                <p>{userDetails[0].SecondChildFirstName}</p>
-              )}
-
-            {userDetails[0].SecondChildFirstName &&
-              field.value.includes(" and ") && <p>2 children = discount</p>}
-          </>
-        )}
-      </>
     </>
   );
 };
