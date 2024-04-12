@@ -1,28 +1,23 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import useLogout from "../CustomHooks/useLogout";
-import logo from "../Images/apple-touch-icon.png";
+import logo from "../Icons/ReMzCoachingLogo.png";
+import { X } from "lucide-react";
 
-function AdminNavbar() {
-  const [showText, setShowText] = useState(false);
-
-  function closeHamburger() {
-    setShowText(false);
-  }
-
-  const { handleLogout } = useLogout();
-
+function AdminNavbar({
+  closeHamburger,
+  windowWidth,
+  setShowText,
+  showText,
+  handleLogout,
+}) {
   return (
     <nav className="navbar">
-      <Link to="/" onClick={() => closeHamburger()}>
+      <Link className="logo" to="/">
         <img className="logo-img" src={logo} alt="" />
       </Link>
-      {!showText ? (
+      {windowWidth <= 767.5 && !showText ? (
         <svg
           className="hamburger"
-          onClick={() => {
-            setShowText(!showText);
-          }}
+          onClick={() => setShowText(!showText)}
           viewBox="0 0 24 24"
           style={{
             fill: "none",
@@ -32,7 +27,7 @@ function AdminNavbar() {
           <path
             d="M4 18L20 18"
             style={{
-              stroke: "#000000",
+              stroke: "var(--clr-cta)",
               strokeWidth: "2",
               strokeLinecap: "round",
             }}
@@ -40,7 +35,7 @@ function AdminNavbar() {
           <path
             d="M4 12L20 12"
             style={{
-              stroke: "#000000",
+              stroke: "var(--clr-cta)",
               strokeWidth: "2",
               strokeLinecap: "round",
             }}
@@ -48,39 +43,30 @@ function AdminNavbar() {
           <path
             d="M4 6L20 6"
             style={{
-              stroke: "#000000",
+              stroke: "var(--clr-cta)",
               strokeWidth: "2",
               strokeLinecap: "round",
             }}
           />
         </svg>
+      ) : windowWidth <= 767.5 && showText ? (
+        <>
+          <X className="hamburger" onClick={() => setShowText(!showText)} />
+          <div className="overlay" onClick={closeHamburger}>
+            <div className="hamburger-menu">
+              <Link to="/admin">
+                <p>Dashboard</p>
+              </Link>
+              <Link>
+                <p onClick={handleLogout}>Logout</p>
+              </Link>
+            </div>
+          </div>
+        </>
       ) : (
-        <svg
-          className="hamburger"
-          onClick={() => {
-            setShowText(!showText);
-          }}
-          xmlns="http://www.w3.org/2000/svg"
-          version="1.1"
-          id="Capa_1"
-          viewBox="0 0 26 26"
-        >
-          <g>
-            <path
-              style={{ fill: "#030104" }}
-              d="M21.125,0H4.875C2.182,0,0,2.182,0,4.875v16.25C0,23.818,2.182,26,4.875,26h16.25   C23.818,26,26,23.818,26,21.125V4.875C26,2.182,23.818,0,21.125,0z M18.78,17.394l-1.388,1.387c-0.254,0.255-0.67,0.255-0.924,0   L13,15.313L9.533,18.78c-0.255,0.255-0.67,0.255-0.925-0.002L7.22,17.394c-0.253-0.256-0.253-0.669,0-0.926l3.468-3.467   L7.221,9.534c-0.254-0.256-0.254-0.672,0-0.925l1.388-1.388c0.255-0.257,0.671-0.257,0.925,0L13,10.689l3.468-3.468   c0.255-0.257,0.671-0.257,0.924,0l1.388,1.386c0.254,0.255,0.254,0.671,0.001,0.927l-3.468,3.467l3.468,3.467   C19.033,16.725,19.033,17.138,18.78,17.394z"
-            />
-          </g>
-        </svg>
-      )}
-
-      {showText && (
         <div className="hamburger-menu">
-          <Link to="/">
-            <p onClick={() => closeHamburger()}>Home</p>
-          </Link>
           <Link to="/admin">
-            <p onClick={() => closeHamburger()}>Dashboard</p>
+            <p>Dashboard</p>
           </Link>
           <Link>
             <p onClick={handleLogout}>Logout</p>

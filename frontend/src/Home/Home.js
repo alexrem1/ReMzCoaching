@@ -1,9 +1,8 @@
 import "./Home.css";
-import car1 from "../Images/Landing/1.jpg";
-import car2 from "../Images/Landing/2.jpg";
-import car3 from "../Images/Landing/3.jpg";
-import car4 from "../Images/Landing/4.jpg";
-import car5 from "../Images/Landing/5.jpg";
+import car1 from "../Images/Landing/pexels-alexander-nadrilyanski-3684122.jpg";
+import car2 from "../Images/Landing/pexels-lukas-296302.jpg";
+import car3 from "../Images/Landing/pexels-mica-asato-772491.jpg";
+import car4 from "../Images/Landing/pexels-tima-miroshnichenko-6078300.jpg";
 import ImageSliderComponent from "./ImageSliderComponent";
 
 function Home() {
@@ -12,7 +11,6 @@ function Home() {
     { url: car2, alt: "image two" },
     { url: car3, atl: "image three" },
     { url: car4, alt: "image four" },
-    { url: car5, alt: "image five" },
   ];
   return (
     <div className="section">
