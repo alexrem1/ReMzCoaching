@@ -1,0 +1,88 @@
+.footer {
+  padding-top: 60px;
+  background-color: var(--clr-cta);
+  padding: 60px;
+}
+
+.footer svg {
+  height: 15px;
+  width: 15px;
+}
+
+.footer .contact,
+.footer .links {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 70px;
+  align-items: center;
+}
+
+.footer .contact .mail,
+.footer .contact .phone,
+.footer .contact .calendar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.footer .links > * {
+  color: #fff;
+  cursor: pointer;
+}
+
+.footer .contact .mail,
+.footer .contact .phone,
+.footer .contact .calendar {
+  color: #fff;
+}
+
+.footer .contact .mail:hover,
+.footer .contact .phone:hover,
+.footer .contact .calendar:hover,
+.footer .contact .mail:active,
+.footer .contact .phone:active,
+.footer .contact .calendar:active,
+.footer .links > *:hover,
+.footer .links > *:active,
+.footer .social > *:hover,
+.footer .social > *:active {
+  color: #000;
+  font-weight: var(--fw-700);
+  border-bottom: 2px solid #000;
+}
+
+.footer .img-container {
+  display: flex;
+  justify-content: center;
+  margin: 25px;
+}
+
+.footer .img-container img {
+  height: 75px;
+  width: 75px;
+  cursor: pointer;
+}
+
+.footer .social {
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-evenly;
+  border-top: 1px solid #fff;
+  padding-top: 20px;
+}
+
+@media (min-width: 768px) {
+  .footer .contact-links {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 70px;
+  }
+
+  .footer .contact,
+  .footer .links {
+    margin-bottom: unset;
+  }
+}

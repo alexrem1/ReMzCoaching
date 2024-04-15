@@ -6,9 +6,13 @@ import padlock from "../Images/AboutMe/padlock.jpg";
 import rainOrShine from "../Images/AboutMe/OMHWL20.jpg";
 import kidsPlayingFootball from "../Images/AboutMe/kids-playing-football-supervised-by-football-trainer.jpg";
 import useUtilities from "../CustomHooks/useUtilities";
+import { useIsAuthenticated } from "../Context/AuthContext";
 
 const AboutMe = () => {
   const { navigate } = useUtilities();
+
+  const { auth } = useIsAuthenticated();
+
   return (
     <div className="about-container">
       <div className="hero-section">
@@ -127,14 +131,36 @@ const AboutMe = () => {
         </div>
       </div>
 
-      <div className="statement-section">
-        <div className="hero-title">
-          <p>Join today! </p>
-        </div>
-      </div>
-      <div className="reasons-section">
-        <div className="reasons-content">
-          <div className="reasons-list">
+      {auth ? (
+        <>
+          <div className="statement-section">
+            <div className="hero-title">
+              <p>Make a booking today! </p>
+            </div>
+          </div>
+          <div className="reasons-section sign-up">
+            <div className="reasons-content">
+              <div className="reasons-list">
+                {/* <div className="list-title">
+              <h3>Sign up in 3 easy steps</h3>
+            </div> */}
+                <div className="hero-text">
+                  <p>
+                    Give your child the best possible start to their footballing
+                    journey that will change their lives with us at ReMz
+                    Coaching.
+                  </p>
+                </div>
+                <button
+                  className="primary-cta"
+                  onClick={() => {
+                    navigate("/products");
+                  }}
+                >
+                  Book now
+                </button>
+              </div>
+              {/* <div className="reasons-list">
             <div className="list-title">
               <h3>Have a look at our services we provide</h3>
             </div>
@@ -148,31 +174,58 @@ const AboutMe = () => {
                 rich in creativity and imagination.
               </p>
             </div>
+          </div> */}
+            </div>
           </div>
-          <div className="reasons-list">
+        </>
+      ) : (
+        <>
+          <div className="statement-section">
+            <div className="hero-title">
+              <p>Join today! </p>
+            </div>
+          </div>
+          <div className="reasons-section sign-up">
+            <div className="reasons-content">
+              <div className="reasons-list">
+                {/* <div className="list-title">
+              <h3>Sign up in 3 easy steps</h3>
+            </div> */}
+                <div className="hero-text">
+                  <p>
+                    Sign up to view what services we offer, purchase our
+                    services, view purchases made and make amendements to your
+                    profile.
+                  </p>
+                </div>
+                <button
+                  className="primary-cta"
+                  onClick={() => {
+                    navigate("/register");
+                  }}
+                >
+                  Sign up
+                </button>
+              </div>
+              {/* <div className="reasons-list">
             <div className="list-title">
-              <h3>Safe & secure at all times</h3>
+              <h3>Have a look at our services we provide</h3>
             </div>
             <div className="hero-text">
-              <button
-                className="primary-cta"
-                onClick={() => {
-                  navigate("/register");
-                }}
-              >
-                Register
-              </button>
               <p>
-                At ReMz Coaching, all our team members undergo a rigorous
-                training program to guarantee that your children are in safe
-                hands at all times. Prior to working with any children, every
-                coach is required to possess a valid DBS check, ensuring the
-                utmost safety and security standards.
+                Our academy managers frequently hold FA Level 3 qualifications,
+                while our younger coaches commonly possess Level 1 and 2
+                certifications. Drawing from extensive playing experiences at
+                high levels, our coaches undergo rigorous examinations
+                administered by ReMz Coaching, fostering a coaching environment
+                rich in creativity and imagination.
               </p>
             </div>
+          </div> */}
+            </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };

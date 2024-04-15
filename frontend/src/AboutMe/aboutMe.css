@@ -58,7 +58,7 @@
   font-size: 125%;
   max-width: 458px;
   margin: 0 auto;
-
+  padding: 100px 10px;
   text-align: center;
 }
 
@@ -115,13 +115,15 @@
   box-shadow: 0 20px 60px rgb(2 2 30/9%);
   border-radius: 6px;
   padding: 45px 25px;
-  line-height: 28px;
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 .reasons-section .reasons-content .reasons-list:nth-child(1) .list-img > img {
   border-radius: 4px;
+}
+.reasons-section .reasons-content .reasons-list .list-title {
+  text-align: center;
 }
 
 .reasons-section .reasons-content .reasons-list .hero-text {
@@ -227,6 +229,14 @@
   .reasons-section {
     top: -100px;
     position: relative;
+  }
+
+  .reasons-section.sign-up {
+    background-color: unset;
+  }
+
+  .reasons-section.sign-up .reasons-content .reasons-list {
+    height: max-content;
   }
   .reasons-section .reasons-content {
     flex-direction: row;

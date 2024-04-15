@@ -22,6 +22,7 @@ import AdminUpdateProduct from "./Admin/AdminProducts/AdminUpdateProduct";
 import AdminAddProduct from "./Admin/AdminProducts/AdminAddProduct";
 import Products from "./Bookings/Products";
 import AboutMe from "./AboutMe/AboutMe";
+import Footer from "./Footer/Footer";
 
 function App() {
   const { auth, loading, role, userID } = useIsAuthenticated();
@@ -189,6 +190,7 @@ function App() {
           element={<p>this doesn't exist - build a 401 page</p>}
         />
       </Routes>
+      <Footer />
     </Router>
   );
 }

@@ -103,12 +103,15 @@ button.primary-cta {
   text-transform: uppercase;
 }
 
-button.primary-cta.active {
+button.primary-cta.active,
+button.primary-cta:hover,
+button.primary-cta:active {
   background-color: var(--clr-cta);
   color: white;
 }
 
-button.primary-cta.active:hover {
+button.primary-cta.active:hover,
+button.primary-cta.active:active {
   background-color: var(--clr-cta);
   color: white;
 }
@@ -142,7 +145,8 @@ button.secondary-cta {
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
-.other-button:hover {
+.other-button:hover,
+.other-button:active {
   background-color: #f2f2f2;
   color: #333333;
   border-color: #aaaaaa;
