@@ -85,7 +85,7 @@ function UserDetails() {
                   navigate(`/profile/update/${details.id}`);
                 }}
               >
-                Update Details
+                <p>Update Details</p>
               </button>
             </div>
             <button

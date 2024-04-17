@@ -43,3 +43,49 @@
 .section .calling p:nth-child(2) {
   grid-area: 2 / content;
 }
+
+/* landing  */
+.landing-container {
+  background-image: url("../Images/Landing/landing.jpg"); /* Replace 'path/to/your/image.jpg' with the actual path to your image */
+  background-size: cover;
+  background-position: center;
+  height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+}
+
+.headline {
+  font-size: 300%;
+  font-weight: var(--fw-700);
+  margin-bottom: 20px;
+}
+
+.quote {
+  font-size: 150%;
+  font-style: italic;
+}
+
+.author {
+  font-size: 100%;
+  font-weight: bold;
+}
+
+/* content container  */
+.content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+@media (min-width: 768px) {
+  .content-container .reasons-section {
+    background: unset;
+    top: -100px;
+  }
+}

@@ -1,36 +1,174 @@
 import "./Home.css";
-import car1 from "../Images/Landing/pexels-alexander-nadrilyanski-3684122.jpg";
-import car2 from "../Images/Landing/pexels-lukas-296302.jpg";
-import car3 from "../Images/Landing/pexels-mica-asato-772491.jpg";
-import car4 from "../Images/Landing/pexels-tima-miroshnichenko-6078300.jpg";
 import ImageSliderComponent from "./ImageSliderComponent";
+import Reviews from "./Reviews";
+import useUtilities from "../CustomHooks/useUtilities";
+import { useIsAuthenticated } from "../Context/AuthContext";
+import personalized from "../Images/Landing/28462458_7398348.jpg";
+import top from "../Images/Landing/10289157_4374013.jpg";
+import family from "../Images/Landing/family-43873_1280.png";
 
 function Home() {
-  const images = [
-    { url: car1, alt: "image one" },
-    { url: car2, alt: "image two" },
-    { url: car3, atl: "image three" },
-    { url: car4, alt: "image four" },
-  ];
+  const { navigate } = useUtilities();
+  const { auth } = useIsAuthenticated();
+
   return (
-    <div className="section">
-      <h1>Join the fun!</h1>
-      <div className="img-slider">
-        <ImageSliderComponent imageURLs={images} />
+    <>
+      {/* <div className="section">
+        <h1>Join the fun!</h1>
+        <div className="img-slider">
+          <ImageSliderComponent />
+        </div>
+        <div className="calling">
+          <p> Why not become a member and benefit from its advantages?</p>
+          <p>
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maxime,
+          </p>
+        </div>
+      </div> */}
+      <div className="landing-container">
+        <div>
+          <h1 className="headline">Empowering Future Stars</h1>
+          <p className="quote">
+            "Success is not just about winning; it's about the journey, the
+            growth, and the passion."
+          </p>
+          <p className="author">- ReMz Coaching</p>
+        </div>
       </div>
-      <div className="calling">
-        <p> Why not become a member and benefit from its advantages?</p>
-        <p>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maxime, ad.
-          Quas, eligendi non aspernatur suscipit labore qui ab harum, similique
-          corrupti quis, placeat error molestias minima provident illo culpa?
-          Facilis? Ipsa necessitatibus explicabo minima neque! Molestiae eius
-          ipsam ea nobis repudiandae! Excepturi, explicabo laudantium
-          repudiandae odit ex quasi illo nemo expedita beatae amet consequuntur
-          quia esse ea rem, cum hic?
-        </p>
+      <div className="content-container">
+        <div className="reasons-section">
+          <div className="reasons-content">
+            <div className="reasons-list">
+              <div className="list-img">
+                <img src={personalized} alt="" />
+              </div>
+              <div className="list-title">
+                <h3>Personalised coaching for every child</h3>
+              </div>
+              <div className="hero-text">
+                <p>
+                  New to the game? Welcome aboard. Aspiring for greatness? Join
+                  our ranks. Wherever your child stands on their athletic path,
+                  our tailored coaching ensures they reach their full potential.
+                </p>
+              </div>
+            </div>
+            <div className="reasons-list">
+              <div className="list-img">
+                <img src={top} alt="" />
+              </div>
+              <div className="list-title">
+                <h3>Expert coaches and quality facilities</h3>
+              </div>
+              <div className="hero-text">
+                <p>
+                  We employ top-tier professional football coaches and utilize
+                  premium facilities, often offering both indoor and outdoor
+                  options. This ensures your child can enjoy playing football in
+                  a nurturing and secure environment.
+                </p>
+              </div>
+            </div>
+            <div className="reasons-list">
+              <div className="list-img">
+                <img src={family} alt="" />
+              </div>
+              <div className="list-title">
+                <h3>2 years of happy parents</h3>
+              </div>
+              <div className="hero-text">
+                <p>
+                  We're committed to delivering outstanding value and
+                  accessibility. With training available at 2 convenient venues
+                  across England, our packed sessions ensure top-notch football
+                  training that's both accessible and worthwhile.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="statement-section">
+          <div className="hero-title">
+            <p>Reviews</p>
+          </div>
+        </div>
+        <Reviews />
+        {auth ? (
+          <>
+            <div className="statement-section">
+              <div className="hero-title">
+                <p>Make a booking today! </p>
+              </div>
+            </div>
+            <div className="reasons-section sign-up">
+              <div className="reasons-content">
+                <div className="reasons-list">
+                  <div className="hero-text">
+                    <p>
+                      Give your child the best possible start to their
+                      footballing journey that will change their lives with us
+                      at ReMz Coaching.
+                    </p>
+                  </div>
+                  <button
+                    className="primary-cta"
+                    onClick={() => {
+                      navigate("/products");
+                    }}
+                  >
+                    Book now
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="statement-section">
+              <div className="hero-title">
+                <p>Join today! </p>
+              </div>
+            </div>
+            <div className="reasons-section sign-up">
+              <div className="reasons-content">
+                <div className="reasons-list">
+                  <div className="hero-text">
+                    <p>
+                      Sign up to view what services we offer, purchase our
+                      services, view purchases made and make amendements to your
+                      profile.
+                    </p>
+                  </div>
+                  <button
+                    className="primary-cta"
+                    onClick={() => {
+                      navigate("/register");
+                    }}
+                  >
+                    Sign up
+                  </button>
+                </div>
+                {/* <div className="reasons-list">
+            <div className="list-title">
+              <h3>Have a look at our services we provide</h3>
+            </div>
+            <div className="hero-text">
+              <p>
+                Our academy managers frequently hold FA Level 3 qualifications,
+                while our younger coaches commonly possess Level 1 and 2
+                certifications. Drawing from extensive playing experiences at
+                high levels, our coaches undergo rigorous examinations
+                administered by ReMz Coaching, fostering a coaching environment
+                rich in creativity and imagination.
+              </p>
+            </div>
+          </div> */}
+              </div>
+            </div>
+          </>
+        )}
       </div>
-    </div>
+    </>
   );
 }
 

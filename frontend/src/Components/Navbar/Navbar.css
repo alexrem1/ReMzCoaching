@@ -88,7 +88,7 @@ nav.navbar .overlay .hamburger-menu > a {
   }
 
   nav.navbar {
-    grid-template-columns: [ full-width-start] 20% [ breakout-start] 10% [ content-start] 10% [ content-end] 10% [ breakout-end] 1fr [ full-width-end];
+    grid-template-columns: [ full-width-start] 20% [ breakout-start] 10% [ content-start] 0% [ content-end] 0% [ breakout-end] 1fr [ full-width-end];
 
     grid-auto-rows: unset;
     align-items: center;
@@ -102,21 +102,8 @@ nav.navbar .overlay .hamburger-menu > a {
     justify-content: space-evenly;
     align-items: center;
   }
-}
 
-@media (min-width: 1024px) {
-  nav.navbar .hamburger-menu > * {
-    font-size: 125%;
-  }
-  nav .logo-img {
-    width: 50px;
-    height: 50px;
-  }
-  nav a.logo {
-    width: 50px;
-    height: 50px;
-  }
-  nav.navbar .hamburger-menu > a:nth-child(6) {
+  nav.navbar .hamburger-menu > :last-child {
     border: 1px solid var(--clr-cta);
     border-radius: 6px;
     padding: 10px;
@@ -124,8 +111,19 @@ nav.navbar .overlay .hamburger-menu > a {
     color: #fff;
     font-weight: var(--fw-700);
   }
-  nav.navbar .hamburger-menu > a:nth-child(6):hover {
+  nav.navbar .hamburger-menu > :last-child:hover {
     color: var(--clr-cta);
     background-color: #fff;
+  }
+}
+
+@media (min-width: 1024px) {
+  nav .logo-img {
+    width: 50px;
+    height: 50px;
+  }
+  nav a.logo {
+    width: 50px;
+    height: 50px;
   }
 }

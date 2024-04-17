@@ -42,7 +42,7 @@ export default function useAdminDashboard() {
   const deleteUser = async (userId) => {
     try {
       // First, delete the user
-      await axios.delete(`${whichAPI}/admin-delete-users-orders/${userId}`);
+      await axios.delete(`${whichAPI}/admin-delete-users-and-orders/${userId}`);
 
       // Then, filter out the deleted user from userData and also remove their orders
       setUserData((prevUserData) => {

@@ -41,6 +41,13 @@ export default function Footer() {
         <div className="links">
           <p
             onClick={() => {
+              navigate("/");
+            }}
+          >
+            Home
+          </p>
+          <p
+            onClick={() => {
               navigate("/products");
             }}
           >
@@ -52,13 +59,6 @@ export default function Footer() {
             }}
           >
             About us
-          </p>
-          <p
-            onClick={() => {
-              navigate("/contact-us");
-            }}
-          >
-            Contact us
           </p>
         </div>
       </div>

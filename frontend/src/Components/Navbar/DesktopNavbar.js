@@ -12,7 +12,14 @@ export default function DesktopNavbar({ handleLogout, auth }) {
       <Link to="/about-us">
         <p>About Us</p>
       </Link>
-      <Link to="/contact-us">
+      <Link
+        onClick={() => {
+          window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: "smooth",
+          });
+        }}
+      >
         <p>Contact Us</p>
       </Link>
       {auth ? (

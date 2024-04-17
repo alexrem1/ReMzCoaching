@@ -15,37 +15,33 @@ function Login() {
 
   return (
     <div className="form-container">
-      <div>
-        <form
-          className="form-container-form"
-          onSubmit={handleSubmit(onSubmit)}
-          ref={inputRef}
-        >
-          <h1>Login</h1>
-          <input type="text" placeholder="Email" {...register("Email")} />
-          {errors.Email && <p className="error">{errors.Email.message}</p>}
+      <form
+        className="form-container-form"
+        onSubmit={handleSubmit(onSubmit)}
+        ref={inputRef}
+      >
+        <h1>Login</h1>
+        <input type="text" placeholder="Email" {...register("Email")} />
+        {errors.Email && <p className="error">{errors.Email.message}</p>}
 
-          <input
-            type="password"
-            placeholder="Password"
-            {...register("password")}
-          />
-          {errors.password && (
-            <p className="error">{errors.password.message}</p>
-          )}
+        <input
+          type="password"
+          placeholder="Password"
+          {...register("password")}
+        />
+        {errors.password && <p className="error">{errors.password.message}</p>}
 
-          <ButtonLoad
-            isSubmittingText="Logging in..."
-            isSubmitSuccessfulText="Logged in successfully"
-            defaultText="Login"
-            isSubmitting={isSubmitting}
-            isSubmitSuccessful={isSubmitSuccessful}
-            disabled={isSubmitting}
-          />
+        <ButtonLoad
+          isSubmittingText="Logging in..."
+          isSubmitSuccessfulText="Logged in successfully"
+          defaultText="Login"
+          isSubmitting={isSubmitting}
+          isSubmitSuccessful={isSubmitSuccessful}
+          disabled={isSubmitting}
+        />
 
-          {errors.root && <p className="error">{errors.root.message}</p>}
-        </form>
-      </div>
+        {errors.root && <p className="error">{errors.root.message}</p>}
+      </form>
       <div className="links">
         <p>
           <Link to="/forgot-password">Forgot password?</Link>

@@ -4,6 +4,9 @@
   width: 100%;
   overflow-x: auto;
 }
+.user-order-info {
+  margin-bottom: 50px;
+}
 
 .user-container {
   margin-bottom: 50px;

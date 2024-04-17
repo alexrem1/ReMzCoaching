@@ -487,6 +487,7 @@ app.delete(
     });
   }
 );
+
 //admin can delete users then their orders
 app.delete(
   "/admin-delete-users-and-orders/:id",
@@ -833,7 +834,7 @@ app.post("/create-payment-intent/:id", verifyUser, async (req, res) => {
 
     const sql = `INSERT INTO orders (buyer_id, product_id, isCompleted, payment_intent, created, order_day, order_child) VALUES (?,?,?, ?, ?, ?, ?)`;
 
-    const isCompleted = 0;
+    const isCompleted = null;
 
     const values = [
       userId,

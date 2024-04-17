@@ -91,7 +91,6 @@ export default function CheckoutForm() {
     <>
       {stripe && elements && (
         <form id="payment-form" onSubmit={handleSubmit}>
-          <h3>Address</h3>
           <AddressElement
             options={{
               mode: "shipping",

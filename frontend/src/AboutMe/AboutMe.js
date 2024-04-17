@@ -1,8 +1,8 @@
 import React from "react";
 import "./aboutMe.css"; // Import CSS for styling
 import founder from "../Images/AboutMe/Screenshot 2024-04-11 175552.png";
-import list1 from "../Images/AboutMe/list-1.jpg";
-import padlock from "../Images/AboutMe/padlock.jpg";
+import list1 from "../Images/AboutMe/15635365_5637961.jpg";
+import padlock from "../Images/AboutMe/2606153_5633.jpg";
 import rainOrShine from "../Images/AboutMe/OMHWL20.jpg";
 import kidsPlayingFootball from "../Images/AboutMe/kids-playing-football-supervised-by-football-trainer.jpg";
 import useUtilities from "../CustomHooks/useUtilities";
@@ -42,6 +42,14 @@ const AboutMe = () => {
           they enjoy every step of the process. At ReMz Coaching, we are
           committed to empowering young athletes and fostering a lifelong love
           for the beautiful game.
+        </p>
+        <p className="hero-text two">
+          In partnership with two local schools, we extend our reach and impact
+          within the community, providing tailored football programs that
+          complement academic learning and promote physical activity. Through
+          these partnerships, we aim to instill values of teamwork, discipline,
+          and resilience while cultivating a passion for football among
+          students.
         </p>
       </div>
       <div className="statement-section">

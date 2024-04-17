@@ -15,7 +15,7 @@ function Payment() {
   const location = useLocation();
   const { state, date, formattedDateTime } = location;
 
-  // console.log(state, date, formattedDateTime);
+  console.log(state, date, formattedDateTime);
 
   useEffect(() => {
     const whichAPI =
