@@ -1,47 +1,54 @@
-/* Dashboard.css */
-
-.table-container {
-  width: 100%;
-  overflow-x: auto;
-}
-.user-order-info {
-  margin-bottom: 50px;
+.dashboard-container {
+  padding: 10px;
 }
 
 .user-container {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 50px;
+  border-bottom: 1px solid #000;
 }
 
-.user-table,
-.order-table {
-  width: 100%;
-  border-collapse: collapse;
+.user-info,
+.order-info {
+  margin-bottom: 20px;
 }
 
-.user-table th,
-.user-table td,
-.order-table th,
-.order-table td {
+.section-title {
+  margin-bottom: 10px;
+}
+
+.user-details {
   border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
+  padding: 10px;
+  border-radius: 5px;
 }
 
-@media screen and (max-width: 1020px) {
-  .user-table,
-  .order-table {
-    width: 100%;
-  }
+.order-item {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
 
+.no-orders {
+  font-style: italic;
+}
+
+@media screen and (min-width: 768px) {
+  .dashboard-container {
+    padding: 50px;
+  }
   .user-container {
-    display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: baseline;
+    gap: 50px;
   }
+}
 
-  .user-table th,
-  .user-table td,
-  .order-table th,
-  .order-table td {
-    font-size: 14px;
+@media screen and (min-width: 1024px) {
+  .dashboard-container {
+    padding: 100px;
   }
 }

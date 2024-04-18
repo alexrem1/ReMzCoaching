@@ -5,128 +5,112 @@ function Dashboard() {
   const { userData, deleteOrder, deleteUser } = useAdminDashboard();
 
   return (
-    <div className="table-container">
+    <div className="dashboard-container">
       {userData.map((user) => (
-        <div key={user.id} id={user.id} className="user-order-info">
-          <table className="user-table">
-            <thead>
-              <tr>
-                <th colSpan="8">Carer Information</th>
-              </tr>
-              <tr>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Email</th>
-                <th>Contact</th>
-                <th>Emergency Contact</th>
-                <th>Children</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{`${user.CarerFirstName} ${user.CarerLastName}`}</td>
-                <td>
-                  <div>
-                    <p>{user.AddressLine1},</p>
-                    {user.AddressLine2 && <p>{user.AddressLine2},</p>}
-                    <p>{user.AddressCityTown},</p>
-                    <p>{user.AddressPostcode}</p>
-                  </div>
-                </td>
-                <td>{user.Email}</td>
-                <td>{user.ContactNumber}</td>
-                <td>{user.EmergencyContactNumber}</td>
-                <td>
-                  <p>
-                    {`${user.FirstChildFirstName} ${user.FirstChildLastName} - ${user.FirstChildDOB} (${user.FirstChildYearGroup})`}
-                  </p>
-                  <p>
-                    {user.SecondChildFirstName &&
-                      ` and ${user.SecondChildFirstName} ${user.SecondChildLastName} - ${user.SecondChildDOB} (${user.SecondChildYearGroup})`}
-                  </p>
-                </td>
-                <td>
-                  <button
-                    className="other-button"
-                    onClick={() => deleteUser(user.id)}
-                  >
-                    <p>Delete account</p>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div key={user.id} className="user-container">
+          <div className="user-info">
+            <h2 className="section-title">
+              Carer Information for{" "}
+              {`${user.CarerFirstName} ${user.CarerLastName}`}
+            </h2>
+            <div className="user-details">
+              <p>
+                <strong>Name:</strong>{" "}
+                {`${user.CarerFirstName} ${user.CarerLastName}`}
+              </p>
+              <p>
+                <strong>Address:</strong> {user.AddressLine1},{" "}
+                {user.AddressLine2}, {user.AddressCityTown},{" "}
+                {user.AddressPostcode}
+              </p>
+              <p>
+                <strong>Email:</strong> {user.Email}
+              </p>
+              <p>
+                <strong>Contact:</strong> {user.ContactNumber}
+              </p>
+              <p>
+                <strong>Emergency Contact:</strong>{" "}
+                {user.EmergencyContactNumber}
+              </p>
+              <p>
+                <strong>Children:</strong>
+              </p>
+              <ul>
+                <li>{`${user.FirstChildFirstName} ${user.FirstChildLastName} - ${user.FirstChildDOB} (${user.FirstChildYearGroup})`}</li>
+                {user.SecondChildFirstName && (
+                  <li>{`${user.SecondChildFirstName} ${user.SecondChildLastName} - ${user.SecondChildDOB} (${user.SecondChildYearGroup})`}</li>
+                )}
+              </ul>
+              <button
+                className="other-button"
+                onClick={() => deleteUser(user.id)}
+              >
+                Delete account
+              </button>
+            </div>
+          </div>
 
-          <table className="order-table">
-            <thead>
-              <tr>
-                <th colSpan="8">Order Information</th>
-              </tr>
-
-              {user.orders.map((hmm) =>
-                hmm.order_finalised && hmm.isCompleted === 1 ? (
-                  <tr key={hmm.order_id}>
-                    <th>School</th>
-                    <th>Activity</th>
-                    <th>Which day</th>
-                    <th>Year group</th>
-                    <th>Runs on</th>
-                    <th>Price paid</th>
-                    <th>How long for</th>
-                    <th>Time</th>
-                    <th>Purchased on</th>
-                  </tr>
-                ) : (
-                  <tr key={hmm.order_id}>
-                    <th>No orders</th>
-                  </tr>
-                )
-              )}
-            </thead>
-            {user.orders.map(
-              (order) =>
-                order.buyer_id &&
-                order.order_finalised &&
-                order.isCompleted === 1 && (
-                  <tbody key={order.order_id} id={order.order_id}>
-                    <tr>
-                      <td>{order.product.product_school}</td>
-                      <td>
-                        {order.product.product_activity} for
-                        {order.order_child}
-                      </td>
-                      {order.order_day ? (
-                        <td>{order.order_day}</td>
-                      ) : (
-                        <td>Next term</td>
-                      )}
-                      <td>{order.product.product_criteria}</td>
-                      <td>{order.product.product_day}</td>
-                      <td>
-                        £
+          <div className="order-info">
+            <h2 className="section-title">
+              Order Information for{" "}
+              {`${user.CarerFirstName} ${user.CarerLastName}`}
+            </h2>
+            {user.orders.some((order) => order.isCompleted === 1) ? (
+              user.orders.map(
+                (order) =>
+                  order.isCompleted === 1 && (
+                    <div key={order.order_id} className="order-item">
+                      <p>
+                        <strong>School:</strong> {order.product.product_school}
+                      </p>
+                      <p>
+                        <strong>Activity:</strong>{" "}
+                        {order.product.product_activity} for {order.order_child}
+                      </p>
+                      <p>
+                        <strong>Which day:</strong>{" "}
+                        {order.order_day ? order.order_day : "Next term"}
+                      </p>
+                      <p>
+                        <strong>Year group:</strong>{" "}
+                        {order.product.product_criteria}
+                      </p>
+                      <p>
+                        <strong>Runs on:</strong> {order.product.product_day}
+                      </p>
+                      <p>
+                        <strong>Price paid:</strong> £
                         {order.product.product_price *
                           order.product.product_activity_duration}
-                      </td>
-                      <td>
+                      </p>
+                      <p>
+                        <strong>How long for:</strong>{" "}
                         {order.product.product_activity_duration > 1
                           ? `${order.product.product_activity_duration} weeks`
                           : `${order.product.product_activity_duration} day`}
-                      </td>
-                      <td>{order.product.product_time}</td>
-                      <td>{order.order_finalised}</td>
-                      <td>
-                        <button
-                          className="other-button"
-                          onClick={() => deleteOrder(order.order_id)}
-                        >
-                          <p>Delete order</p>
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                )
+                      </p>
+                      <p>
+                        <strong>Time:</strong> {order.product.product_time}
+                      </p>
+                      <p>
+                        <strong>Purchased on:</strong> {order.order_finalised}
+                      </p>
+                      <button
+                        className="other-button"
+                        onClick={() => deleteOrder(order.order_id)}
+                      >
+                        Delete order
+                      </button>
+                    </div>
+                  )
+              )
+            ) : (
+              <div className="order-item">
+                <p className="no-orders">No Orders</p>
+              </div>
             )}
-          </table>
+          </div>
         </div>
       ))}
     </div>

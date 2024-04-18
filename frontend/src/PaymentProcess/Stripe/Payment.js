@@ -73,7 +73,6 @@ function Payment() {
         <div className="form-container-form">
           <h1>Payment</h1>
           <div className="content">
-            <h2>Product Details:</h2>
             <p>School: {productChosen.product_school}</p>
             <p>
               Activity: {productChosen.product_activity} for{" "}

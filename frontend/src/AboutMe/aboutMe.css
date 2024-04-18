@@ -127,28 +127,10 @@
 }
 
 .reasons-section .reasons-content .reasons-list .hero-text {
-  /* text-align: left; */
   margin: 0;
-  /* background-color: #f7f7f7; */
   background-color: unset;
   color: #000;
 }
-
-.reasons-section .reasons-content .reasons-list .list-img {
-  height: 315px;
-  display: flex;
-}
-
-.reasons-section .reasons-content .reasons-list .list-img > img {
-  height: unset;
-  align-self: center;
-}
-
-/* .affordable-section {
-  padding: 15px;
-  width: 100%;
-  background: #f7f7f7;
-} */
 
 .affordable-section .affordable-content {
   display: flex;
@@ -163,46 +145,6 @@
 .affordable-section .affordable-content .affordable-img > img {
   border-radius: 4px;
 }
-
-/* .affordable-section .affordable-content .hero-text {
-  width: 50%;
-  height: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
-}
-.affordable-section .affordable-content .affordable-img {
-  width: 50%;
-} */
-
-/* @media screen and (max-width: 768px) {
-  .about-content {
-    flex-direction: column;
-  }
-
-  .about-text,
-  .about-image {
-    margin-right: 0;
-    margin-bottom: 20px;
-  }
-
-  .about-text p {
-    margin-bottom: 10px;
-  }
-
-  .hero-section {
-    padding: 60px 0;
-  }
-
-  .hero-section h1 {
-    font-size: 28px;
-  }
-
-  .hero-text {
-    font-size: 16px;
-  }
-} */
 
 @media (min-width: 768px) {
   .hero-statement {
@@ -226,8 +168,6 @@
 
     box-shadow: 0 20px 60px #02021e17;
     border-radius: 6px;
-    /* padding: 45px 25px; */
-    /* line-height: 28px; */
   }
 
   .statement-section .hero-text {
@@ -254,6 +194,16 @@
   }
   .reasons-section .reasons-content .reasons-list .list-title {
     min-height: 60px;
+  }
+
+  .reasons-section .reasons-content .reasons-list .list-img {
+    height: 300px;
+    display: flex;
+  }
+
+  .reasons-section .reasons-content .reasons-list .list-img > img {
+    align-self: center;
+    object-fit: contain;
   }
 
   /* affordable section  */

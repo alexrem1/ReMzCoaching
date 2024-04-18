@@ -7,6 +7,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { useParams } from "react-router-dom";
 // import CAPTCHA from "./CAPTCHA";
+import "./CheckoutForm.css";
 
 export default function CheckoutForm() {
   const stripe = useStripe();
@@ -128,9 +129,17 @@ export default function CheckoutForm() {
               )}
             </span>
           </button>
+          <p>
+            Use the card number 4242 4242 4242 4242 to simulate a test card and
+            proceed with payment.
+          </p>
           {/* <CAPTCHA /> */}
           {/* Show any error or success messages */}
-          {message && <div id="payment-message">{message}</div>}
+          {message && (
+            <div className="error" id="payment-message">
+              {message}
+            </div>
+          )}
         </form>
       )}
     </>

@@ -83,6 +83,7 @@
   cursor: pointer;
   outline: none;
   padding: 0;
+  margin: 0;
 }
 
 .form-container .error {
@@ -196,6 +197,20 @@
 
 /* products */
 
+.no-spaces {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+}
+
+.form-container.products .hero-text {
+  background: unset;
+  color: #000;
+  border: 1px solid #000;
+}
+
 .form-container.products .form-container-form {
   flex-direction: column;
   display: flex;
@@ -239,7 +254,7 @@
 }
 
 .form-container.profile .content > p {
-  border: 1px solid #0e8e9d70;
+  border-bottom: 2.5px solid #0e8e9d70;
   padding: 10px;
 }
 /* profile end  */

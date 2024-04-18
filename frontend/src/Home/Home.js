@@ -6,6 +6,8 @@ import { useIsAuthenticated } from "../Context/AuthContext";
 import personalized from "../Images/Landing/28462458_7398348.jpg";
 import top from "../Images/Landing/10289157_4374013.jpg";
 import family from "../Images/Landing/family-43873_1280.png";
+import group from "../Images/Landing/958027_OF16710.jpg";
+import vr from "../Images/Landing/72376234_2304-i301-013-S-m004-c13-VR-sports-tranings-isometric-composition.jpg";
 
 function Home() {
   const { navigate } = useUtilities();
@@ -82,6 +84,53 @@ function Home() {
                   accessibility. With training available at 2 convenient venues
                   across England, our packed sessions ensure top-notch football
                   training that's both accessible and worthwhile.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="statement-section two">
+          <p className="hero-title two">What we do</p>
+          <p className="hero-description">
+            We offer fun football training sessions which help players become
+            the best they can be. Our proven training syllabus runs 50 weeks of
+            the year and has helped players achieve ranging level of success.
+            Some players have grown in confidence and developed a love for
+            football and others have progressed to becoming premier league
+            footballers.
+          </p>
+        </div>
+        <div className="reasons-section">
+          <div className="reasons-content">
+            <div className="reasons-list">
+              <div className="list-img">
+                <img src={group} alt="" />
+              </div>
+              <div className="list-title">
+                <h3>Daily Group Training</h3>
+              </div>
+              <div className="hero-text">
+                <p>
+                  New to the game? Welcome aboard. Aspiring for greatness? Join
+                  our ranks. Wherever your child stands on their athletic path,
+                  our tailored coaching ensures they reach their full potential.
+                </p>
+              </div>
+            </div>
+            <div className="reasons-list">
+              <div className="list-img">
+                <img src={vr} alt="" />
+              </div>
+              <div className="list-title">
+                <h3>Football Development Camps</h3>
+              </div>
+              <div className="hero-text">
+                <p>
+                  Exciting news! Get ready for our upcoming development camps
+                  designed to take your skills to the next level. Stay tuned for
+                  more details on how you can join these enriching and intensive
+                  training programs. Unlock your potential and elevate your game
+                  with our development camps.
                 </p>
               </div>
             </div>

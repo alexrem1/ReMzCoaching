@@ -12,18 +12,7 @@ export default function useUpdateProfile() {
   const location = useLocation();
   const userID = location.pathname.split("/")[3];
 
-  const {
-    schema,
-
-    setStep,
-    isTooltipVisible,
-    handleMouseEnter,
-    handleMouseLeave,
-    handleTooltipToggle,
-    step,
-    nextStep,
-    prevStep,
-  } = useRegistration();
+  const { schema, setStep, step, nextStep, prevStep } = useRegistration();
 
   const modifiedSchema = schema.omit(["CarerFirstName", "CarerLastName"]);
 
@@ -107,10 +96,6 @@ export default function useUpdateProfile() {
     onSubmit,
     userDetails,
     inputRef,
-    isTooltipVisible,
-    handleMouseEnter,
-    handleMouseLeave,
-    handleTooltipToggle,
     step,
     nextStep,
     prevStep,

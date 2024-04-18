@@ -46,7 +46,8 @@ nav .hamburger-menu > *:hover {
 }
 
 /* mobile users */
-nav.navbar .overlay .hamburger-menu a > p:active {
+nav.navbar .overlay .hamburger-menu a > p:active,
+nav.navbar .overlay .hamburger-menu a > p:hover {
   color: var(--clr-cta);
   font-weight: var(--fw-700);
 }

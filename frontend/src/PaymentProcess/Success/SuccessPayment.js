@@ -47,7 +47,7 @@ function SuccessPayment() {
     isSuccessful();
   }, []);
   return (
-    <div className="form-container">
+    <div className="form-container" style={{ height: "50vh" }}>
       {status === "succeeded" ? (
         <div className="form-container-form">
           <div className="content">

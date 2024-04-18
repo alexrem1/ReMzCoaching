@@ -4,7 +4,6 @@ import useBookings from "../CustomHooks/useBookings";
 import SelectChild from "../Components/SelectChild";
 import { useGetProducts } from "../CustomHooks/useGetProducts";
 import useGetProfile from "../CustomHooks/useGetProfile";
-import { useState } from "react";
 import useUtilities from "../CustomHooks/useUtilities";
 
 function Products() {
@@ -147,12 +146,27 @@ function Products() {
               userDetails[0] &&
               !userDetails[0].SecondChildFirstName ? (
                 <p className="error">You're not eligible for this service.</p>
-              ) : (
-                <div>
-                  <button className="primary-cta" type="submit">
-                    Book now
+              ) : product.total_spaces === 0 ? (
+                <div className="no-spaces">
+                  <button
+                    disabled={product.total_spaces === 0}
+                    className="primary-cta"
+                    type="submit"
+                  >
+                    0 spaces left
                   </button>
+                  <div className="hero-text">
+                    <p>Spaces will be available every Sunday at midnight</p>
+                  </div>
                 </div>
+              ) : (
+                <>
+                  <div>
+                    <button className="primary-cta" type="submit">
+                      Book now ({product.total_spaces} spaces left)
+                    </button>
+                  </div>
+                </>
               )}
             </div>
           ))}

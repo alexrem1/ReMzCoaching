@@ -6,6 +6,7 @@ import bcrypt, { hash } from "bcrypt";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
+import cron from "cron";
 
 dotenv.config();
 
@@ -963,9 +964,26 @@ app.put("/orders/:id", verifyUser, async (req, res) => {
             }
           });
 
-          return res
-            .status(200)
-            .json({ message: "Order placed successfully", paymentIntent });
+          const updateRemainingSpaces =
+            "UPDATE products SET total_spaces = total_spaces - 1 WHERE product_id =? ";
+
+          db.query(updateRemainingSpaces, [id], (err, result) => {
+            if (err) {
+              console.error("Error updating remaining spaces:", err);
+              return res
+                .status(500)
+                .json({ error: "Error updating remaining spaces" });
+            }
+
+            if (result.affectedRows === 0) {
+              // No matching order found
+              return res.status(404).json({ error: "Order not found" });
+            }
+
+            return res
+              .status(200)
+              .json({ message: "Order placed successfully", paymentIntent });
+          });
         });
       } catch (error) {
         console.error("Error retrieving payment intent:", error);
@@ -976,6 +994,33 @@ app.put("/orders/:id", verifyUser, async (req, res) => {
     }
   );
 });
+
+const resetTotalSpaces = () => {
+  console.log("dog");
+  try {
+    const today = new Date().getDay();
+
+    // Check if today is Thursday (4)
+    if (today === 0) {
+      // Execute SQL query to update total_spaces for all products
+      db.query("UPDATE products SET total_spaces = 10", (err, result) => {
+        if (err) {
+          console.log("Error resetting total_spaces:", err);
+          // Handle the error accordingly, maybe throw an error or log it
+          return;
+        }
+        console.log("Total spaces reset to 10 for all products.");
+      });
+    }
+  } catch (error) {
+    console.error("Error resetting total_spaces:", error);
+  }
+};
+
+const job = new cron.CronJob("0 0 * * 0", resetTotalSpaces); // Run every Sunday at 00:00
+
+// Start the cron job
+job.start();
 
 // show order to user
 app.get("/orders/:id", verifyUser, (req, res) => {

@@ -5,11 +5,11 @@ import dayjs from "dayjs";
 import { AlertCircle, ArrowLeftCircle } from "lucide-react";
 import ButtonLoad from "../../Components/ButtonLoad";
 import CustomDatePicker from "../../Components/DatePickerWeekends";
+import useUtilities from "../../CustomHooks/useUtilities";
 
 function UserUpdateDetails() {
   const {
     navigate,
-
     register,
     handleSubmit,
     control,
@@ -18,16 +18,17 @@ function UserUpdateDetails() {
     isSubmitSuccessful,
     onSubmit,
     userDetails,
-    isTooltipVisible,
-    handleMouseEnter,
-    handleMouseLeave,
-    handleTooltipToggle,
     step,
     nextStep,
     prevStep,
   } = useUpdateProfile();
 
-  console.log(errors);
+  const {
+    isTooltipVisible,
+    handleMouseEnter,
+    handleMouseLeave,
+    handleTooltipToggle,
+  } = useUtilities();
 
   return (
     <>

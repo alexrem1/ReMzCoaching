@@ -12,7 +12,7 @@ export default function Footer() {
   };
 
   const makePhoneCall = () => {
-    window.open(`tel:${+7534633664}`);
+    window.open(`tel:${+447534633664}`);
   };
 
   return (
@@ -20,9 +20,13 @@ export default function Footer() {
       <div className="img-container">
         <img
           src={logo}
-          alt=""
+          alt="logo"
           onClick={() => {
             navigate("/");
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
           }}
         />
       </div>
@@ -42,6 +46,10 @@ export default function Footer() {
           <p
             onClick={() => {
               navigate("/");
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
             }}
           >
             Home
@@ -49,6 +57,10 @@ export default function Footer() {
           <p
             onClick={() => {
               navigate("/products");
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
             }}
           >
             Services
@@ -56,6 +68,10 @@ export default function Footer() {
           <p
             onClick={() => {
               navigate("/about-us");
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
             }}
           >
             About us
