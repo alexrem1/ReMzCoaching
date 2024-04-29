@@ -23,10 +23,10 @@ app.use(
 app.use(cookieParser());
 
 const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DB,
+  host: process.env.DB_HOST_ONLINE,
+  user: process.env.DB_USER_ONLINE,
+  password: process.env.DB_PASSWORD_ONLINE,
+  database: process.env.DB_DB_ONLINE,
 });
 
 // middleware function to check if user is authenticated
@@ -1038,6 +1038,6 @@ app.get("/orders/:id", verifyUser, (req, res) => {
   });
 });
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.DB_PORT, () => {
   console.log("running... totally");
 });
