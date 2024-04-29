@@ -41,8 +41,7 @@ function ForgottenPassword() {
               <Link to="/login">Login</Link>
             </p>
             <p>
-              New to QC Sports Coaching?{" "}
-              <Link to="/register">Register today!</Link>
+              New to ReMz Coaching? <Link to="/register">Register today!</Link>
             </p>
           </div>
         </>

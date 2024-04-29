@@ -11,6 +11,7 @@ const CustomDatePicker = ({ field, errors, disabledDate, placeholder }) => {
       field.onChange(undefined);
       console.log(errors, date);
       console.log(date, dayjs(date), dayjs(date)?.format("DD/MM/YYYY"));
+      console.log("dog");
     }
     console.log(errors, date);
     console.log(date, dayjs(date), dayjs(date)?.format("DD/MM/YYYY"));

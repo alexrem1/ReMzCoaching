@@ -95,14 +95,12 @@ export default function CheckoutForm() {
           <AddressElement
             options={{
               mode: "shipping",
-              // allowedCountries: ["UK"],
               fields: {
                 phone: "always",
               },
-              // defaultValues: {
-              //   name: "Jane Doe",
-              //   // disabled: true,
-              // },
+              defaultValues: {
+                name: "Test Test",
+              },
               validation: {
                 phone: {
                   required: "always",

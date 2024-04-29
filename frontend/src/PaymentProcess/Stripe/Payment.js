@@ -15,8 +15,6 @@ function Payment() {
   const location = useLocation();
   const { state, date, formattedDateTime } = location;
 
-  console.log(state, date, formattedDateTime);
-
   useEffect(() => {
     const whichAPI =
       window.location.hostname === "localhost"
@@ -24,26 +22,29 @@ function Payment() {
         : process.env.REACT_APP_VURL;
 
     const makeRequest = async () => {
-      const response = await axios.post(
-        `${whichAPI}/create-payment-intent/${id}`,
-        state,
-        date,
-        formattedDateTime
-      );
+      try {
+        const response = await axios.post(
+          `${whichAPI}/create-payment-intent/${id}`,
+          state,
+          date,
+          formattedDateTime
+        );
 
-      // console.log(response);
+        // Handle the response properly
+        if (response.status === 200) {
+          const { clientSecret } = response.data;
+          setClientSecret(clientSecret);
+          setProductChosen(response.data.product);
+        } else {
+          console.error("Failed to create payment intent");
+        }
+      } catch (error) {
+        console.error("Error making request:", error);
 
-      // Handle the response properly
-      if (response.status === 200) {
-        // console.log(response);
-        const { clientSecret } = response.data;
-        setClientSecret(clientSecret);
-        setProductChosen(response.data.product);
-        // console.log(response.data.product);
-      } else {
-        console.error("Failed to create payment intent");
+        window.location.href = "/not-found-product";
       }
     };
+
     makeRequest();
   }, [id]);
 
@@ -76,7 +77,7 @@ function Payment() {
             <p>School: {productChosen.product_school}</p>
             <p>
               Activity: {productChosen.product_activity} for{" "}
-              {state.child && state.child}
+              {state?.child && state.child}
             </p>
             <p>
               Price: £
@@ -90,7 +91,7 @@ function Payment() {
             {clientSecret && (
               <>
                 <Elements options={options} stripe={stripePromise}>
-                  <CheckoutForm clientSecret={clientSecret} />
+                  <CheckoutForm />
                 </Elements>
               </>
             )}

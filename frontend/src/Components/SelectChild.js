@@ -104,7 +104,7 @@ const SelectChild = ({ field, errors, prod }) => {
           ))}
       </Select>
       {errors.selectedName && (
-        <p style={{ color: "red" }}>{errors.selectedName.message}</p>
+        <p className="error">{errors.selectedName.message}</p>
       )}
     </>
   );

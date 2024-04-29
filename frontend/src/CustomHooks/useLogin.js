@@ -41,7 +41,6 @@ export default function useLogin() {
       : process.env.REACT_APP_VURL;
 
   const navigate = useNavigate();
-  axios.defaults.withCredentials = true;
   const onSubmit = async (data) => {
     await axios.post(`${whichAPI}/login`, data).then((res) => {
       if (res.data.Status === "User logged in successfully") {

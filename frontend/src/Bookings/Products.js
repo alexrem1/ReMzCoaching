@@ -148,15 +148,11 @@ function Products() {
                 <p className="error">You're not eligible for this service.</p>
               ) : product.total_spaces === 0 ? (
                 <div className="no-spaces">
-                  <button
-                    disabled={product.total_spaces === 0}
-                    className="primary-cta"
-                    type="submit"
-                  >
-                    0 spaces left
-                  </button>
                   <div className="hero-text">
-                    <p>Spaces will be available every Sunday at midnight</p>
+                    <p>
+                      Unfortunately, there's no spaces left for this class.
+                      Spaces will be available every Monday at 6am.
+                    </p>
                   </div>
                 </div>
               ) : (

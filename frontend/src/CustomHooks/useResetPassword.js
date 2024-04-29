@@ -39,7 +39,6 @@ export default function useResetPassword() {
       ? process.env.REACT_APP_API_URL
       : process.env.REACT_APP_VURL;
 
-  axios.defaults.withCredentials = true;
   const onSubmit = async (data) => {
     await axios
       .post(`${whichAPI}/reset-password/${id}/${token}`, data)

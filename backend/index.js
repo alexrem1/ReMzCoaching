@@ -208,8 +208,8 @@ app.post("/login", (req, res) => {
   });
 });
 
-//users only can log out
-app.get("/logout", (req, res) => {
+// only users can log out
+app.get("/logout", verifyUser, (req, res) => {
   res.clearCookie("token");
   return res.json({ Status: "User logged out successfully" });
 });
@@ -273,7 +273,7 @@ app.post("/register", (req, res) => {
       var mailOptions = {
         from: process.env.MY_EMAIL,
         to: req.body.Email,
-        subject: "You've registered with QCSports Coaching!",
+        subject: "You've registered with ReMz Coaching!",
         html: `
         <p>Welcome to the team!</p>
         <p>Your account has been created and I look forward to interacting with you.</p>
@@ -472,7 +472,7 @@ app.get("/admin-users-info", verifyRole("admin"), (req, res) => {
   });
 });
 
-//delete users orders admin
+//delete users orders as admin
 app.delete(
   "/admin-delete-users-orders/:id",
   verifyRole("admin"),
@@ -489,7 +489,7 @@ app.delete(
   }
 );
 
-//admin can delete users then their orders
+//admin can delete users accounts then their orders
 app.delete(
   "/admin-delete-users-and-orders/:id",
   verifyRole("admin"),
@@ -520,7 +520,7 @@ app.delete(
   }
 );
 
-//users can delete users then their orders
+//users can delete their accounts then their orders
 app.delete("/delete-account/:id", verifyUser, (req, res) => {
   const userId = req.params.id;
 
@@ -579,8 +579,6 @@ app.delete("/delete-account/:id", verifyUser, (req, res) => {
     });
   });
 });
-
-//non users
 
 //forgot password
 app.post("/forgot-password", (req, res) => {
@@ -868,7 +866,7 @@ app.post("/create-payment-intent/:id", verifyUser, async (req, res) => {
   }
 });
 
-//complete order and send email
+//complete order, send email and update spaces
 app.put("/orders/:id", verifyUser, async (req, res) => {
   const { id } = req.params;
   const { payment_intent, formattedDateTime } = req.body;
@@ -908,7 +906,7 @@ app.put("/orders/:id", verifyUser, async (req, res) => {
             .json({ error: "Payment intent not succeeded" });
         }
 
-        // Insert data into the orders table
+        // update data in orders table
         const updateOrder =
           "UPDATE orders SET isCompleted = ?, order_finalised = ? WHERE payment_intent = ?";
 
@@ -996,12 +994,10 @@ app.put("/orders/:id", verifyUser, async (req, res) => {
 });
 
 const resetTotalSpaces = () => {
-  console.log("dog");
   try {
     const today = new Date().getDay();
 
-    // Check if today is Thursday (4)
-    if (today === 0) {
+    if (today === 1) {
       // Execute SQL query to update total_spaces for all products
       db.query("UPDATE products SET total_spaces = 10", (err, result) => {
         if (err) {
@@ -1017,7 +1013,7 @@ const resetTotalSpaces = () => {
   }
 };
 
-const job = new cron.CronJob("0 0 * * 0", resetTotalSpaces); // Run every Sunday at 00:00
+const job = new cron.CronJob("0 06 * * 1", resetTotalSpaces); // Run every Sunday at 00:00
 
 // Start the cron job
 job.start();

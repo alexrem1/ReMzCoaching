@@ -5,7 +5,6 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import SchoolServices from "./Services/SchoolServices";
 import Home from "./Home/Home";
 import Registration from "./Authentication/Registration/Registration";
 import Login from "./Authentication/Login/Login";
@@ -23,6 +22,8 @@ import AdminAddProduct from "./Admin/AdminProducts/AdminAddProduct";
 import Products from "./Bookings/Products";
 import AboutMe from "./AboutMe/AboutMe";
 import Footer from "./Footer/Footer";
+import NotFound from "./404/NotFound";
+import NotFoundProduct from "./404/NotFoundProduct";
 
 function App() {
   const { auth, loading, role, userID } = useIsAuthenticated();
@@ -73,7 +74,11 @@ function App() {
         <Route
           path="/login"
           element={
-            loading === null ? null : loading && !auth ? (
+            loading === null ? (
+              <div className="loading">
+                <Loader />
+              </div>
+            ) : loading && !auth ? (
               <Login />
             ) : (
               !loading && auth && <Navigate to="/" />
@@ -83,7 +88,11 @@ function App() {
         <Route
           path="/forgot-password"
           element={
-            loading === null ? null : loading && !auth ? (
+            loading === null ? (
+              <div className="loading">
+                <Loader />
+              </div>
+            ) : loading && !auth ? (
               <ForgottenPassword />
             ) : (
               !loading && auth && <Navigate to="/" />
@@ -93,7 +102,11 @@ function App() {
         <Route
           path="/reset-password/:id/:token"
           element={
-            loading === null ? null : loading && !auth ? (
+            loading === null ? (
+              <div className="loading">
+                <Loader />
+              </div>
+            ) : loading && !auth ? (
               <ResetPassword />
             ) : (
               !loading && auth && <Navigate to="/" />
@@ -103,7 +116,11 @@ function App() {
         <Route
           path="/profile"
           element={
-            loading === null ? null : !loading && auth ? (
+            loading === null ? (
+              <div className="loading">
+                <Loader />
+              </div>
+            ) : !loading && auth ? (
               <Profile />
             ) : (
               loading && !auth && <Navigate to="/login" />
@@ -113,14 +130,17 @@ function App() {
         <Route
           path="/profile/update/:id"
           element={
-            loading === null ? null : !loading && auth ? (
+            loading === null ? (
+              <div className="loading">
+                <Loader />
+              </div>
+            ) : !loading && auth ? (
               <ProfileUpdate />
             ) : (
               loading && !auth && <Navigate to="/login" />
             )
           }
         />
-        <Route path="/services" element={<SchoolServices />} />
         <Route
           path="/admin"
           element={
@@ -167,7 +187,11 @@ function App() {
         <Route
           path="/payment/:id"
           element={
-            loading === null ? null : !loading && auth ? (
+            loading === null ? (
+              <div className="loading">
+                <Loader />
+              </div>
+            ) : !loading && auth ? (
               <Payment />
             ) : (
               loading && !auth && <Navigate to="/login" />
@@ -177,7 +201,11 @@ function App() {
         <Route
           path="/success/:id"
           element={
-            loading === null ? null : !loading && auth ? (
+            loading === null ? (
+              <div className="loading">
+                <Loader />
+              </div>
+            ) : !loading && auth ? (
               <SuccessPayment />
             ) : (
               loading && !auth && <Navigate to="/login" />
@@ -185,10 +213,9 @@ function App() {
           }
         />
 
-        <Route
-          path="*"
-          element={<p>this doesn't exist - build a 401 page</p>}
-        />
+        <Route path="*" element={<NotFound />} />
+        <Route path="/not-found" element={<NotFound />} />
+        <Route path="/not-found-product" element={<NotFoundProduct />} />
       </Routes>
       <Footer />
     </Router>
