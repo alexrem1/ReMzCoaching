@@ -24,8 +24,10 @@ import AboutMe from "./AboutMe/AboutMe";
 import Footer from "./Footer/Footer";
 import NotFound from "./404/NotFound";
 import NotFoundProduct from "./404/NotFoundProduct";
+import axios from "axios";
 
 function App() {
+  axios.defaults.withCredentials = true;
   const { auth, loading, role, userID } = useIsAuthenticated();
   if (loading === null) {
   }

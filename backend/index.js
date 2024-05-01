@@ -187,6 +187,9 @@ app.post("/login", (req, res) => {
             );
             res.cookie("token", token, {
               expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
+              secure: true,
+              httpOnly: true,
+              sameSite: "none",
             });
             return res.status(200).json({
               Status: "User logged in successfully",
