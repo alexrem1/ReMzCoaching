@@ -1038,6 +1038,6 @@ app.get("/orders/:id", verifyUser, (req, res) => {
   });
 });
 
-app.listen(process.env.DB_PORT, () => {
+app.listen(process.env.PORT, () => {
   console.log("running... totally");
 });
