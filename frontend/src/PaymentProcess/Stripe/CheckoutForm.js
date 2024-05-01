@@ -18,6 +18,11 @@ export default function CheckoutForm() {
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const whichURL =
+    window.location.hostname === "localhost"
+      ? process.env.REACT_APP_LOCAL_URL
+      : process.env.REACT_APP_URL;
+
   useEffect(() => {
     if (!stripe) {
       return;
@@ -64,7 +69,7 @@ export default function CheckoutForm() {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: `http://localhost:3000/success/${id}`,
+        return_url: `${whichURL}/success/${id}`,
       },
     });
 

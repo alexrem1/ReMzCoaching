@@ -213,7 +213,12 @@ app.post("/login", (req, res) => {
 
 // only users can log out
 app.get("/logout", verifyUser, (req, res) => {
-  res.clearCookie("token");
+  res.cookie("token", "", {
+    expires: new Date(0),
+    httpOnly: true,
+    secure: true, // Ensure to use HTTPS
+    sameSite: "none",
+  });
   return res.json({ Status: "User logged out successfully" });
 });
 
