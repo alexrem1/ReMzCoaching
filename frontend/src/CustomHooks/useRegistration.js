@@ -70,24 +70,6 @@ export default function useRegistration() {
     setError,
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm({
-    defaultValues: {
-      CarerFirstName: "remmy",
-      CarerLastName: "remmy",
-      Email: "remidy@live.co.ukk",
-      ContactNumber: "07534633664",
-      EmergencyContactNumber: "07534633664",
-      FirstChildFirstName: "remmy",
-      FirstChildLastName: "test",
-      FirstChildDOB: dayjs().format("YYYY-MM-DD"),
-      FirstChildYearGroup: "7",
-      FirstChildMedical: "N/A",
-      password: "93MDLuffy!!!",
-      confirmPassword: "93MDLuffy!!!",
-      AddressCityTown: "london",
-      AddressLine1: "test",
-      AddressLine2: "test",
-      AddressPostcode: "Test",
-    },
     resolver: yupResolver(schema),
   });
   const navigate = useNavigate();

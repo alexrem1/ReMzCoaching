@@ -15,7 +15,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: [process.env.VURL, process.env.LOCAL],
+    origin: [process.env.VURL],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -54,17 +54,17 @@ const verifyUser = (req, res, next) => {
 const verifyRole = (requiredRole) => (req, res, next) => {
   const token = req.cookies.token;
   if (!token) {
-    return res.redirect(process.env.VURL || process.env.LOCAL);
+    return res.redirect(process.env.VURL);
   }
 
   jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
     if (err) {
-      return res.redirect(process.env.VURL || process.env.LOCAL);
+      return res.redirect(process.env.VURL);
     }
 
     const { role } = decoded;
     if (role !== requiredRole) {
-      return res.redirect(process.env.VURL || process.env.LOCAL);
+      return res.redirect(process.env.VURL);
     }
 
     next(); // User has the required role, continue to the next middleware
@@ -265,10 +265,6 @@ app.post("/register", (req, res) => {
       }
 
       // Send email notification
-      const emailURL =
-        req.hostname === process.env.DB_HOST
-          ? process.env.LOCAL
-          : process.env.VURL;
 
       var transporter = nodemailer.createTransport({
         service: "hotmail",
@@ -285,7 +281,7 @@ app.post("/register", (req, res) => {
         html: `
         <p>Welcome to the team!</p>
         <p>Your account has been created and I look forward to interacting with you.</p>
-        <p>Please login <a href="${emailURL}/login">here</a>.</p>
+        <p>Please login <a href="${process.env.VURL}/login">here</a>.</p>
         <p>If you have any questions, reply back to this email.</p>
       `,
       };
@@ -549,11 +545,6 @@ app.delete("/delete-account/:id", verifyUser, (req, res) => {
       }
 
       // Send email notification
-      const emailURL =
-        req.hostname === process.env.DB_HOST
-          ? process.env.LOCAL
-          : process.env.VURL;
-
       var transporter = nodemailer.createTransport({
         service: "hotmail",
         auth: {
@@ -622,16 +613,11 @@ app.post("/forgot-password", (req, res) => {
       },
     });
 
-    const emailURL =
-      req.hostname === process.env.DB_HOST
-        ? process.env.LOCAL
-        : process.env.VURL;
-
     var mailOptions = {
       from: process.env.MY_EMAIL,
       to: userEMail,
       subject: "Reset your password",
-      html: `<p>Here's the link to reset your password: <a href="${emailURL}/reset-password/${userID}/${token}">Reset password</a></p>
+      html: `<p>Here's the link to reset your password: <a href="${process.env.VURL}/reset-password/${userID}/${token}">Reset password</a></p>
       <p>Please note this password reset expires in 30 minutes</p>
       `,
     };
@@ -684,10 +670,6 @@ app.post("/reset-password/:id/:token", (req, res) => {
             }
 
             // Send email notification
-            const emailURL =
-              req.hostname === process.env.DB_HOST
-                ? process.env.LOCAL
-                : process.env.VURL;
 
             var transporter = nodemailer.createTransport({
               service: "hotmail",
@@ -703,7 +685,7 @@ app.post("/reset-password/:id/:token", (req, res) => {
               subject: "Password reset successfully",
               html: `
                 <p>Your password has been successfully reset.</p>
-                <p>Please login <a href="${emailURL}/login">here</a>.</p>
+                <p>Please login <a href="${process.env.VURL}/login">here</a>.</p>
                 <p>If you have any questions, reply back to this email.</p>
               `,
             };
@@ -943,11 +925,6 @@ app.put("/orders/:id", verifyUser, async (req, res) => {
             },
           });
 
-          const emailURL =
-            req.hostname === process.env.DB_HOST
-              ? process.env.LOCAL
-              : process.env.VURL;
-
           var mailOptions = {
             from: process.env.MY_EMAIL,
             to: req.email,
@@ -955,7 +932,7 @@ app.put("/orders/:id", verifyUser, async (req, res) => {
             html: `
       <p>You have purchased: ${paymentIntent.description}</p>
       <p>I'll be in touch with you soon to confirm your order on the number provided: ${paymentIntent.shipping.phone}</p>
-      <p>Check your order <a href="${emailURL}/profile">here</a>.</p>
+      <p>Check your order <a href="${process.env.VURL}/profile">here</a>.</p>
       <p>If you have any questions, reply back to this email.</p>
       `,
           };
