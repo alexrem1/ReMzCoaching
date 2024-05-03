@@ -94,6 +94,16 @@ export default function useRegistration() {
     setChildCount((prevCount) => prevCount - 1);
   };
 
+  //   const navigate = useNavigate();
+  const inputRef = useRef();
+
+  useEffect(() => {
+    // Focus the input field when the component mounts
+    if (inputRef.current) {
+      inputRef.current.querySelector("input").focus();
+    }
+  }, []);
+
   useEffect(() => {
     const hasErrors = Object.keys(errors).length > 0;
     if (hasErrors) {
@@ -134,16 +144,16 @@ export default function useRegistration() {
     data.SecondChildDOB =
       data.SecondChildDOB && dayjs(data.SecondChildDOB).format("DD/MM/YYYY");
 
-    console.log(data);
+    // console.log(data);
     await axios.post(`${whichAPI}/register`, data).then((res) => {
       if (step === 3) {
-        console.log("Final Form Data: ", data);
+        // console.log("Final Form Data: ", data);
         if (res.data.Status === "User registered successfully") {
-          console.log(res, "success");
+          // console.log(res, "success");
           navigate("/login");
           reset();
         } else {
-          console.log(res, "err");
+          // console.log(res, "err");
           setError("root", {
             message: res.data.Error,
           });
@@ -166,7 +176,7 @@ export default function useRegistration() {
     addChild,
     removeChild,
     schema,
-
+    inputRef,
     setStep,
   };
 }

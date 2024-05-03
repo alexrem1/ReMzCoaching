@@ -23,6 +23,7 @@ function Registration() {
     addChild,
     childCount,
     removeChild,
+    inputRef,
   } = useRegistration();
 
   const {
@@ -34,7 +35,11 @@ function Registration() {
 
   return (
     <div className="form-container">
-      <form className="form-container-form" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className="form-container-form"
+        onSubmit={handleSubmit(onSubmit)}
+        ref={inputRef}
+      >
         <h1>Register</h1>
         {step === 1 && (
           <>
@@ -443,50 +448,20 @@ function Registration() {
                             <AlertCircle className="tooltip-trigger" />
                           </div>
 
-                          <DatePicker
-                            ref={field.ref}
-                            name={field.name}
-                            onBlur={field.onBlur}
-                            onChange={(date) => {
-                              field.onChange(date ? dayjs(date) : null);
-                              console.log(
-                                date,
-                                dayjs(date),
-                                dayjs(date).format("DD/MM/YYYY")
-                              );
-                            }}
-                            format="DD/MM/YYYY"
-                            locale={{
-                              format: "DD/MM/YYYY",
-                              lang: { locale: "en-gb" },
-                            }} // Set locale to UK
-                            value={field.value ? dayjs(field.value) : null}
-                            placeholder="Select DOB"
+                          <CustomDatePicker
+                            field={field}
+                            errors={errors}
+                            placeholder={"Select DOB"}
                           />
                         </div>
                       ) : (
                         <div className="tooltip-container date">
                           <label>First child DOB</label>
 
-                          <DatePicker
-                            ref={field.ref}
-                            name={field.name}
-                            onBlur={field.onBlur}
-                            onChange={(date) => {
-                              field.onChange(date ? dayjs(date) : null);
-                              console.log(
-                                date,
-                                dayjs(date),
-                                dayjs(date).format("DD/MM/YYYY")
-                              );
-                            }}
-                            format="DD/MM/YYYY"
-                            locale={{
-                              format: "DD/MM/YYYY",
-                              lang: { locale: "en-gb" },
-                            }} // Set locale to UK
-                            value={field.value ? dayjs(field.value) : null}
-                            placeholder="Select DOB"
+                          <CustomDatePicker
+                            field={field}
+                            errors={errors}
+                            placeholder={"Select DOB"}
                           />
                         </div>
                       )}
