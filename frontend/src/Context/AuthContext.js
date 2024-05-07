@@ -19,20 +19,28 @@ export const AuthProvider = ({ children }) => {
 
   axios.defaults.withCredentials = true;
   const checkAuthentication = () => {
-    axios.get(`${whichAPI}`).then((res) => {
-      if (res.data.Status === "You are authenticated") {
-        console.log(res, "success");
-        setAuth(true);
-        setName(res.data.name);
-        setRole(res.data.role);
-        setUserID(res.data.id);
-        setLoading(false);
-      } else {
-        console.log(res, "err");
-        setAuth(false);
-        setLoading(true);
-      }
-    });
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios
+        .get(`${whichAPI}`, { headers: { Authorization: `Bearer ${token}` } })
+        .then((res) => {
+          if (res.data.Status === "You are authenticated") {
+            console.log(res, "success");
+            setAuth(true);
+            setName(res.data.name);
+            setRole(res.data.role);
+            setUserID(res.data.id);
+            setLoading(false);
+          } else {
+            console.log(res, "err");
+            setAuth(false);
+            setLoading(true);
+          }
+        });
+    } else {
+      setAuth(false);
+      setLoading(true);
+    }
   };
   useEffect(() => {
     checkAuthentication();

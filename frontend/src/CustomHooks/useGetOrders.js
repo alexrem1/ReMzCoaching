@@ -12,8 +12,12 @@ export const useGetOrders = () => {
 
   useEffect(() => {
     const fetchMyOrders = async () => {
+      const token = localStorage.getItem("token");
+
       try {
-        const response = await axios.get(`${whichAPI}/orders/${userID}`);
+        const response = await axios.get(`${whichAPI}/orders/${userID}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setMyOrders(response.data);
         console.log(response, "user bookings fetched");
       } catch (error) {

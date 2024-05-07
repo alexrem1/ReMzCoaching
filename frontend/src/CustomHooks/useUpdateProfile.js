@@ -62,25 +62,30 @@ export default function useUpdateProfile() {
       : process.env.REACT_APP_VURL;
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
     data.FirstChildDOB = dayjs(data.FirstChildDOB).format("DD/MM/YYYY");
     data.SecondChildDOB =
       data.SecondChildDOB && dayjs(data.SecondChildDOB).format("DD/MM/YYYY");
 
     try {
-      await axios.put(`${whichAPI}/users/${userID}`, data).then((res) => {
-        if (step === 3) {
-          if (res.data.Status === "User updated successfully") {
-            console.log("success update", res);
-            navigate("/profile");
-          } else {
-            setError("root", { message: res.data.Error });
-            console.log("error update", res);
+      const token = localStorage.getItem("token");
+      await axios
+        .put(`${whichAPI}/users/${userID}`, data, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          if (step === 3) {
+            if (res.data.Status === "User updated successfully") {
+              // console.log("success update", res);
+              navigate("/profile");
+            } else {
+              setError("root", { message: res.data.Error });
+              // console.log("error update", res);
+            }
           }
-        }
-      });
+        });
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
       setError("root", { message: error.message });
     }
   };

@@ -80,10 +80,10 @@ export default function CheckoutForm() {
     // redirected to the `return_url`.
     if (error.type === "card_error" || error.type === "validation_error") {
       setMessage(error.message);
-      console.log(error);
+      // console.log(error);
     } else {
       setMessage("An unexpected error occurred.");
-      console.log(error, message);
+      // console.log(error, message);
     }
 
     setIsLoading(false);
@@ -133,8 +133,9 @@ export default function CheckoutForm() {
             </span>
           </button>
           <p>
-            Use the card number 4242 4242 4242 4242 to simulate a test card and
-            proceed with payment.
+            Use the card number 4242 4242 4242 4242 to simulate a test card, use
+            any expiry date in the future and use any cvc to proceed with
+            payment.
           </p>
           {/* <CAPTCHA /> */}
           {/* Show any error or success messages */}

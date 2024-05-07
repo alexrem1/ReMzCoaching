@@ -11,8 +11,11 @@ export const useGetProducts = () => {
 
   useEffect(() => {
     const fetchUserProducts = async () => {
+      const token = localStorage.getItem("token");
       try {
-        const response = await axios.get(`${whichAPI}/products`);
+        const response = await axios.get(`${whichAPI}/products`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setProducts(response.data);
         // console.log(response.data, "products fetched");
       } catch (error) {

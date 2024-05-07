@@ -48,6 +48,10 @@ export default function useLogin() {
         setAuth(true);
         setLoading(false);
         setRole(res.data.role);
+
+        const token = res.data.token;
+        // Store token in local storage or state
+        localStorage.setItem("token", token);
         // Redirect based on user role
         if (res.data.role === "admin") {
           navigate("/admin");

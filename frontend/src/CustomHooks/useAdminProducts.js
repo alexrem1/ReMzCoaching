@@ -40,6 +40,8 @@ export default function useAdminProducts(
     resolver: yupResolver(schema),
   });
 
+  const token = localStorage.getItem("token");
+
   const whichAPI =
     window.location.hostname === "localhost"
       ? process.env.REACT_APP_API_URL
@@ -47,15 +49,19 @@ export default function useAdminProducts(
 
   //   add product
   async function addProductSubmit(data) {
-    console.log(data);
+    // console.log(data);
 
     try {
-      await axios.post(`${whichAPI}/admin-add-product`, data).then((res) => {
-        console.log(res);
-        navigate("/admin");
-      });
+      await axios
+        .post(`${whichAPI}/admin-add-product`, data, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          // console.log(res);
+          navigate("/admin");
+        });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   }
 
@@ -66,7 +72,9 @@ export default function useAdminProducts(
         ? process.env.REACT_APP_API_URL
         : process.env.REACT_APP_VURL;
     try {
-      axios.delete(`${whichAPI}/admin-delete-product/${productId}`);
+      axios.delete(`${whichAPI}/admin-delete-product/${productId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const updatedProducts = products.filter(
         (product) => product.product_id !== productId
@@ -74,7 +82,7 @@ export default function useAdminProducts(
       setProducts(updatedProducts);
       setActiveProductIndex(0);
     } catch (error) {
-      console.log("Error deleting product:", error);
+      // console.log("Error deleting product:", error);
     }
   }
 
@@ -87,15 +95,17 @@ export default function useAdminProducts(
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const res = await axios.get(`${whichAPI}/products/${id}`);
+        const res = await axios.get(`${whichAPI}/products/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-        console.log(res.data, "product fetched successfully");
+        // console.log(res.data, "product fetched successfully");
 
         setSelectedProduct(res.data);
 
         // /products/product-update
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     };
 
@@ -103,14 +113,15 @@ export default function useAdminProducts(
   }, [id]);
 
   async function updateProductSubmit(data) {
-    console.log(data, "updatedProduct");
+    // console.log(data, "updatedProduct");
     try {
       const res = await axios.put(
         `${whichAPI}/admin-update-product/${id}`,
-        data
+        data,
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       navigate("/admin");
-      console.log(res);
+      // console.log(res);
     } catch (error) {}
   }
 

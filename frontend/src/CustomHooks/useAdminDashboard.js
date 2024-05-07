@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 export default function useAdminDashboard() {
   const [userData, setUserData] = useState([]);
+  const token = localStorage.getItem("token");
 
   const whichAPI =
     window.location.hostname === "localhost"
@@ -11,11 +12,13 @@ export default function useAdminDashboard() {
   useEffect(() => {
     const fetchUserOrders = async () => {
       try {
-        const response = await axios.get(`${whichAPI}/admin-users-info`);
+        const response = await axios.get(`${whichAPI}/admin-users-info`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setUserData(response.data);
-        console.log(response.data);
+        // console.log(response.data);
       } catch (error) {
-        console.error("Error fetching user orders:", error);
+        // console.error("Error fetching user orders:", error);
       }
     };
 
@@ -24,7 +27,9 @@ export default function useAdminDashboard() {
 
   const deleteOrder = async (orderId) => {
     await axios
-      .delete(`${whichAPI}/admin-delete-users-orders/${orderId}`)
+      .delete(`${whichAPI}/admin-delete-users-orders/${orderId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => {
         setUserData((prevUserOrders) => {
           // Update the userOrders state by filtering out the deleted order
@@ -42,7 +47,10 @@ export default function useAdminDashboard() {
   const deleteUser = async (userId) => {
     try {
       // First, delete the user
-      await axios.delete(`${whichAPI}/admin-delete-users-and-orders/${userId}`);
+      await axios.delete(
+        `${whichAPI}/admin-delete-users-and-orders/${userId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
       // Then, filter out the deleted user from userData and also remove their orders
       setUserData((prevUserData) => {

@@ -22,12 +22,14 @@ function Payment() {
         : process.env.REACT_APP_VURL;
 
     const makeRequest = async () => {
+      const token = localStorage.getItem("token");
       try {
         const response = await axios.post(
           `${whichAPI}/create-payment-intent/${id}`,
           state,
           date,
-          formattedDateTime
+          formattedDateTime,
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         // Handle the response properly

@@ -15,7 +15,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: [process.env.VURL],
+    origin: [process.env.VURL, process.env.LOCAL],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -31,7 +31,8 @@ const db = mysql.createConnection({
 
 // middleware function to check if user is authenticated
 const verifyUser = (req, res, next) => {
-  const token = req.cookies.token;
+  const token =
+    req.headers.authorization && req.headers.authorization.split(" ")[1];
   if (!token) {
     return res.json({ Error: "You are not authenticated" });
   } else
@@ -52,7 +53,8 @@ const verifyUser = (req, res, next) => {
 
 // Middleware function to verify user role
 const verifyRole = (requiredRole) => (req, res, next) => {
-  const token = req.cookies.token;
+  const token =
+    req.headers.authorization && req.headers.authorization.split(" ")[1];
   if (!token) {
     return res.redirect(process.env.VURL);
   }
@@ -171,7 +173,7 @@ app.post("/login", (req, res) => {
         req.body.password.toString(),
         data[0].password,
         (err, response) => {
-          if (err) return res.json({ Error: "Dog" });
+          if (err) return res.json({ Error: "Error comparing passwords" });
           if (response) {
             const name = data[0].CarerFirstName + " " + data[0].CarerLastName;
             const role = data[0].role;
@@ -185,12 +187,13 @@ app.post("/login", (req, res) => {
                 expiresIn: "1d",
               }
             );
-            res.cookie("token", token, {
-              expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
-              secure: true,
-              httpOnly: true,
-              sameSite: "none",
-            });
+            // res.cookie("token", token, {
+            //   expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
+            // secure: true,
+            //   httpOnly: true,
+            // sameSite: "none"
+            //   domain: "remzcoaching-frontend.vercel.app",
+            // });
             return res.status(200).json({
               Status: "User logged in successfully",
               role,
@@ -198,8 +201,8 @@ app.post("/login", (req, res) => {
               id,
               email,
               phone,
+              token,
             });
-            // deprecated: res.json({ Status: "User logged in successfully" }, role);
           } else {
             return res.json({
               Error: "Please check your password and try again.",
@@ -211,16 +214,16 @@ app.post("/login", (req, res) => {
   });
 });
 
-// only users can log out
-app.get("/logout", verifyUser, (req, res) => {
-  res.cookie("token", "", {
-    expires: new Date(0),
-    httpOnly: true,
-    secure: true, // Ensure to use HTTPS
-    sameSite: "none",
-  });
-  return res.json({ Status: "User logged out successfully" });
-});
+// // only users can log out
+// app.get("/logout", verifyUser, (req, res) => {
+//   res.cookie("token", "", {
+//     expires: new Date(0),
+//     httpOnly: true,
+//     secure: true, // Ensure to use HTTPS
+//     sameSite: "none",
+//   });
+//   return res.json({ Status: "User logged out successfully" });
+// });
 
 //users can register
 app.post("/register", (req, res) => {
@@ -277,12 +280,33 @@ app.post("/register", (req, res) => {
       var mailOptions = {
         from: process.env.MY_EMAIL,
         to: req.body.Email,
-        subject: "You've registered with ReMz Coaching!",
+        subject: "Welcome to ReMz Coaching!",
         html: `
-        <p>Welcome to the team!</p>
-        <p>Your account has been created and I look forward to interacting with you.</p>
-        <p>Please login <a href="${process.env.VURL}/login">here</a>.</p>
-        <p>If you have any questions, reply back to this email.</p>
+        <p>Welcome aboard! We're thrilled to have you join us at ReMz Coaching. Thank you for choosing our platform.</p>
+
+        <p>Your account has been successfully created, and you're now part of our community. Here's a quick overview of what you can do:</p>
+
+        <ul>
+        <li>
+        <p>Explore and purchase our services</p>
+        </li>
+        <li>
+        <p>Update account details</p>
+        </li>
+        <li>
+        <p>Check order details</p>
+        </li>
+        <li>
+        <p>Delete account</p>
+        </li>
+        </ul>
+
+        <p>To get started, simply <a href="${process.env.VURL}/login">log in</a> to your account using the credentials you provided during registration. If you have any questions or need assistance, don't hesitate to reach out to our <a href="mailto:wickzy123@hotmail.com">support team</a>.</p>
+
+        <p>We're excited to have you with us and look forward to serving you.
+        </p>
+
+        <p>Yours,<br/>Alex</p>
       `,
       };
 
@@ -556,11 +580,18 @@ app.delete("/delete-account/:id", verifyUser, (req, res) => {
       var mailOptions = {
         from: process.env.MY_EMAIL,
         to: req.email,
-        subject: "Account deleted",
+        subject: "Account Deletion Confirmation",
         html: `
-        <p>It's sad to see you leave!</p>
-        <p>Your data with us has been deleted rom the database.</a>.</p>
-        <p>If you have any feedback, reply back to this email.</p>
+        <p>We're writing to confirm that your account has been successfully deleted from our system.
+        </p>
+
+        <p>Please note that this action is irreversible, and you will no longer have access to your account or any associated data.</p>
+
+        <p>If you believe this deletion was made in error or if you have any questions, please don't hesitate to contact us.</p>
+
+        <p>Thank you for being a part of our community. We appreciate your support.</p>
+
+        <p>Yours,<br/>Alex</p>
       `,
       };
 
@@ -616,9 +647,19 @@ app.post("/forgot-password", (req, res) => {
     var mailOptions = {
       from: process.env.MY_EMAIL,
       to: userEMail,
-      subject: "Reset your password",
-      html: `<p>Here's the link to reset your password: <a href="${process.env.VURL}/reset-password/${userID}/${token}">Reset password</a></p>
+      subject: "Forgotten your password",
+      html: `
+      <p>Forgotten your password on <a href="${process.env.VURL}">remzcoaching-frontend.vercel.app</a>? This email contains a secure link to choose a new password for your account.</p>
+
+      <p>Email: ${userEMail}</p>
+
+      <p>Use this secure link to reset your password: <a href="${process.env.VURL}/reset-password/${userID}/${token}">${process.env.VURL}/reset-password/${userID}/${token}</a></p>
+
       <p>Please note this password reset expires in 30 minutes</p>
+
+      <p>If you did not request this password reset or believe your account has been compromised, please contact our support team immediately at <a href="mailto:wickzy123@hotmail.com">wickzy123@hotmail.com</a>.</p>
+
+      <p>Yours, <br />Alex</p>
       `,
     };
 
@@ -685,8 +726,12 @@ app.post("/reset-password/:id/:token", (req, res) => {
               subject: "Password reset successfully",
               html: `
                 <p>Your password has been successfully reset.</p>
-                <p>Please login <a href="${process.env.VURL}/login">here</a>.</p>
-                <p>If you have any questions, reply back to this email.</p>
+             
+                <p>If you initiated this password reset request, you can safely ignore this email. Your password has been updated, and you can now log in, <a href="${process.env.VURL}/login">here</a>, using your new password.</p>
+                
+                <p>If you did not reset password and believe your account has been compromised, please contact our support team immediately at <a href="mailto:wickzy123@hotmail.com">wickzy123@hotmail.com</a>.</p>
+
+                <p>Yours, <br />Alex</p>
               `,
             };
 
@@ -928,12 +973,23 @@ app.put("/orders/:id", verifyUser, async (req, res) => {
           var mailOptions = {
             from: process.env.MY_EMAIL,
             to: req.email,
-            subject: "Order placed successfully",
+            subject: "Your Order Confirmation",
             html: `
-      <p>You have purchased: ${paymentIntent.description}</p>
-      <p>I'll be in touch with you soon to confirm your order on the number provided: ${paymentIntent.shipping.phone}</p>
-      <p>Check your order <a href="${process.env.VURL}/profile">here</a>.</p>
-      <p>If you have any questions, reply back to this email.</p>
+            <p>We are delighted to inform you that your order has been successfully placed.</p>
+
+            <ul>
+            <li><p>You have purchased: ${paymentIntent.description}</p></li>
+<li> <p>We'll be in touch with you soon to confirm your order on the number provided: ${paymentIntent.shipping.phone}</p></li>
+            </ul>
+
+      <p>You can view the status of your order and manage your account by visiting your profile page <a href="${process.env.VURL}/profile">here</a>.</p>
+
+
+      <p>If you have any questions or need further assistance, please don't hesitate to reply to this email. We're here to help!</p>
+
+      <p>Thank you for choosing us for your purchase.</p>
+
+      <p>Yours, <br />Alex</p>
       `,
           };
 
@@ -998,7 +1054,7 @@ const resetTotalSpaces = () => {
   }
 };
 
-const job = new cron.CronJob("0 06 * * 1", resetTotalSpaces); // Run every Sunday at 00:00
+const job = new cron.CronJob("0 06 * * 1", resetTotalSpaces); // Run every Monday at 6am
 
 // Start the cron job
 job.start();

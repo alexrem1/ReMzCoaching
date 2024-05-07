@@ -7,7 +7,7 @@ export default function Footer() {
   const { navigate } = useUtilities();
 
   const sendEmail = () => {
-    const email = "example@example.com";
+    const email = "wickzy123@hotmail.com";
     window.open(`mailto:${email}`);
   };
 

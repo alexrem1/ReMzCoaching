@@ -14,13 +14,18 @@ export default function useGetProfile() {
 
   useEffect(() => {
     const fetchUserDetails = async () => {
+      const token = localStorage.getItem("token");
       try {
-        await axios.get(`${whichAPI}/users/${userID}`).then((res) => {
-          setUserDetails(res.data);
-          // console.log(res.data);
-        });
+        await axios
+          .get(`${whichAPI}/users/${userID}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then((res) => {
+            setUserDetails(res.data);
+            // console.log(res.data);
+          });
       } catch (error) {
-        console.log("error", error);
+        // console.log("error", error);
       }
     };
 

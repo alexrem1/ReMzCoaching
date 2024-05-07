@@ -93,7 +93,7 @@ const SelectChild = ({ field, errors, prod }) => {
         defaultValue="Select your child"
         onChange={(value) => {
           field.onChange(value);
-          console.log(value, "child selected");
+          // console.log(value, "child selected");
         }}
       >
         {userDetails.length > 0 &&

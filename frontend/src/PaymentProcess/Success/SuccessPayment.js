@@ -28,10 +28,16 @@ function SuccessPayment() {
           ? process.env.REACT_APP_API_URL
           : process.env.REACT_APP_VURL;
       try {
-        const response = await axios.put(`${whichAPI}/orders/${id}`, {
-          payment_intent,
-          formattedDateTime,
-        });
+        const token = localStorage.getItem("token");
+
+        const response = await axios.put(
+          `${whichAPI}/orders/${id}`,
+          { headers: { Authorization: `Bearer ${token}` } },
+          {
+            payment_intent,
+            formattedDateTime,
+          }
+        );
         setStatus(response.data.paymentIntent.status);
         setTimeout(() => {
           navigate("/profile");

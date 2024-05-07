@@ -514,27 +514,10 @@ function UserUpdateDetails() {
                                   <AlertCircle className="tooltip-trigger" />
                                 </div>
 
-                                <DatePicker
-                                  ref={field.ref}
-                                  name={field.name}
-                                  onBlur={field.onBlur}
-                                  onChange={(date) => {
-                                    field.onChange(date ? dayjs(date) : null);
-                                    console.log(
-                                      date,
-                                      dayjs(date),
-                                      dayjs(date).format("DD/MM/YYYY")
-                                    );
-                                  }}
-                                  format="DD/MM/YYYY"
-                                  locale={{
-                                    format: "DD/MM/YYYY",
-                                    lang: { locale: "en-gb" },
-                                  }} // Set locale to UK
-                                  value={
-                                    field.value ? dayjs(field.value) : null
-                                  }
-                                  placeholder="Select DOB"
+                                <CustomDatePicker
+                                  field={field}
+                                  errors={errors}
+                                  placeholder={"Select DOB"}
                                 />
                               </div>
                             ) : (

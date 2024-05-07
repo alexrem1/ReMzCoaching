@@ -3,18 +3,16 @@ import dayjs from "dayjs";
 
 // Extract DatePicker component
 const CustomDatePicker = ({ field, errors, disabledDate, placeholder }) => {
-  console.log(field, errors);
   const handleChange = (date) => {
     field.onChange(date && dayjs(date)); // Update form value
     if (date === null) {
       // If date is cleared, clear the error message
       field.onChange(undefined);
-      console.log(errors, date);
-      console.log(date, dayjs(date), dayjs(date)?.format("DD/MM/YYYY"));
-      console.log("dog");
+      // console.log(errors, date);
+      // console.log(date, dayjs(date), dayjs(date)?.format("DD/MM/YYYY"));
     }
-    console.log(errors, date);
-    console.log(date, dayjs(date), dayjs(date)?.format("DD/MM/YYYY"));
+    // console.log(errors, date);
+    // console.log(date, dayjs(date), dayjs(date)?.format("DD/MM/YYYY"));
   };
 
   return (

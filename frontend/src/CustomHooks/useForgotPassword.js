@@ -31,12 +31,16 @@ export default function useForgotPassword() {
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post(`${whichAPI}/forgot-password`, data);
+      const token = localStorage.getItem("token");
+
+      const res = await axios.post(`${whichAPI}/forgot-password`, data, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       if (res.data.Status === "Successfully requested password reset") {
         setResetSuccess(true);
       }
     } catch (err) {
-      console.log(err, "err");
+      // console.log(err, "err");
       setError("root", {
         message: err.response.data.Error,
       });
