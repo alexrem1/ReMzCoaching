@@ -31,7 +31,7 @@ export default function useForgotPassword() {
 
   const onSubmit = async (data) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
 
       const res = await axios.post(`${whichAPI}/forgot-password`, data, {
         headers: { Authorization: `Bearer ${token}` },

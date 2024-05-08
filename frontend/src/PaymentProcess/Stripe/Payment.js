@@ -23,7 +23,7 @@ function Payment() {
 
     const makeRequest = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
         const response = await axios.post(
           `${whichAPI}/create-payment-intent/${id}`,
           state,

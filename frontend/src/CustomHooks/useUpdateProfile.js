@@ -68,7 +68,7 @@ export default function useUpdateProfile() {
       data.SecondChildDOB && dayjs(data.SecondChildDOB).format("DD/MM/YYYY");
 
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       await axios
         .put(`${whichAPI}/users/${userID}`, data, {
           headers: { Authorization: `Bearer ${token}` },

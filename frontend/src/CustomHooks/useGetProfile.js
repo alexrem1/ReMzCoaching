@@ -14,7 +14,7 @@ export default function useGetProfile() {
 
   useEffect(() => {
     const fetchUserDetails = async () => {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       try {
         await axios
           .get(`${whichAPI}/users/${userID}`, {

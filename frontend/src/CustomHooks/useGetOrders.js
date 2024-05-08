@@ -12,7 +12,7 @@ export const useGetOrders = () => {
 
   useEffect(() => {
     const fetchMyOrders = async () => {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
 
       try {
         const response = await axios.get(`${whichAPI}/orders/${userID}`, {

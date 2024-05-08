@@ -40,7 +40,7 @@ export default function useResetPassword() {
       : process.env.REACT_APP_VURL;
 
   const onSubmit = async (data) => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     await axios
       .post(`${whichAPI}/reset-password/${id}/${token}`, data, {

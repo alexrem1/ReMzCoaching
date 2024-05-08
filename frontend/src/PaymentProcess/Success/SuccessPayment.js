@@ -28,7 +28,7 @@ function SuccessPayment() {
           ? process.env.REACT_APP_API_URL
           : process.env.REACT_APP_VURL;
       try {
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
 
         const response = await axios.put(
           `${whichAPI}/orders/${id}`,

@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
   axios.defaults.withCredentials = true;
   const checkAuthentication = () => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (token) {
       axios
         .get(`${whichAPI}`, { headers: { Authorization: `Bearer ${token}` } })

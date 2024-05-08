@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 export default function useAdminDashboard() {
   const [userData, setUserData] = useState([]);
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   const whichAPI =
     window.location.hostname === "localhost"

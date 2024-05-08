@@ -20,6 +20,14 @@ app.use(
     credentials: true,
   })
 );
+
+// Content Security Policy middleware
+app.use((req, res, next) => {
+  console.log(req.headers);
+  res.setHeader("Content-Security-Policy", "script-src 'self'");
+  next();
+});
+
 app.use(cookieParser());
 
 const db = mysql.createConnection({
@@ -184,7 +192,7 @@ app.post("/login", (req, res) => {
               { name, role, id, email, phone },
               process.env.SECRET_KEY,
               {
-                expiresIn: "1d",
+                expiresIn: "1h",
               }
             );
             // res.cookie("token", token, {

@@ -8,7 +8,7 @@ export default function useDeleteUser() {
 
   const deleteUser = async (userId) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       // First, delete the user
       await axios.delete(`${whichAPI}/delete-account/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },

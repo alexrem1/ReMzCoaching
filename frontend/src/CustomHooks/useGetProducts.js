@@ -11,7 +11,7 @@ export const useGetProducts = () => {
 
   useEffect(() => {
     const fetchUserProducts = async () => {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       try {
         const response = await axios.get(`${whichAPI}/products`, {
           headers: { Authorization: `Bearer ${token}` },

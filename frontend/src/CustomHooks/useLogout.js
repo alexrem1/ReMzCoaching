@@ -1,6 +1,6 @@
 export default function useLogout() {
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     window.location.href = "/";
   };
 

@@ -20,6 +20,11 @@ RESTful API
 - **Purpose:** Facilitate communication between the frontend and backend components of the application by providing a standardized and stateless interface for accessing and manipulating resources
 - **Description:** The RESTful API serves as the intermediary layer that enables seamless interaction between the frontend and backend of the application. It follows the principles of Representational State Transfer (REST), which emphasize stateless communication and standardized endpoints. Through the API, clients can perform various operations such as retrieving, creating, updating, and deleting resources using HTTP methods like GET, POST, PUT, and DELETE. Each endpoint is designed to correspond to a specific resource or collection of resources, making the API intuitive and easy to use. By adhering to RESTful principles, the API promotes scalability, flexibility, and maintainability, contributing to the overall efficiency and robustness of the application architecture
 
+Token-based authentication with server-side rendering (SSR)
+
+- **Purpose:** Token-based authentication with server-side rendering (SSR) is aimed at securing web applications while simultaneously enhancing user experience by providing a seamless authentication process
+- **Description:** This authentication approach involves using JSON Web Tokens (JWT) to authenticate users and server-side rendering (SSR) to render the initial HTML content with the user's authentication status
+
 ### Features
 
 User Authentication

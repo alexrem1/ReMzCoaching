@@ -40,7 +40,7 @@ export default function useAdminProducts(
     resolver: yupResolver(schema),
   });
 
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   const whichAPI =
     window.location.hostname === "localhost"
