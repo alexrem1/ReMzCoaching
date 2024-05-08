@@ -33,12 +33,12 @@ const db = mysql.createConnection({
 const verifyUser = (req, res, next) => {
   const token =
     req.headers.authorization && req.headers.authorization.split(" ")[1];
+
   if (!token) {
     return res.json({ Error: "You are not authenticated" });
   } else
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
       if (err) {
-        res.clearCookie("token");
         return res.json({ Error: "Invalid token" });
       } else {
         req.name = decoded.name;

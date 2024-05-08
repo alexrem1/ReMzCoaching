@@ -13,7 +13,7 @@ function Payment() {
   const [productChosen, setProductChosen] = useState("");
 
   const location = useLocation();
-  const { state, date, formattedDateTime } = location;
+  const { state } = location;
 
   useEffect(() => {
     const whichAPI =
@@ -22,14 +22,16 @@ function Payment() {
         : process.env.REACT_APP_VURL;
 
     const makeRequest = async () => {
-      const token = localStorage.getItem("token");
       try {
+        const token = localStorage.getItem("token");
         const response = await axios.post(
           `${whichAPI}/create-payment-intent/${id}`,
           state,
-          date,
-          formattedDateTime,
-          { headers: { Authorization: `Bearer ${token}` } }
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         // Handle the response properly

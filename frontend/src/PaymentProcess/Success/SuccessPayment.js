@@ -32,11 +32,11 @@ function SuccessPayment() {
 
         const response = await axios.put(
           `${whichAPI}/orders/${id}`,
-          { headers: { Authorization: `Bearer ${token}` } },
           {
             payment_intent,
             formattedDateTime,
-          }
+          },
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         setStatus(response.data.paymentIntent.status);
         setTimeout(() => {

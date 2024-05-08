@@ -19,6 +19,11 @@ export default function useBookings() {
       return true; // Weekend is disabled
     }
 
+    // Disable dates before the current day
+    if (current.isBefore(dayjs(), "day")) {
+      return true;
+    }
+
     // Define term dates for the academic year 2023/2024
     const termDates = [
       // Autumn Term 2023
