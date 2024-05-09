@@ -1,5 +1,4 @@
 import "./Home.css";
-import ImageSliderComponent from "./ImageSliderComponent";
 import Reviews from "./Reviews";
 import useUtilities from "../CustomHooks/useUtilities";
 import { useIsAuthenticated } from "../Context/AuthContext";

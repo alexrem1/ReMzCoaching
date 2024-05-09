@@ -37,6 +37,26 @@ app.use((req, res, next) => {
 
 app.use(cookieParser());
 
+const generateCSRFToken = () => {
+  return crypto.randomBytes(64).toString("hex");
+};
+
+const csrfProtection = (req, res, next) => {
+  const csrfToken = req.headers["x-csrf-token"];
+  if (!csrfToken || csrfToken !== req.session.csrfToken) {
+    return res.status(403).json({ error: "Invalid CSRF token" });
+  }
+  next();
+};
+
+// Route handler to generate and send CSRF token to the client
+app.get("/csrf-token", (req, res) => {
+  const csrfToken = generateCSRFToken(); // Your function to generate a CSRF token
+  console.log(csrfToken, "csrf");
+
+  res.json({ csrfToken });
+});
+
 const db = mysql.createConnection({
   host: process.env.DB_HOST_ONLINE,
   user: process.env.DB_USER_ONLINE,
@@ -52,8 +72,7 @@ const verifyUser = (req, res, next) => {
   if (!token) {
     return res.json({ Error: "You are not authenticated" });
   } else
-    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
-      console.log(token, "token");
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
       if (err) {
         return res.json({ Error: "Invalid token" });
       } else {
@@ -75,7 +94,7 @@ const verifyRole = (requiredRole) => (req, res, next) => {
     return res.redirect(process.env.VURL);
   }
 
-  jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) {
       return res.redirect(process.env.VURL);
     }
@@ -198,7 +217,7 @@ app.post("/login", (req, res) => {
             const phone = data[0].ContactNumber;
             const token = jwt.sign(
               { name, role, id, email, phone },
-              process.env.SECRET_KEY,
+              SECRET_KEY,
               {
                 expiresIn: "1h",
               }
@@ -317,7 +336,7 @@ app.post("/register", (req, res) => {
         </li>
         </ul>
 
-        <p>To get started, simply <a href="${process.env.VURL}/login">log in</a> to your account using the credentials you provided during registration. If you have any questions or need assistance, don't hesitate to reach out to our <a href="mailto:wickzy123@hotmail.com">support team</a>.</p>
+        <p>To get started, simply <a href="${process.env.VURL}/login">log in</a> to your account using the credentials you provided during registration. If you have any questions or need assistance, don't hesitate to reach out to our <a href="mailto:alexander.roberts@live.co.uk">support team</a>.</p>
 
         <p>We're excited to have you with us and look forward to serving you.
         </p>
@@ -646,7 +665,7 @@ app.post("/forgot-password", (req, res) => {
 
     const userID = data[0].id;
     const userEMail = data[0].Email;
-    const token = jwt.sign({ id: userID }, process.env.SECRET_KEY, {
+    const token = jwt.sign({ id: userID }, SECRET_KEY, {
       expiresIn: "30m",
     });
 
@@ -673,7 +692,7 @@ app.post("/forgot-password", (req, res) => {
 
       <p>Please note this password reset expires in 30 minutes</p>
 
-      <p>If you did not request this password reset or believe your account has been compromised, please contact our support team immediately at <a href="mailto:wickzy123@hotmail.com">wickzy123@hotmail.com</a>.</p>
+      <p>If you did not request this password reset or believe your account has been compromised, please contact our support team immediately at <a href="mailto:alexander.roberts@live.co.uk">alexander.roberts@live.co.uk</a>.</p>
 
       <p>Yours, <br />Alex</p>
       `,
@@ -696,7 +715,7 @@ app.post("/reset-password/:id/:token", (req, res) => {
   const id = req.params.id;
   const token = req.params.token;
 
-  jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) {
       return res.status(401).json({ Error: "Invalid token" });
     } else {
@@ -745,7 +764,7 @@ app.post("/reset-password/:id/:token", (req, res) => {
              
                 <p>If you initiated this password reset request, you can safely ignore this email. Your password has been updated, and you can now log in, <a href="${process.env.VURL}/login">here</a>, using your new password.</p>
                 
-                <p>If you did not reset password and believe your account has been compromised, please contact our support team immediately at <a href="mailto:wickzy123@hotmail.com">wickzy123@hotmail.com</a>.</p>
+                <p>If you did not reset password and believe your account has been compromised, please contact our support team immediately at <a href="mailto:alexander.roberts@live.co.uk">alexander.roberts@live.co.uk</a>.</p>
 
                 <p>Yours, <br />Alex</p>
               `,

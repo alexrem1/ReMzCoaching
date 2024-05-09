@@ -1,6 +1,4 @@
-import axios from "axios";
 import { useGetProducts } from "../../CustomHooks/useGetProducts";
-import { useNavigate } from "react-router-dom";
 import "./adminProducts.css";
 import useUtilities from "../../CustomHooks/useUtilities";
 import useAdminProducts from "../../CustomHooks/useAdminProducts";

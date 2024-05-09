@@ -9,9 +9,18 @@ export default function useDeleteUser() {
   const deleteUser = async (userId) => {
     try {
       const token = sessionStorage.getItem("token");
+      // Fetch CSRF token
+      const csrfResponse = await axios.get(`${whichAPI}/csrf-token`);
+      const csrfToken = csrfResponse.data.csrfToken;
+
+      // Include CSRF token and Authorization token in headers
+      const headers = {
+        "X-CSRF-Token": csrfToken,
+        Authorization: `Bearer ${token}`,
+      };
       // First, delete the user
       await axios.delete(`${whichAPI}/delete-account/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers,
       });
       return true;
     } catch (error) {

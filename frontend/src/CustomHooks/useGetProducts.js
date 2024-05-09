@@ -12,9 +12,18 @@ export const useGetProducts = () => {
   useEffect(() => {
     const fetchUserProducts = async () => {
       const token = sessionStorage.getItem("token");
+      // Fetch CSRF token
+      const csrfResponse = await axios.get(`${whichAPI}/csrf-token`);
+      const csrfToken = csrfResponse.data.csrfToken;
+
+      // Include CSRF token and Authorization token in headers
+      const headers = {
+        "X-CSRF-Token": csrfToken,
+        Authorization: `Bearer ${token}`,
+      };
       try {
         const response = await axios.get(`${whichAPI}/products`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers,
         });
         setProducts(response.data);
         // console.log(response.data, "products fetched");

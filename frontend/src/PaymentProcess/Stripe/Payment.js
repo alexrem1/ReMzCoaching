@@ -24,13 +24,21 @@ function Payment() {
     const makeRequest = async () => {
       try {
         const token = sessionStorage.getItem("token");
+        // Fetch CSRF token
+        const csrfResponse = await axios.get(`${whichAPI}/csrf-token`);
+        const csrfToken = csrfResponse.data.csrfToken;
+
+        // Include CSRF token and Authorization token in headers
+        const headers = {
+          "X-CSRF-Token": csrfToken,
+          Authorization: `Bearer ${token}`,
+        };
+
         const response = await axios.post(
           `${whichAPI}/create-payment-intent/${id}`,
           state,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers,
           }
         );
 

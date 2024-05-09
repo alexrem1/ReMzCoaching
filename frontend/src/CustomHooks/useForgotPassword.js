@@ -31,7 +31,17 @@ export default function useForgotPassword() {
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post(`${whichAPI}/forgot-password`, data);
+      // Fetch CSRF token
+      const csrfResponse = await axios.get(`${whichAPI}/csrf-token`);
+      const csrfToken = csrfResponse.data.csrfToken;
+
+      // Include CSRF token and Authorization token in headers
+      const headers = {
+        "X-CSRF-Token": csrfToken,
+      };
+      const res = await axios.post(`${whichAPI}/forgot-password`, data, {
+        headers,
+      });
       if (res.data.Status === "Successfully requested password reset") {
         setResetSuccess(true);
       }

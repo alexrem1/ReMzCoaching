@@ -40,8 +40,16 @@ export default function useResetPassword() {
       : process.env.REACT_APP_VURL;
 
   const onSubmit = async (data) => {
+    // Fetch CSRF token
+    const csrfResponse = await axios.get(`${whichAPI}/csrf-token`);
+    const csrfToken = csrfResponse.data.csrfToken;
+
+    // Include CSRF token and Authorization token in headers
+    const headers = {
+      "X-CSRF-Token": csrfToken,
+    };
     await axios
-      .post(`${whichAPI}/reset-password/${id}/${token}`, data)
+      .post(`${whichAPI}/reset-password/${id}/${token}`, data, { headers })
       .then((res) => {
         if (res.data.Status === "Successfully reset password") {
           setSuccess(true);

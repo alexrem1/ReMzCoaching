@@ -52,9 +52,18 @@ export default function useAdminProducts(
     // console.log(data);
 
     try {
+      // Fetch CSRF token
+      const csrfResponse = await axios.get(`${whichAPI}/csrf-token`);
+      const csrfToken = csrfResponse.data.csrfToken;
+
+      // Include CSRF token and Authorization token in headers
+      const headers = {
+        "X-CSRF-Token": csrfToken,
+        Authorization: `Bearer ${token}`,
+      };
       await axios
         .post(`${whichAPI}/admin-add-product`, data, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers,
         })
         .then((res) => {
           // console.log(res);
@@ -66,14 +75,19 @@ export default function useAdminProducts(
   }
 
   // delete a product
-  function deleteProduct(productId) {
-    const whichAPI =
-      window.location.hostname === "localhost"
-        ? process.env.REACT_APP_API_URL
-        : process.env.REACT_APP_VURL;
+  async function deleteProduct(productId) {
+    // Fetch CSRF token
+    const csrfResponse = await axios.get(`${whichAPI}/csrf-token`);
+    const csrfToken = csrfResponse.data.csrfToken;
+
+    // Include CSRF token and Authorization token in headers
+    const headers = {
+      "X-CSRF-Token": csrfToken,
+      Authorization: `Bearer ${token}`,
+    };
     try {
       axios.delete(`${whichAPI}/admin-delete-product/${productId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers,
       });
 
       const updatedProducts = products.filter(
@@ -95,8 +109,17 @@ export default function useAdminProducts(
   useEffect(() => {
     const getProduct = async () => {
       try {
+        // Fetch CSRF token
+        const csrfResponse = await axios.get(`${whichAPI}/csrf-token`);
+        const csrfToken = csrfResponse.data.csrfToken;
+
+        // Include CSRF token and Authorization token in headers
+        const headers = {
+          "X-CSRF-Token": csrfToken,
+          Authorization: `Bearer ${token}`,
+        };
         const res = await axios.get(`${whichAPI}/products/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers,
         });
 
         // console.log(res.data, "product fetched successfully");
@@ -115,11 +138,18 @@ export default function useAdminProducts(
   async function updateProductSubmit(data) {
     // console.log(data, "updatedProduct");
     try {
-      const res = await axios.put(
-        `${whichAPI}/admin-update-product/${id}`,
-        data,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      // Fetch CSRF token
+      const csrfResponse = await axios.get(`${whichAPI}/csrf-token`);
+      const csrfToken = csrfResponse.data.csrfToken;
+
+      // Include CSRF token and Authorization token in headers
+      const headers = {
+        "X-CSRF-Token": csrfToken,
+        Authorization: `Bearer ${token}`,
+      };
+      await axios.put(`${whichAPI}/admin-update-product/${id}`, data, {
+        headers,
+      });
       navigate("/admin");
       // console.log(res);
     } catch (error) {}

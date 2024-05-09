@@ -29,6 +29,15 @@ function SuccessPayment() {
           : process.env.REACT_APP_VURL;
       try {
         const token = sessionStorage.getItem("token");
+        // Fetch CSRF token
+        const csrfResponse = await axios.get(`${whichAPI}/csrf-token`);
+        const csrfToken = csrfResponse.data.csrfToken;
+
+        // Include CSRF token and Authorization token in headers
+        const headers = {
+          "X-CSRF-Token": csrfToken,
+          Authorization: `Bearer ${token}`,
+        };
 
         const response = await axios.put(
           `${whichAPI}/orders/${id}`,
@@ -36,7 +45,7 @@ function SuccessPayment() {
             payment_intent,
             formattedDateTime,
           },
-          { headers: { Authorization: `Bearer ${token}` } }
+          { headers }
         );
         setStatus(response.data.paymentIntent.status);
         setTimeout(() => {

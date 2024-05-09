@@ -15,10 +15,19 @@ export default function useGetProfile() {
   useEffect(() => {
     const fetchUserDetails = async () => {
       const token = sessionStorage.getItem("token");
+      // Fetch CSRF token
+      const csrfResponse = await axios.get(`${whichAPI}/csrf-token`);
+      const csrfToken = csrfResponse.data.csrfToken;
+
+      // Include CSRF token and Authorization token in headers
+      const headers = {
+        "X-CSRF-Token": csrfToken,
+        Authorization: `Bearer ${token}`,
+      };
       try {
         await axios
           .get(`${whichAPI}/users/${userID}`, {
-            headers: { Authorization: `Bearer ${token}` },
+            headers,
           })
           .then((res) => {
             setUserDetails(res.data);

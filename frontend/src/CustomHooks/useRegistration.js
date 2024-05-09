@@ -145,7 +145,16 @@ export default function useRegistration() {
       data.SecondChildDOB && dayjs(data.SecondChildDOB).format("DD/MM/YYYY");
 
     // console.log(data);
-    await axios.post(`${whichAPI}/register`, data).then((res) => {
+
+    // Fetch CSRF token
+    const csrfResponse = await axios.get(`${whichAPI}/csrf-token`);
+    const csrfToken = csrfResponse.data.csrfToken;
+
+    // Include CSRF token and Authorization token in headers
+    const headers = {
+      "X-CSRF-Token": csrfToken,
+    };
+    await axios.post(`${whichAPI}/register`, data, { headers }).then((res) => {
       if (step === 3) {
         // console.log("Final Form Data: ", data);
         if (res.data.Status === "User registered successfully") {

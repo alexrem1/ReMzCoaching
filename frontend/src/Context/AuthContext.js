@@ -16,25 +16,32 @@ export const AuthProvider = ({ children }) => {
       : process.env.REACT_APP_VURL;
 
   axios.defaults.withCredentials = true;
-  const checkAuthentication = () => {
+  const checkAuthentication = async () => {
     const token = sessionStorage.getItem("token");
     if (token) {
-      axios
-        .get(`${whichAPI}`, { headers: { Authorization: `Bearer ${token}` } })
-        .then((res) => {
-          if (res.data.Status === "You are authenticated") {
-            console.log(res, "success");
-            setAuth(true);
-            setName(res.data.name);
-            setRole(res.data.role);
-            setUserID(res.data.id);
-            setLoading(false);
-          } else {
-            console.log(res, "err");
-            setAuth(false);
-            setLoading(true);
-          }
-        });
+      // Fetch CSRF token
+      const csrfResponse = await axios.get(`${whichAPI}/csrf-token`);
+      const csrfToken = csrfResponse.data.csrfToken;
+
+      // Include CSRF token and Authorization token in headers
+      const headers = {
+        "X-CSRF-Token": csrfToken,
+        Authorization: `Bearer ${token}`,
+      };
+      axios.get(`${whichAPI}`, { headers }).then((res) => {
+        if (res.data.Status === "You are authenticated") {
+          console.log(res, "success");
+          setAuth(true);
+          setName(res.data.name);
+          setRole(res.data.role);
+          setUserID(res.data.id);
+          setLoading(false);
+        } else {
+          console.log(res, "err");
+          setAuth(false);
+          setLoading(true);
+        }
+      });
     } else {
       setAuth(false);
       setLoading(true);

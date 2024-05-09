@@ -42,33 +42,46 @@ export default function useLogin() {
 
   const navigate = useNavigate();
   const onSubmit = async (data) => {
-    await axios.post(`${whichAPI}/login`, data).then((res) => {
-      if (res.data.Status === "User logged in successfully") {
-        console.log(res, "success", res.data.role, res.data.name);
-        setAuth(true);
-        setLoading(false);
-        setRole(res.data.role);
+    try {
+      // Fetch CSRF token
+      const csrfResponse = await axios.get(`${whichAPI}/csrf-token`);
+      const csrfToken = csrfResponse.data.csrfToken;
 
-        const token = res.data.token;
-        // Store token in local storage or state
-        sessionStorage.setItem("token", token);
-        // Redirect based on user role
-        if (res.data.role === "admin") {
-          navigate("/admin");
-        } else if (res.data.role === "visitor") {
-          navigate("/");
+      // Include CSRF token and Authorization token in headers
+      const headers = {
+        "X-CSRF-Token": csrfToken,
+      };
+
+      await axios.post(`${whichAPI}/login`, data, { headers }).then((res) => {
+        if (res.data.Status === "User logged in successfully") {
+          console.log(res, "success", res.data.role, res.data.name);
+          setAuth(true);
+          setLoading(false);
+          setRole(res.data.role);
+
+          const token = res.data.token;
+          // Store token in local storage or state
+          sessionStorage.setItem("token", token);
+          // Redirect based on user role
+          if (res.data.role === "admin") {
+            navigate("/admin");
+          } else if (res.data.role === "visitor") {
+            navigate("/");
+          }
+        } else {
+          console.log(res, "err");
+          setError("root", {
+            message: res.data.Error,
+          });
+          setAuth(false);
+          setLoading(true);
+          // inputRef.current.querySelector("input[name='email']").value = "";
+          // inputRef.current.querySelector("input[name='email']").focus();
         }
-      } else {
-        console.log(res, "err");
-        setError("root", {
-          message: res.data.Error,
-        });
-        setAuth(false);
-        setLoading(true);
-        // inputRef.current.querySelector("input[name='email']").value = "";
-        // inputRef.current.querySelector("input[name='email']").focus();
-      }
-    });
+      });
+    } catch (error) {
+      console.error("Error during login:", error);
+    }
   };
   return {
     register,

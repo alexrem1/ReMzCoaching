@@ -12,8 +12,18 @@ export default function useAdminDashboard() {
   useEffect(() => {
     const fetchUserOrders = async () => {
       try {
+        // Fetch CSRF token
+        const csrfResponse = await axios.get(`${whichAPI}/csrf-token`);
+        const csrfToken = csrfResponse.data.csrfToken;
+
+        // Include CSRF token and Authorization token in headers
+        const headers = {
+          "X-CSRF-Token": csrfToken,
+          Authorization: `Bearer ${token}`,
+        };
+
         const response = await axios.get(`${whichAPI}/admin-users-info`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers,
         });
         setUserData(response.data);
         // console.log(response.data);
@@ -26,9 +36,19 @@ export default function useAdminDashboard() {
   }, [whichAPI]);
 
   const deleteOrder = async (orderId) => {
+    // Fetch CSRF token
+    const csrfResponse = await axios.get(`${whichAPI}/csrf-token`);
+    const csrfToken = csrfResponse.data.csrfToken;
+
+    // Include CSRF token and Authorization token in headers
+    const headers = {
+      "X-CSRF-Token": csrfToken,
+      Authorization: `Bearer ${token}`,
+    };
+
     await axios
       .delete(`${whichAPI}/admin-delete-users-orders/${orderId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers,
       })
       .then((res) => {
         setUserData((prevUserOrders) => {
@@ -46,10 +66,20 @@ export default function useAdminDashboard() {
 
   const deleteUser = async (userId) => {
     try {
+      // Fetch CSRF token
+      const csrfResponse = await axios.get(`${whichAPI}/csrf-token`);
+      const csrfToken = csrfResponse.data.csrfToken;
+
+      // Include CSRF token and Authorization token in headers
+      const headers = {
+        "X-CSRF-Token": csrfToken,
+        Authorization: `Bearer ${token}`,
+      };
+
       // First, delete the user
       await axios.delete(
         `${whichAPI}/admin-delete-users-and-orders/${userId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers }
       );
 
       // Then, filter out the deleted user from userData and also remove their orders
