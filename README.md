@@ -25,6 +25,25 @@ Token-based authentication with server-side rendering (SSR)
 - **Purpose:** Token-based authentication with server-side rendering (SSR) is aimed at securing web applications while simultaneously enhancing user experience by providing a seamless authentication process
 - **Description:** This authentication approach involves using JSON Web Tokens (JWT) to authenticate users and server-side rendering (SSR) to render the initial HTML content with the user's authentication status
 
+### Security
+
+CRSF Protection
+
+- **Purpose:** To prevent Cross-Site Request Forgery (CSRF) attacks
+- **Description:** CSRF protection is implemented to safeguard against unauthorized commands or transactions performed on behalf of an authenticated user without their consent. This protection mechanism involves generating and validating unique tokens for each user session. When a user interacts with the application, the server provides a unique CSRF token embedded within the application's requests. Upon submission, the server verifies the received token to ensure that the request originates from the expected user session and not from a malicious third-party site. This helps prevent attackers from tricking users into unintentionally executing harmful actions, such as changing passwords, making transactions, or performing other sensitive operations without their knowledge
+
+Frontend CSP
+
+- **Purpose:** To mitigate the risk of Cross-Site Scripting (XSS) attacks by specifying which resources can be loaded or executed by the browser, thereby enhancing the security of client-side code execution
+- **Description:** Frontend CSP is implemented using the meta tag in HTML or the Content-Security-Policy HTTP header. It defines a set of directives that instruct the browser on which origins are allowed to load certain types of resources (such as scripts, stylesheets, images, fonts, etc.). By restricting the origins from which resources can be loaded, it helps prevent attackers from injecting malicious scripts into web pages, thus protecting users from XSS vulnerabilities
+
+Backend CSP
+
+- **Purpose:** To provide an additional layer of security by specifying CSP directives in the HTTP response headers sent by the server, complementing frontend CSP to further mitigate the risk of XSS attacks and other security vulnerabilities originating from the server-side code or resources
+- **Description:** Backend CSP is implemented on the server-side using server configuration. It adds CSP directives to the HTTP response headers, instructing the browser on how to handle resources loaded from the server. By enforcing stricter policies on resource loading and script execution, it enhances the overall security posture of the web application and reduces the attack surface for potential security threats
+
+fill them both out
+
 ### Features
 
 User Authentication
