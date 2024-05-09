@@ -15,8 +15,6 @@ export const AuthProvider = ({ children }) => {
       ? process.env.REACT_APP_API_URL
       : process.env.REACT_APP_VURL;
 
-  // console.log(whichAPI, process.env.REACT_APP_VURL);
-
   axios.defaults.withCredentials = true;
   const checkAuthentication = () => {
     const token = sessionStorage.getItem("token");

@@ -31,11 +31,7 @@ export default function useForgotPassword() {
 
   const onSubmit = async (data) => {
     try {
-      const token = sessionStorage.getItem("token");
-
-      const res = await axios.post(`${whichAPI}/forgot-password`, data, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.post(`${whichAPI}/forgot-password`, data);
       if (res.data.Status === "Successfully requested password reset") {
         setResetSuccess(true);
       }

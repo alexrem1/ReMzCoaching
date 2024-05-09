@@ -7,6 +7,14 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 import cron from "cron";
+import crypto from "crypto";
+
+const generateSecretKey = () => {
+  return crypto.randomBytes(64).toString("hex");
+};
+
+// Set the secret key in the environment variable
+const SECRET_KEY = generateSecretKey();
 
 dotenv.config();
 
@@ -23,7 +31,6 @@ app.use(
 
 // Content Security Policy middleware
 app.use((req, res, next) => {
-  console.log(req.headers);
   res.setHeader("Content-Security-Policy", "script-src 'self'");
   next();
 });
@@ -46,6 +53,7 @@ const verifyUser = (req, res, next) => {
     return res.json({ Error: "You are not authenticated" });
   } else
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+      console.log(token, "token");
       if (err) {
         return res.json({ Error: "Invalid token" });
       } else {

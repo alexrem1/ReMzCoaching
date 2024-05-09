@@ -40,12 +40,8 @@ export default function useResetPassword() {
       : process.env.REACT_APP_VURL;
 
   const onSubmit = async (data) => {
-    const token = sessionStorage.getItem("token");
-
     await axios
-      .post(`${whichAPI}/reset-password/${id}/${token}`, data, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      .post(`${whichAPI}/reset-password/${id}/${token}`, data)
       .then((res) => {
         if (res.data.Status === "Successfully reset password") {
           setSuccess(true);
