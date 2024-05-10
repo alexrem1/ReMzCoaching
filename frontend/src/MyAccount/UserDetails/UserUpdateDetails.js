@@ -1,5 +1,5 @@
 import { Controller } from "react-hook-form";
-import { ConfigProvider, DatePicker } from "antd";
+import { ConfigProvider } from "antd";
 import useUpdateProfile from "../../CustomHooks/useUpdateProfile";
 import dayjs from "dayjs";
 import { AlertCircle, ArrowLeftCircle } from "lucide-react";
@@ -21,14 +21,8 @@ function UserUpdateDetails() {
     step,
     nextStep,
     prevStep,
+    disabledDOB,
   } = useUpdateProfile();
-
-  const {
-    isTooltipVisible,
-    handleMouseEnter,
-    handleMouseLeave,
-    handleTooltipToggle,
-  } = useUtilities();
 
   return (
     <>
@@ -44,243 +38,225 @@ function UserUpdateDetails() {
                 <>
                   <h3>Step 1 of 3</h3>
                   <div className="content">
-                    {errors.CarerFirstName ? (
-                      <>
-                        <div className="tooltip-container">
-                          <span className="error">*</span>
-                          <label>First name</label>
-                          <AlertCircle
-                            className="tooltip-trigger"
-                            aria-label="More info"
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                            onClick={handleTooltipToggle}
-                          />
-                        </div>
-
-                        <input
-                          type="text"
-                          {...register("CarerFirstName")}
-                          placeholder={
-                            isTooltipVisible && errors.CarerFirstName
-                              ? errors.CarerFirstName.message
-                              : null
-                          }
-                        />
-                      </>
-                    ) : (
-                      <>
+                    <>
+                      <div className="tooltip-container">
                         <label>First name</label>
-                        <input
-                          type="text"
-                          {...register("CarerFirstName")}
-                          defaultValue={details.CarerFirstName}
-                          disabled={details.CarerFirstName}
-                        />
-                      </>
-                    )}
+                      </div>
 
-                    {errors.CarerLastName ? (
-                      <>
-                        <div className="tooltip-container">
-                          <span className="error">*</span>
-                          <label>Last name</label>
-                          <AlertCircle
-                            className="tooltip-trigger"
-                            aria-label="More info"
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                            onClick={handleTooltipToggle}
-                          />
-                        </div>
-                        <input
-                          type="text"
-                          {...register("CarerLastName")}
-                          placeholder={
-                            isTooltipVisible && errors.CarerLastName
-                              ? errors.CarerLastName.message
-                              : null
-                          }
-                        />
-                      </>
-                    ) : (
-                      <>
+                      <input
+                        defaultValue={details.CarerFirstName}
+                        disabled={details.CarerFirstName}
+                        type="text"
+                        {...register("CarerFirstName")}
+                      />
+                    </>
+
+                    <>
+                      <div className="tooltip-container">
                         <label>Last name</label>
-                        <input
-                          type="text"
-                          {...register("CarerLastName")}
-                          defaultValue={details.CarerLastName}
-                          disabled={details.CarerLastName}
-                        />
-                      </>
-                    )}
+                      </div>
 
-                    {errors.Email ? (
-                      <>
-                        <div className="tooltip-container">
-                          <span className="error">*</span>
-                          <label>Email</label>
-                          <AlertCircle
-                            className="tooltip-trigger"
-                            aria-label="More info"
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                            onClick={handleTooltipToggle}
-                          />
-                        </div>
-                        <input
-                          type="text"
-                          {...register("Email")}
-                          name="Email"
-                          placeholder={
-                            isTooltipVisible && errors.Email
-                              ? errors.Email.message
-                              : null
-                          }
-                        />
-                      </>
-                    ) : (
-                      <>
+                      <input
+                        defaultValue={details.CarerLastName}
+                        disabled={details.CarerLastName}
+                        type="text"
+                        {...register("CarerFirstName")}
+                      />
+                    </>
+
+                    <>
+                      <div className="tooltip-container">
+                        <span
+                          className="error"
+                          style={{
+                            display: errors.Email ? "block" : "none",
+                          }}
+                        >
+                          *
+                        </span>
                         <label>Email</label>
-                        <input
-                          type="text"
-                          {...register("Email")}
-                          name="Email"
-                          defaultValue={details.Email}
+                        <AlertCircle
+                          style={{
+                            display: errors.Email ? "block" : "none",
+                          }}
+                          className="tooltip-trigger"
+                          aria-label="More info"
                         />
-                      </>
-                    )}
+                      </div>
 
-                    {errors.ContactNumber ? (
-                      <>
-                        <div className="tooltip-container">
-                          <span className="error">*</span>
-                          <label>Contact number</label>
-                          <AlertCircle
-                            className="tooltip-trigger"
-                            aria-label="More info"
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                            onClick={handleTooltipToggle}
-                          />
-                        </div>
-                        <input
-                          type="number"
-                          {...register("ContactNumber")}
-                          placeholder={
-                            isTooltipVisible && errors.ContactNumber
-                              ? errors.ContactNumber.message
-                              : null
-                          }
-                        />
-                      </>
-                    ) : (
-                      <>
+                      <div>
+                        <label style={{ padding: "0" }}>
+                          {errors.Email ? errors.Email.message : null}
+                        </label>
+                      </div>
+                      <input
+                        name="Email"
+                        style={{
+                          borderBottom: errors.Email
+                            ? "1px solid red"
+                            : "1px solid black",
+                        }}
+                        type="text"
+                        defaultValue={details.Email}
+                        {...register("Email")}
+                      />
+                    </>
+
+                    <>
+                      <div className="tooltip-container">
+                        <span
+                          className="error"
+                          style={{
+                            display: errors.ContactNumber ? "block" : "none",
+                          }}
+                        >
+                          *
+                        </span>
                         <label>Contact number</label>
-                        <input
-                          type="number"
-                          {...register("ContactNumber")}
-                          defaultValue={details.ContactNumber}
+                        <AlertCircle
+                          style={{
+                            display: errors.ContactNumber ? "block" : "none",
+                          }}
+                          className="tooltip-trigger"
+                          aria-label="More info"
                         />
-                      </>
-                    )}
+                      </div>
 
-                    {errors.EmergencyContactNumber ? (
-                      <>
-                        <div className="tooltip-container">
-                          <span className="error">*</span>
-                          <label>Emergency contact number</label>
-                          <AlertCircle
-                            className="tooltip-trigger"
-                            aria-label="More info"
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                            onClick={handleTooltipToggle}
-                          />
-                        </div>
-                        <input
-                          type="number"
-                          {...register("EmergencyContactNumber")}
-                          placeholder={
-                            isTooltipVisible && errors.EmergencyContactNumber
-                              ? errors.EmergencyContactNumber.message
-                              : null
-                          }
-                        />
-                      </>
-                    ) : (
-                      <>
+                      <div>
+                        <label style={{ padding: "0" }}>
+                          {errors.ContactNumber
+                            ? errors.ContactNumber.message
+                            : null}
+                        </label>
+                      </div>
+                      <input
+                        style={{
+                          borderBottom: errors.ContactNumber
+                            ? "1px solid red"
+                            : "1px solid black",
+                        }}
+                        type="number"
+                        defaultValue={details.ContactNumber}
+                        {...register("ContactNumber")}
+                      />
+                    </>
+
+                    <>
+                      <div className="tooltip-container">
+                        <span
+                          className="error"
+                          style={{
+                            display: errors.EmergencyContactNumber
+                              ? "block"
+                              : "none",
+                          }}
+                        >
+                          *
+                        </span>
                         <label>Emergency contact number</label>
-                        <input
-                          type="number"
-                          {...register("EmergencyContactNumber")}
-                          defaultValue={details.EmergencyContactNumber}
+                        <AlertCircle
+                          style={{
+                            display: errors.EmergencyContactNumber
+                              ? "block"
+                              : "none",
+                          }}
+                          className="tooltip-trigger"
+                          aria-label="More info"
                         />
-                      </>
-                    )}
+                      </div>
 
-                    {errors.password ? (
-                      <>
-                        <div className="tooltip-container">
-                          <span className="error">*</span>
-                          <label>Password</label>
-                          <AlertCircle
-                            className="tooltip-trigger"
-                            aria-label="More info"
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                            onClick={handleTooltipToggle}
-                          />
-                        </div>
-                        <input
-                          type="password"
-                          {...register("password")}
-                          placeholder={
-                            isTooltipVisible && errors.password
-                              ? errors.password.message
-                              : null
-                          }
-                        />
-                      </>
-                    ) : (
-                      <>
+                      <div>
+                        <label style={{ padding: "0" }}>
+                          {errors.EmergencyContactNumber
+                            ? errors.EmergencyContactNumber.message
+                            : null}
+                        </label>
+                      </div>
+                      <input
+                        style={{
+                          borderBottom: errors.EmergencyContactNumber
+                            ? "1px solid red"
+                            : "1px solid black",
+                        }}
+                        type="number"
+                        defaultValue={details.EmergencyContactNumber}
+                        {...register("EmergencyContactNumber")}
+                      />
+                    </>
+
+                    <>
+                      <div className="tooltip-container">
+                        <span
+                          className="error"
+                          style={{
+                            display: errors.password ? "block" : "none",
+                          }}
+                        >
+                          *
+                        </span>
                         <label>Password</label>
-                        <input type="password" {...register("password")} />
-                      </>
-                    )}
+                        <AlertCircle
+                          style={{
+                            display: errors.password ? "block" : "none",
+                          }}
+                          className="tooltip-trigger"
+                          aria-label="More info"
+                        />
+                      </div>
 
-                    {errors.confirmPassword ? (
-                      <>
-                        <div className="tooltip-container">
-                          <span className="error">*</span>
-                          <label>Confirm password</label>
-                          <AlertCircle
-                            className="tooltip-trigger"
-                            aria-label="More info"
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                            onClick={handleTooltipToggle}
-                          />
-                        </div>
-                        <input
-                          type="password"
-                          {...register("confirmPassword")}
-                          placeholder={
-                            isTooltipVisible && errors.confirmPassword
-                              ? errors.confirmPassword.message
-                              : null
-                          }
-                        />
-                      </>
-                    ) : (
-                      <>
+                      <div>
+                        <label style={{ padding: "0" }}>
+                          {errors.password ? errors.password.message : null}
+                        </label>
+                      </div>
+                      <input
+                        style={{
+                          borderBottom: errors.password
+                            ? "1px solid red"
+                            : "1px solid black",
+                        }}
+                        type="password"
+                        {...register("password")}
+                      />
+                    </>
+
+                    <>
+                      <div className="tooltip-container">
+                        <span
+                          className="error"
+                          style={{
+                            display: errors.confirmPassword ? "block" : "none",
+                          }}
+                        >
+                          *
+                        </span>
                         <label>Confirm password</label>
-                        <input
-                          type="password"
-                          {...register("confirmPassword")}
+                        <AlertCircle
+                          style={{
+                            display: errors.confirmPassword ? "block" : "none",
+                          }}
+                          className="tooltip-trigger"
+                          aria-label="More info"
                         />
-                      </>
-                    )}
+                      </div>
+
+                      <div>
+                        <label style={{ padding: "0" }}>
+                          {errors.confirmPassword
+                            ? errors.confirmPassword.message
+                            : null}
+                        </label>
+                      </div>
+                      <input
+                        style={{
+                          borderBottom: errors.confirmPassword
+                            ? "1px solid red"
+                            : "1px solid black",
+                        }}
+                        type="password"
+                        {...register("confirmPassword")}
+                      />
+                    </>
                   </div>
                   <button
                     className="primary-cta"
@@ -295,39 +271,44 @@ function UserUpdateDetails() {
                 <>
                   <h3>Step 2 of 3</h3>
                   <div className="content">
-                    {errors.AddressLine1 ? (
-                      <>
-                        <div className="tooltip-container">
-                          <span className="error">*</span>
-                          <label>Address Line 1</label>
-                          <AlertCircle
-                            className="tooltip-trigger"
-                            aria-label="More info"
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                            onClick={handleTooltipToggle}
-                          />
-                        </div>
-                        <input
-                          type="text"
-                          {...register("AddressLine1")}
-                          placeholder={
-                            isTooltipVisible && errors.AddressLine1
-                              ? errors.AddressLine1.message
-                              : null
-                          }
-                        />
-                      </>
-                    ) : (
-                      <>
+                    <>
+                      <div className="tooltip-container">
+                        <span
+                          className="error"
+                          style={{
+                            display: errors.AddressLine1 ? "block" : "none",
+                          }}
+                        >
+                          *
+                        </span>
                         <label>Address Line 1</label>
-                        <input
-                          type="text"
-                          {...register("AddressLine1")}
-                          defaultValue={details.AddressLine1}
+                        <AlertCircle
+                          style={{
+                            display: errors.AddressLine1 ? "block" : "none",
+                          }}
+                          className="tooltip-trigger"
+                          aria-label="More info"
                         />
-                      </>
-                    )}
+                      </div>
+
+                      <div>
+                        <label style={{ padding: "0" }}>
+                          {errors.AddressLine1
+                            ? errors.AddressLine1.message
+                            : null}
+                        </label>
+                      </div>
+                      <input
+                        style={{
+                          borderBottom: errors.AddressLine1
+                            ? "1px solid red"
+                            : "1px solid black",
+                        }}
+                        type="text"
+                        defaultValue={details.AddressLine1}
+                        {...register("AddressLine1")}
+                      />
+                    </>
 
                     <label>Address Line 2 (Optional)</label>
                     <input
@@ -338,73 +319,83 @@ function UserUpdateDetails() {
                       }
                     />
 
-                    {errors.AddressCityTown ? (
-                      <>
-                        <div className="tooltip-container">
-                          <span className="error">*</span>
-                          <label>City or Town</label>
-                          <AlertCircle
-                            className="tooltip-trigger"
-                            aria-label="More info"
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                            onClick={handleTooltipToggle}
-                          />
-                        </div>
-                        <input
-                          type="text"
-                          {...register("AddressCityTown")}
-                          placeholder={
-                            isTooltipVisible && errors.AddressCityTown
-                              ? errors.AddressCityTown.message
-                              : null
-                          }
-                        />
-                      </>
-                    ) : (
-                      <>
+                    <>
+                      <div className="tooltip-container">
+                        <span
+                          className="error"
+                          style={{
+                            display: errors.AddressCityTown ? "block" : "none",
+                          }}
+                        >
+                          *
+                        </span>
                         <label>City or Town</label>
-                        <input
-                          type="text"
-                          {...register("AddressCityTown")}
-                          defaultValue={details.AddressCityTown}
+                        <AlertCircle
+                          style={{
+                            display: errors.AddressCityTown ? "block" : "none",
+                          }}
+                          className="tooltip-trigger"
+                          aria-label="More info"
                         />
-                      </>
-                    )}
+                      </div>
 
-                    {errors.AddressPostcode ? (
-                      <>
-                        <div className="tooltip-container">
-                          <span className="error">*</span>
-                          <label>Postcode</label>
-                          <AlertCircle
-                            className="tooltip-trigger"
-                            aria-label="More info"
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                            onClick={handleTooltipToggle}
-                          />
-                        </div>
-                        <input
-                          type="text"
-                          {...register("AddressPostcode")}
-                          placeholder={
-                            isTooltipVisible && errors.AddressPostcode
-                              ? errors.AddressPostcode.message
-                              : null
-                          }
-                        />
-                      </>
-                    ) : (
-                      <>
+                      <div>
+                        <label style={{ padding: "0" }}>
+                          {errors.AddressCityTown
+                            ? errors.AddressCityTown.message
+                            : null}
+                        </label>
+                      </div>
+                      <input
+                        style={{
+                          borderBottom: errors.AddressCityTown
+                            ? "1px solid red"
+                            : "1px solid black",
+                        }}
+                        type="text"
+                        defaultValue={details.AddressCityTown}
+                        {...register("AddressCityTown")}
+                      />
+                    </>
+
+                    <>
+                      <div className="tooltip-container">
+                        <span
+                          className="error"
+                          style={{
+                            display: errors.AddressPostcode ? "block" : "none",
+                          }}
+                        >
+                          *
+                        </span>
                         <label>Postcode</label>
-                        <input
-                          type="text"
-                          {...register("AddressPostcode")}
-                          defaultValue={details.AddressPostcode}
+                        <AlertCircle
+                          style={{
+                            display: errors.AddressPostcode ? "block" : "none",
+                          }}
+                          className="tooltip-trigger"
+                          aria-label="More info"
                         />
-                      </>
-                    )}
+                      </div>
+
+                      <div>
+                        <label style={{ padding: "0" }}>
+                          {errors.AddressPostcode
+                            ? errors.AddressPostcode.message
+                            : null}
+                        </label>
+                      </div>
+                      <input
+                        style={{
+                          borderBottom: errors.AddressPostcode
+                            ? "1px solid red"
+                            : "1px solid black",
+                        }}
+                        type="text"
+                        defaultValue={details.AddressPostcode}
+                        {...register("AddressPostcode")}
+                      />
+                    </>
                   </div>
                   <button
                     type="button"
@@ -426,83 +417,105 @@ function UserUpdateDetails() {
                 <>
                   <h3>Step 3 of 3</h3>
                   <div className="content">
-                    {errors.FirstChildFirstName ? (
-                      <>
-                        <div className="tooltip-container">
-                          <span className="error">*</span>
-                          <label>First child first name</label>
-                          <AlertCircle
-                            className="tooltip-trigger"
-                            aria-label="More info"
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                            onClick={handleTooltipToggle}
-                          />
-                        </div>
-                        <input
-                          type="text"
-                          {...register("FirstChildFirstName")}
-                          placeholder={
-                            isTooltipVisible && errors.FirstChildFirstName
-                              ? errors.FirstChildFirstName.message
-                              : null
-                          }
-                        />
-                      </>
-                    ) : (
-                      <>
+                    <>
+                      <div className="tooltip-container">
+                        <span
+                          className="error"
+                          style={{
+                            display: errors.FirstChildFirstName
+                              ? "block"
+                              : "none",
+                          }}
+                        >
+                          *
+                        </span>
                         <label>First child first name</label>
-                        <input
-                          type="text"
-                          {...register("FirstChildFirstName")}
-                          defaultValue={details.FirstChildFirstName}
+                        <AlertCircle
+                          style={{
+                            display: errors.FirstChildFirstName
+                              ? "block"
+                              : "none",
+                          }}
+                          className="tooltip-trigger"
+                          aria-label="More info"
                         />
-                      </>
-                    )}
+                      </div>
 
-                    {errors.FirstChildLastName ? (
-                      <>
-                        <div className="tooltip-container">
-                          <span className="error">*</span>
-                          <label>First child last name</label>
-                          <AlertCircle
-                            className="tooltip-trigger"
-                            aria-label="More info"
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                            onClick={handleTooltipToggle}
-                          />
-                        </div>
-                        <input
-                          type="text"
-                          {...register("FirstChildLastName")}
-                          placeholder={
-                            isTooltipVisible && errors.FirstChildLastName
-                              ? errors.FirstChildLastName.message
-                              : null
-                          }
-                        />
-                      </>
-                    ) : (
-                      <>
+                      <div>
+                        <label style={{ padding: "0" }}>
+                          {errors.FirstChildFirstName
+                            ? errors.FirstChildFirstName.message
+                            : null}
+                        </label>
+                      </div>
+                      <input
+                        style={{
+                          borderBottom: errors.FirstChildFirstName
+                            ? "1px solid red"
+                            : "1px solid black",
+                        }}
+                        type="text"
+                        defaultValue={details.FirstChildFirstName}
+                        {...register("FirstChildFirstName")}
+                      />
+                    </>
+
+                    <>
+                      <div className="tooltip-container">
+                        <span
+                          className="error"
+                          style={{
+                            display: errors.FirstChildLastName
+                              ? "block"
+                              : "none",
+                          }}
+                        >
+                          *
+                        </span>
                         <label>First child last name</label>
-                        <input
-                          type="text"
-                          {...register("FirstChildLastName")}
-                          defaultValue={details.FirstChildLastName}
+                        <AlertCircle
+                          style={{
+                            display: errors.FirstChildLastName
+                              ? "block"
+                              : "none",
+                          }}
+                          className="tooltip-trigger"
+                          aria-label="More info"
                         />
-                      </>
-                    )}
+                      </div>
+
+                      <div>
+                        <label style={{ padding: "0" }}>
+                          {errors.FirstChildLastName
+                            ? errors.FirstChildLastName.message
+                            : null}
+                        </label>
+                      </div>
+                      <input
+                        style={{
+                          borderBottom: errors.FirstChildLastName
+                            ? "1px solid red"
+                            : "1px solid black",
+                        }}
+                        type="text"
+                        defaultValue={details.FirstChildLastName}
+                        {...register("FirstChildLastName")}
+                      />
+                    </>
 
                     <ConfigProvider>
                       <Controller
                         name="FirstChildDOB"
                         control={control}
                         defaultValue={
-                          details.FirstChildDOB &&
-                          dayjs(details.FirstChildDOB, "DD/MM/YYYY").format(
-                            "YYYY-MM-DD"
-                          )
+                          errors.FirstChildDOB
+                            ? undefined // If there's an error, set defaultValue to undefined
+                            : details.FirstChildDOB &&
+                              details.FirstChildDOB.trim() !== ""
+                            ? dayjs(details.FirstChildDOB, "DD/MM/YYYY").format(
+                                "YYYY-MM-DD"
+                              )
+                            : undefined // If empty or doesn't exist, set it to undefined
                         }
                         render={({ field }) => (
                           <>
@@ -517,6 +530,7 @@ function UserUpdateDetails() {
                                 <CustomDatePicker
                                   field={field}
                                   errors={errors}
+                                  disabledDate={disabledDOB}
                                   placeholder={"Select DOB"}
                                 />
                               </div>
@@ -527,7 +541,8 @@ function UserUpdateDetails() {
                                 <CustomDatePicker
                                   errors={errors}
                                   field={field}
-                                  placeholder="First child DOB"
+                                  disabledDate={disabledDOB}
+                                  placeholder="Select DOB"
                                 />
                               </div>
                             )}
@@ -536,73 +551,91 @@ function UserUpdateDetails() {
                       />
                     </ConfigProvider>
 
-                    {errors.FirstChildYearGroup ? (
-                      <>
-                        <div className="tooltip-container">
-                          <span className="error">*</span>
-                          <label>First child year group</label>
-                          <AlertCircle
-                            className="tooltip-trigger"
-                            aria-label="More info"
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                            onClick={handleTooltipToggle}
-                          />
-                        </div>
-                        <input
-                          type="text"
-                          {...register("FirstChildYearGroup")}
-                          placeholder={
-                            isTooltipVisible && errors.FirstChildYearGroup
-                              ? errors.FirstChildYearGroup.message
-                              : null
-                          }
-                        />
-                      </>
-                    ) : (
-                      <>
+                    <>
+                      <div className="tooltip-container">
+                        <span
+                          className="error"
+                          style={{
+                            display: errors.FirstChildYearGroup
+                              ? "block"
+                              : "none",
+                          }}
+                        >
+                          *
+                        </span>
                         <label>First child year group</label>
-                        <input
-                          type="text"
-                          {...register("FirstChildYearGroup")}
-                          defaultValue={details.FirstChildYearGroup}
+                        <AlertCircle
+                          style={{
+                            display: errors.FirstChildYearGroup
+                              ? "block"
+                              : "none",
+                          }}
+                          className="tooltip-trigger"
+                          aria-label="More info"
                         />
-                      </>
-                    )}
+                      </div>
 
-                    {errors.FirstChildMedical ? (
-                      <>
-                        <div className="tooltip-container">
-                          <span className="error">*</span>
-                          <label>First child medical details</label>
-                          <AlertCircle
-                            className="tooltip-trigger"
-                            aria-label="More info"
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                            onClick={handleTooltipToggle}
-                          />
-                        </div>
-                        <input
-                          type="text"
-                          {...register("FirstChildMedical")}
-                          placeholder={
-                            isTooltipVisible && errors.FirstChildMedical
-                              ? errors.FirstChildMedical.message
-                              : null
-                          }
-                        />
-                      </>
-                    ) : (
-                      <>
+                      <div>
+                        <label style={{ padding: "0" }}>
+                          {errors.FirstChildYearGroup
+                            ? errors.FirstChildYearGroup.message
+                            : null}
+                        </label>
+                      </div>
+                      <input
+                        style={{
+                          borderBottom: errors.FirstChildYearGroup
+                            ? "1px solid red"
+                            : "1px solid black",
+                        }}
+                        type="text"
+                        defaultValue={details.FirstChildYearGroup}
+                        {...register("FirstChildYearGroup")}
+                      />
+                    </>
+
+                    <>
+                      <div className="tooltip-container">
+                        <span
+                          className="error"
+                          style={{
+                            display: errors.FirstChildMedical
+                              ? "block"
+                              : "none",
+                          }}
+                        >
+                          *
+                        </span>
                         <label>First child medical details</label>
-                        <input
-                          type="text"
-                          {...register("FirstChildMedical")}
-                          defaultValue={details.FirstChildMedical}
+                        <AlertCircle
+                          style={{
+                            display: errors.FirstChildMedical
+                              ? "block"
+                              : "none",
+                          }}
+                          className="tooltip-trigger"
+                          aria-label="More info"
                         />
-                      </>
-                    )}
+                      </div>
+
+                      <div>
+                        <label style={{ padding: "0" }}>
+                          {errors.FirstChildMedical
+                            ? errors.FirstChildMedical.message
+                            : null}
+                        </label>
+                      </div>
+                      <input
+                        style={{
+                          borderBottom: errors.FirstChildMedical
+                            ? "1px solid red"
+                            : "1px solid black",
+                        }}
+                        type="text"
+                        defaultValue={details.FirstChildMedical}
+                        {...register("FirstChildMedical")}
+                      />
+                    </>
 
                     <>
                       <label>Second child first name</label>
@@ -630,12 +663,15 @@ function UserUpdateDetails() {
                         <Controller
                           name="SecondChildDOB"
                           defaultValue={
-                            details.SecondChildDOB
+                            errors.SecondChildDOB
+                              ? undefined // If there's an error, set defaultValue to undefined
+                              : details.SecondChildDOB &&
+                                details.SecondChildDOB.trim() !== ""
                               ? dayjs(
                                   details.SecondChildDOB,
                                   "DD/MM/YYYY"
                                 ).format("YYYY-MM-DD")
-                              : undefined
+                              : undefined // If empty or doesn't exist, set it to undefined
                           }
                           control={control}
                           render={({ field }) => (
@@ -646,7 +682,8 @@ function UserUpdateDetails() {
                                 <CustomDatePicker
                                   errors={errors}
                                   field={field}
-                                  placeholder="Second child DOB"
+                                  disabledDate={disabledDOB}
+                                  placeholder="Select DOB"
                                 />
                               </div>
                             </>

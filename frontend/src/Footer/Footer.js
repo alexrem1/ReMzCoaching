@@ -23,10 +23,10 @@ export default function Footer() {
           alt="logo"
           onClick={() => {
             navigate("/");
-            window.scrollTo({
-              top: 0,
-              behavior: "smooth",
-            });
+            // window.scrollTo({
+            //   top: 0,
+            //   behavior: "smooth",
+            // });
           }}
         />
       </div>
@@ -46,10 +46,10 @@ export default function Footer() {
           <p
             onClick={() => {
               navigate("/");
-              window.scrollTo({
-                top: 0,
-                behavior: "smooth",
-              });
+              // window.scrollTo({
+              //   top: 0,
+              //   behavior: "smooth",
+              // });
             }}
           >
             Home
@@ -57,10 +57,6 @@ export default function Footer() {
           <p
             onClick={() => {
               navigate("/products");
-              window.scrollTo({
-                top: 0,
-                behavior: "smooth",
-              });
             }}
           >
             Services
@@ -68,10 +64,6 @@ export default function Footer() {
           <p
             onClick={() => {
               navigate("/about-us");
-              window.scrollTo({
-                top: 0,
-                behavior: "smooth",
-              });
             }}
           >
             About us

@@ -14,19 +14,24 @@ export default function useRegistration() {
     Email: yup
       .string()
       .email("Enter a valid email")
-      .required("Required")
-      .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
+      .required("Enter a valid email")
+      .matches(
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        "Enter a valid email"
+      ),
     ContactNumber: yup
       .string()
-      .length(11, "Enter a valid contact number")
+      .length(11, "Enter a valid contact number with 11 numbers")
       .required("Your contact number is required"),
     EmergencyContactNumber: yup
       .string()
-      .length(11, "Enter a valid emergency contact number")
+      .length(11, "Enter a valid emergency contact number with 11 numbers")
       .required("Your emergency contact number is required"),
     password: yup
       .string()
-      .required("Password is required")
+      .required(
+        "Must contain at least 12 Characters, 1 Uppercase, 1 Lowercase, 1 Special Character, and 1 Number"
+      )
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*[\]{}()?"\\,><':;|_~`=+-])[a-zA-Z\d!@#$%^&*[\]{}()?"\\,><':;|_~`=+-]{12,99}$/,
         "Must contain at least 12 Characters, 1 Uppercase, 1 Lowercase, 1 Special Character, and 1 Number"
@@ -38,10 +43,16 @@ export default function useRegistration() {
         "Your passwords do not match, please ensure they match."
       )
       .required("Confirm Password is required"),
-    AddressLine1: yup.string().required("Enter your address line 1."),
+    AddressLine1: yup.string().required("Enter your address line 1"),
     AddressLine2: yup.string(),
-    AddressCityTown: yup.string().required("Enter your city or town."),
-    AddressPostcode: yup.string().required("Enter your postcode."),
+    AddressCityTown: yup.string().required("Enter your city or town"),
+    AddressPostcode: yup
+      .string()
+      .required("Enter a valid UK postcode")
+      .matches(
+        /^([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z])))) ?[0-9][A-Za-z]{2})$/,
+        "Enter a valid UK postcode"
+      ),
     FirstChildFirstName: yup
       .string()
       .required("Your child's first name is required"),
@@ -78,10 +89,18 @@ export default function useRegistration() {
 
   const nextStep = () => {
     setStep((prevStep) => prevStep + 1);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   const prevStep = () => {
     setStep((prevStep) => prevStep - 1);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   const [childCount, setChildCount] = useState(1); // Initial count includes the first two children
@@ -127,6 +146,12 @@ export default function useRegistration() {
     }
   }, [errors, step]);
 
+  const disabledDOB = (current) => {
+    // Disable dates after the current day
+    if (current.isAfter(dayjs(), "day")) {
+      return true;
+    }
+  };
   const whichAPI =
     window.location.hostname === "localhost"
       ? process.env.REACT_APP_API_URL
@@ -187,5 +212,6 @@ export default function useRegistration() {
     schema,
     inputRef,
     setStep,
+    disabledDOB,
   };
 }

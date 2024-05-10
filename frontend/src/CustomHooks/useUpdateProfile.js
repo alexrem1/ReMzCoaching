@@ -12,7 +12,8 @@ export default function useUpdateProfile() {
   const location = useLocation();
   const userID = location.pathname.split("/")[3];
 
-  const { schema, setStep, step, nextStep, prevStep } = useRegistration();
+  const { schema, setStep, step, nextStep, prevStep, disabledDOB } =
+    useRegistration();
 
   const modifiedSchema = schema.omit(["CarerFirstName", "CarerLastName"]);
 
@@ -113,5 +114,6 @@ export default function useUpdateProfile() {
     step,
     nextStep,
     prevStep,
+    disabledDOB,
   };
 }

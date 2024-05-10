@@ -25,6 +25,7 @@ import Footer from "./Footer/Footer";
 import NotFound from "./404/NotFound";
 import NotFoundProduct from "./404/NotFoundProduct";
 import axios from "axios";
+import ScrollToTop from "./Components/ScrollToTop";
 
 function App() {
   axios.defaults.withCredentials = true;
@@ -40,6 +41,7 @@ function App() {
   ); // Log the value of auth after it has been updated
   return (
     <Router>
+      <ScrollToTop />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

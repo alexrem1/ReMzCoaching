@@ -165,21 +165,6 @@
   padding: 5px; /* Increase padding to expand trigger area */
 }
 
-.tooltip {
-  display: none;
-  position: absolute;
-  top: calc(100% + 5px); /* Position the tooltip below the trigger */
-  left: 50%; /* Center the tooltip horizontally */
-  transform: translateX(-50%); /* Adjust to center horizontally */
-  background-color: #333;
-  color: #fff;
-  padding: 5px;
-  border-radius: 5px;
-  z-index: 1;
-}
-.tooltip.active {
-  display: block;
-}
 .tooltip-container {
   display: flex;
   align-items: center;

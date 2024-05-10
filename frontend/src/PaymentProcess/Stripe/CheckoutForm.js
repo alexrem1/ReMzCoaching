@@ -104,7 +104,7 @@ export default function CheckoutForm() {
                 phone: "always",
               },
               defaultValues: {
-                name: "Test Test",
+                country: "GB",
               },
               validation: {
                 phone: {
