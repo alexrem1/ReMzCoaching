@@ -126,6 +126,21 @@
   margin: 20px 0;
 }
 
+.password-input-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.password-input-wrapper span {
+  position: absolute;
+  right: 0;
+}
+
+.password-input-wrapper span svg {
+  cursor: pointer;
+}
+
 /* Media queries for tablet */
 @media screen and (min-width: 768px) {
   .form-container {

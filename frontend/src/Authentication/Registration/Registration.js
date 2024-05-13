@@ -1,9 +1,10 @@
 import useRegistration from "../../CustomHooks/useRegistration";
 import { ConfigProvider } from "antd";
 import { Controller } from "react-hook-form";
-import { ArrowLeftCircle, AlertCircle } from "lucide-react";
+import { ArrowLeftCircle, AlertCircle, Eye, EyeOff } from "lucide-react";
 import ButtonLoad from "../../Components/ButtonLoad";
 import CustomDatePicker from "../../Components/DatePickerWeekends";
+import useUtilities from "../../CustomHooks/useUtilities";
 
 function Registration() {
   const {
@@ -23,6 +24,15 @@ function Registration() {
     inputRef,
     disabledDOB,
   } = useRegistration();
+
+  const {
+    togglePasswordVisibility1,
+    passwordInput,
+    togglePasswordVisibility2,
+    confirmPasswordInput,
+    showPassword1,
+    showPassword2,
+  } = useUtilities();
 
   return (
     <div className="form-container">
@@ -240,21 +250,25 @@ function Registration() {
                     aria-label="More info"
                   />
                 </div>
-
                 <div>
                   <label style={{ padding: "0" }}>
                     {errors.password ? errors.password.message : null}
                   </label>
                 </div>
-                <input
-                  style={{
-                    borderBottom: errors.password
-                      ? "1px solid red"
-                      : "1px solid black",
-                  }}
-                  type="password"
-                  {...register("password")}
-                />
+                <div ref={passwordInput} className="password-input-wrapper">
+                  <input
+                    style={{
+                      borderBottom: errors.password
+                        ? "1px solid red"
+                        : "1px solid black",
+                    }}
+                    type="password"
+                    {...register("password")}
+                  />
+                  <span onClick={togglePasswordVisibility1}>
+                    {showPassword1 ? <Eye /> : <EyeOff />}
+                  </span>
+                </div>
               </>
 
               <>
@@ -284,15 +298,23 @@ function Registration() {
                       : null}
                   </label>
                 </div>
-                <input
-                  style={{
-                    borderBottom: errors.confirmPassword
-                      ? "1px solid red"
-                      : "1px solid black",
-                  }}
-                  type="password"
-                  {...register("confirmPassword")}
-                />
+                <div
+                  className="password-input-wrapper"
+                  ref={confirmPasswordInput}
+                >
+                  <input
+                    style={{
+                      borderBottom: errors.confirmPassword
+                        ? "1px solid red"
+                        : "1px solid black",
+                    }}
+                    type="password"
+                    {...register("confirmPassword")}
+                  />
+                  <span onClick={togglePasswordVisibility2}>
+                    {showPassword2 ? <Eye /> : <EyeOff />}
+                  </span>
+                </div>
               </>
             </div>
             <button className="primary-cta" type="button" onClick={nextStep}>

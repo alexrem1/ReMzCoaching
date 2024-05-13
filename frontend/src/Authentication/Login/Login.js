@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import useLogin from "../../CustomHooks/useLogin";
 import ButtonLoad from "../../Components/ButtonLoad";
 import "../../forms.css";
+import useUtilities from "../../CustomHooks/useUtilities";
+import { Eye, EyeOff } from "lucide-react";
 function Login() {
   const {
     register,
@@ -12,6 +14,9 @@ function Login() {
     onSubmit,
     inputRef,
   } = useLogin();
+
+  const { togglePasswordVisibility1, passwordInput, showPassword1 } =
+    useUtilities();
 
   return (
     <div className="form-container">
@@ -24,13 +29,17 @@ function Login() {
         <input type="text" placeholder="Email" {...register("Email")} />
         {errors.Email && <p className="error">{errors.Email.message}</p>}
 
-        <input
-          type="password"
-          placeholder="Password"
-          {...register("password")}
-        />
+        <div ref={passwordInput} className="password-input-wrapper">
+          <input
+            type="password"
+            placeholder="Password"
+            {...register("password")}
+          />
+          <span onClick={togglePasswordVisibility1}>
+            {showPassword1 ? <Eye /> : <EyeOff />}
+          </span>
+        </div>
         {errors.password && <p className="error">{errors.password.message}</p>}
-
         <ButtonLoad
           isSubmittingText="Logging in..."
           isSubmitSuccessfulText="Logged in successfully"

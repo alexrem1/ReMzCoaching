@@ -2,7 +2,7 @@ import { Controller } from "react-hook-form";
 import { ConfigProvider } from "antd";
 import useUpdateProfile from "../../CustomHooks/useUpdateProfile";
 import dayjs from "dayjs";
-import { AlertCircle, ArrowLeftCircle } from "lucide-react";
+import { AlertCircle, ArrowLeftCircle, Eye, EyeOff } from "lucide-react";
 import ButtonLoad from "../../Components/ButtonLoad";
 import CustomDatePicker from "../../Components/DatePickerWeekends";
 import useUtilities from "../../CustomHooks/useUtilities";
@@ -23,6 +23,15 @@ function UserUpdateDetails() {
     prevStep,
     disabledDOB,
   } = useUpdateProfile();
+
+  const {
+    togglePasswordVisibility1,
+    passwordInput,
+    togglePasswordVisibility2,
+    confirmPasswordInput,
+    showPassword1,
+    showPassword2,
+  } = useUtilities();
 
   return (
     <>
@@ -209,15 +218,23 @@ function UserUpdateDetails() {
                           {errors.password ? errors.password.message : null}
                         </label>
                       </div>
-                      <input
-                        style={{
-                          borderBottom: errors.password
-                            ? "1px solid red"
-                            : "1px solid black",
-                        }}
-                        type="password"
-                        {...register("password")}
-                      />
+                      <div
+                        className="password-input-wrapper"
+                        ref={passwordInput}
+                      >
+                        <input
+                          style={{
+                            borderBottom: errors.password
+                              ? "1px solid red"
+                              : "1px solid black",
+                          }}
+                          type="password"
+                          {...register("password")}
+                        />
+                        <span onClick={togglePasswordVisibility1}>
+                          {showPassword1 ? <Eye /> : <EyeOff />}
+                        </span>
+                      </div>
                     </>
 
                     <>
@@ -247,15 +264,23 @@ function UserUpdateDetails() {
                             : null}
                         </label>
                       </div>
-                      <input
-                        style={{
-                          borderBottom: errors.confirmPassword
-                            ? "1px solid red"
-                            : "1px solid black",
-                        }}
-                        type="password"
-                        {...register("confirmPassword")}
-                      />
+                      <div
+                        className="password-input-wrapper"
+                        ref={confirmPasswordInput}
+                      >
+                        <input
+                          style={{
+                            borderBottom: errors.confirmPassword
+                              ? "1px solid red"
+                              : "1px solid black",
+                          }}
+                          type="password"
+                          {...register("confirmPassword")}
+                        />{" "}
+                        <span onClick={togglePasswordVisibility2}>
+                          {showPassword2 ? <Eye /> : <EyeOff />}
+                        </span>
+                      </div>
                     </>
                   </div>
                   <button

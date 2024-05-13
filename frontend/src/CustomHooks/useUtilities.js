@@ -1,21 +1,21 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function useUtilities(products) {
-  // handle tooltip error display
-  const [isTooltipVisible, setTooltipVisible] = useState(false);
+  // // handle tooltip error display
+  // const [isTooltipVisible, setTooltipVisible] = useState(false);
 
-  const handleMouseEnter = () => {
-    setTooltipVisible(true);
-  };
+  // const handleMouseEnter = () => {
+  //   setTooltipVisible(true);
+  // };
 
-  const handleMouseLeave = () => {
-    setTooltipVisible(false);
-  };
+  // const handleMouseLeave = () => {
+  //   setTooltipVisible(false);
+  // };
 
-  const handleTooltipToggle = () => {
-    setTooltipVisible(!isTooltipVisible);
-  };
+  // const handleTooltipToggle = () => {
+  //   setTooltipVisible(!isTooltipVisible);
+  // };
 
   // handle display and button functionality
 
@@ -36,15 +36,48 @@ export default function useUtilities(products) {
   // use navigate
   const navigate = useNavigate();
 
+  const [showPassword1, setShowPassword1] = useState(true);
+  const [showPassword2, setShowPassword2] = useState(true);
+  const passwordInput = useRef();
+  const confirmPasswordInput = useRef();
+
+  useEffect(() => {
+    togglePasswordVisibility1();
+    togglePasswordVisibility2();
+  }, []);
+
+  const togglePasswordVisibility1 = () => {
+    setShowPassword1((prevState) => !prevState);
+    if (passwordInput.current != null) {
+      passwordInput.current.querySelector("input").type = showPassword1
+        ? "password"
+        : "text";
+    }
+  };
+  const togglePasswordVisibility2 = () => {
+    setShowPassword2((prevState) => !prevState);
+    if (confirmPasswordInput.current != null) {
+      confirmPasswordInput.current.querySelector("input").type = showPassword2
+        ? "password"
+        : "type";
+    }
+  };
+
   return {
-    handleMouseEnter,
-    handleMouseLeave,
-    handleTooltipToggle,
-    isTooltipVisible,
+    // handleMouseEnter,
+    // handleMouseLeave,
+    // handleTooltipToggle,
+    // isTooltipVisible,
     activeProductIndex,
     handleNextProduct,
     handlePrevProduct,
     setActiveProductIndex,
     navigate,
+    togglePasswordVisibility1,
+    passwordInput,
+    togglePasswordVisibility2,
+    confirmPasswordInput,
+    showPassword1,
+    showPassword2,
   };
 }
