@@ -276,7 +276,7 @@ function UserUpdateDetails() {
                           }}
                           type="password"
                           {...register("confirmPassword")}
-                        />{" "}
+                        />
                         <span onClick={togglePasswordVisibility2}>
                           {showPassword2 ? <Eye /> : <EyeOff />}
                         </span>

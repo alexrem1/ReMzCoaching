@@ -42,8 +42,6 @@ Backend CSP
 - **Purpose:** To provide an additional layer of security by specifying CSP directives in the HTTP response headers sent by the server, complementing frontend CSP to further mitigate the risk of XSS attacks and other security vulnerabilities originating from the server-side code or resources
 - **Description:** Backend CSP is implemented on the server-side using server configuration. It adds CSP directives to the HTTP response headers, instructing the browser on how to handle resources loaded from the server. By enforcing stricter policies on resource loading and script execution, it enhances the overall security posture of the web application and reduces the attack surface for potential security threats
 
-fill them both out
-
 ### Features
 
 User Authentication
